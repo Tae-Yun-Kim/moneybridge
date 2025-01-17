@@ -1,8 +1,8 @@
 package com.moneybridge.service;
 
-import com.moneybridge.domain.Member;
-import com.moneybridge.domain.MemberGrade;
-import com.moneybridge.domain.MemberRole;
+import com.moneybridge.domain.member.Member;
+import com.moneybridge.domain.member.MemberGrade;
+import com.moneybridge.domain.member.MemberRole;
 import com.moneybridge.dto.MemberDTO;
 import com.moneybridge.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
