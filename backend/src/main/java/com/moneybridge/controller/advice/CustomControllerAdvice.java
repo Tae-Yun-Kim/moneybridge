@@ -40,4 +40,18 @@ public class CustomControllerAdvice {
 
         return ResponseEntity.ok().body(Map.of("error", msg));
     }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleGenericException(Exception ex) {
+        // 에러 로그 출력
+        ex.printStackTrace();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + ex.getMessage());
+    }
+
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<String> handleIllegalStateException(IllegalStateException ex) {
+        // 특정 예외 처리
+        ex.printStackTrace();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Illegal State: " + ex.getMessage());
+    }
 }

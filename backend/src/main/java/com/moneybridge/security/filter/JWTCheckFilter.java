@@ -5,7 +5,7 @@ import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
 
-import com.moneybridge.dto.MemberDTO;
+import com.moneybridge.dto.member.MemberDTO;
 import com.moneybridge.util.JWTUtil;
 import com.google.gson.Gson;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

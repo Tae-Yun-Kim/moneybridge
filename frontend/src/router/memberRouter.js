@@ -1,6 +1,7 @@
 import { Suspense, lazy } from "react";
 import SignupPage from "../pages/member/SignupPage";
 import SocialInfoCompletionPage from "../pages/member/SocialInfoCompletionPage";
+import AccountPage from "../pages/member/AccountPage";
 
 const Loading = <div>Loading....</div>;
 const LoginPage = lazy(() => import("../pages/member/LoginPage"));
@@ -68,6 +69,15 @@ const memberRouter = () => {
       element: (
         <Suspense fallback={Loading}>
           <DeletePage />
+        </Suspense>
+      ),
+    },
+
+    {
+      path: "account",
+      element: (
+        <Suspense fallback={Loading}>
+          <AccountPage />
         </Suspense>
       ),
     },
