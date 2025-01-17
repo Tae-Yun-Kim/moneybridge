@@ -2,7 +2,7 @@ package com.moneybridge.security;
 
 import java.util.stream.Collectors;
 
-import com.moneybridge.domain.Member;
+import com.moneybridge.domain.member.Member;
 import com.moneybridge.dto.MemberDTO;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

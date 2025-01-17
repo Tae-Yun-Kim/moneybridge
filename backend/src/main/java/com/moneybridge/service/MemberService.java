@@ -1,6 +1,6 @@
 package com.moneybridge.service;
 
-import com.moneybridge.domain.Member;
+import com.moneybridge.domain.member.Member;
 import com.moneybridge.dto.MemberDTO;
 import org.springframework.transaction.annotation.Transactional;
 

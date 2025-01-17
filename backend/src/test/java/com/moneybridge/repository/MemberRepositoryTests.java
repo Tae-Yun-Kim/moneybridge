@@ -1,14 +1,14 @@
 package com.moneybridge.repository;
 
-import com.moneybridge.domain.MemberGrade;
+import com.moneybridge.domain.member.MemberGrade;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.moneybridge.domain.Member;
-import com.moneybridge.domain.MemberRole;
+import com.moneybridge.domain.member.Member;
+import com.moneybridge.domain.member.MemberRole;
 
 @SpringBootTest
 @Log4j2
