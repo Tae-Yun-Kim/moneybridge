@@ -1,7 +1,7 @@
 package com.moneybridge.service;
 
-import com.back.domain.LoanProduct;
-import com.back.repository.LoanProductRepository;
+import com.moneybridge.domain.LoanProduct;
+import com.moneybridge.repository.LoanProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
