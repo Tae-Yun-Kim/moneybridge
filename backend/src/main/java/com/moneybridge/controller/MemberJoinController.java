@@ -1,6 +1,6 @@
 package com.moneybridge.controller;
 
-import com.moneybridge.domain.Member;
+import com.moneybridge.domain.member.Member;
 import com.moneybridge.dto.MemberDTO;
 import com.moneybridge.service.MemberService;
 import lombok.RequiredArgsConstructor;
