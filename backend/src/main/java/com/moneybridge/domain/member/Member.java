@@ -1,6 +1,9 @@
 package com.moneybridge.domain.member;
 
-import com.moneybridge.dto.MemberDTO;
+
+import com.moneybridge.domain.account.Account;
+import com.moneybridge.dto.member.MemberDTO;
+
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,8 +36,6 @@ public class Member {
     @Column(unique = true, nullable = false)
     private String email;
 
-    @Column(unique = true, nullable = false)
-    private String accountNumber;
 
     private String nickname;
 
@@ -45,6 +46,11 @@ public class Member {
     private boolean isLender;
 
     private boolean accountLocked;
+
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JoinColumn(name = "account_number", referencedColumnName = "accountNumber", unique = true)
+    private Account account;
+
 
     @ElementCollection(fetch = FetchType.LAZY)
     @Builder.Default
@@ -77,6 +83,16 @@ public class Member {
     public void setSocial(boolean social) {
         this.social = social;
     }
+
+    public void setAccount(Account account) {
+        if (account != null) {
+            this.account = account;
+            account.setMember(this);
+        } else {
+            this.account = null;
+        }
+    }
+
 
     public void changeMemberinfo(MemberDTO memberDTO, PasswordEncoder passwordEncoder){
         // 비밀번호 암호화 후 변경

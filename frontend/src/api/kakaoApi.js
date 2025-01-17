@@ -55,16 +55,42 @@ export const getAccessToken = async (authCode) => {
  * 카카오 액세스 토큰으로 사용자 정보 가져오기
  * @param {string} accessToken - 카카오에서 발급한 액세스 토큰
  */
+// export const getMemberWithAccessToken = async (accessToken) => {
+//   try {
+//     const res = await axios.get(
+//       `${API_SERVER_HOST}/api/member/kakao?accessToken=${accessToken}`
+//     );
+//     console.log("카카오 사용자 정보 요청 성공:", res.data);
+//     return res.data;
+//   } catch (error) {
+//     console.error("카카오 사용자 정보 요청 실패:", error);
+//     throw new Error("카카오 사용자 정보 요청 실패");
+//   }
+// };
 export const getMemberWithAccessToken = async (accessToken) => {
   try {
     const res = await axios.get(
       `${API_SERVER_HOST}/api/member/kakao?accessToken=${accessToken}`
     );
     console.log("카카오 사용자 정보 요청 성공:", res.data);
+
+    // 여기서 토큰 저장 로직 추가
+    const { accessToken: serverAccessToken, refreshToken } = res.data;
+
+    if (serverAccessToken && refreshToken) {
+      localStorage.setItem("accessToken", serverAccessToken);
+      localStorage.setItem("refreshToken", refreshToken);
+      console.log(
+        "AccessToken과 RefreshToken이 로컬 스토리지에 저장되었습니다."
+      );
+    } else {
+      console.log("토큰이 반환되지 않았습니다.");
+    }
+
     return res.data;
   } catch (error) {
     console.error("카카오 사용자 정보 요청 실패:", error);
-    throw new Error("카카오 사용자 정보 요청 실패");
+    throw error;
   }
 };
 
