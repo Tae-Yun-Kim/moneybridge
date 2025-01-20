@@ -1,7 +1,6 @@
 import { useState } from "react";
 import useCustomLogin from "../../hooks/useCustomLogin";
 import KakaoLoginComponent from "./KakaoLoginComponent";
-import SignupComponent from "./SignupComponent";
 import { Link } from "react-router-dom";
 
 const initState = {
