@@ -1,11 +1,19 @@
 package com.moneybridge.repository;
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 80add5cbcedaa079610c3bdfdacd41331797bcbb
 import com.moneybridge.domain.account.Account;
 import com.moneybridge.domain.member.Member;
 import com.moneybridge.domain.member.MemberGrade;
 import com.moneybridge.domain.member.MemberRole;
 import com.moneybridge.repository.member.MemberRepository;
 import com.moneybridge.repository.account.AccountRepository;
+<<<<<<< HEAD
+=======
+
+>>>>>>> 80add5cbcedaa079610c3bdfdacd41331797bcbb
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

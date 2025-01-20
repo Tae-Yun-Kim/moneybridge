@@ -3,7 +3,13 @@ package com.moneybridge.security;
 import java.util.stream.Collectors;
 
 import com.moneybridge.domain.member.Member;
+<<<<<<< HEAD
 import com.moneybridge.dto.member.MemberDTO;
+=======
+
+import com.moneybridge.dto.member.MemberDTO;
+
+>>>>>>> 80add5cbcedaa079610c3bdfdacd41331797bcbb
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

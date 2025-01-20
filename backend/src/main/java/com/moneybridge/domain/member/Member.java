@@ -1,7 +1,14 @@
 package com.moneybridge.domain.member;
 
+<<<<<<< HEAD
 import com.moneybridge.domain.account.Account;
 import com.moneybridge.dto.member.MemberDTO;
+=======
+
+import com.moneybridge.domain.account.Account;
+import com.moneybridge.dto.member.MemberDTO;
+
+>>>>>>> 80add5cbcedaa079610c3bdfdacd41331797bcbb
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -34,8 +41,11 @@ public class Member {
     @Column(unique = true, nullable = false)
     private String email;
 
+<<<<<<< HEAD
 //    @Column(unique = true, nullable = false)
 //    private String accountNumber;
+=======
+>>>>>>> 80add5cbcedaa079610c3bdfdacd41331797bcbb
 
     private String nickname;
 
@@ -51,6 +61,10 @@ public class Member {
     @JoinColumn(name = "account_number", referencedColumnName = "accountNumber", unique = true)
     private Account account;
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 80add5cbcedaa079610c3bdfdacd41331797bcbb
     @ElementCollection(fetch = FetchType.LAZY)
     @Builder.Default
     private List<MemberRole> memberRoleList = new ArrayList<>();
@@ -92,6 +106,10 @@ public class Member {
         }
     }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 80add5cbcedaa079610c3bdfdacd41331797bcbb
     public void changeMemberinfo(MemberDTO memberDTO, PasswordEncoder passwordEncoder){
         // 비밀번호 암호화 후 변경
         if (memberDTO.getPassword() != null && !memberDTO.getPassword().isEmpty()) {

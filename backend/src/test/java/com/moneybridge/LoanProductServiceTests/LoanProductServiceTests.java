@@ -1,7 +1,14 @@
 package com.moneybridge.LoanProductServiceTests;
 
+<<<<<<< HEAD
 import com.moneybridge.domain.loan.LoanProduct;
 import com.moneybridge.service.loan.LoanProductService;
+=======
+
+import com.moneybridge.domain.loan.LoanProduct;
+import com.moneybridge.service.loan.LoanProductService;
+
+>>>>>>> 80add5cbcedaa079610c3bdfdacd41331797bcbb
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
