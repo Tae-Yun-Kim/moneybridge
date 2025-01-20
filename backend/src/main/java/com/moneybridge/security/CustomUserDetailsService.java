@@ -3,12 +3,12 @@ package com.moneybridge.security;
 import java.util.stream.Collectors;
 
 import com.moneybridge.domain.member.Member;
-import com.moneybridge.dto.MemberDTO;
+import com.moneybridge.dto.member.MemberDTO;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import com.moneybridge.repository.MemberRepository;
+import com.moneybridge.repository.member.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -38,7 +38,7 @@ public class CustomUserDetailsService implements UserDetailsService{
                 member.getResidentNumber(),
                 member.getPhoneNumber(),
                 member.getEmail(),
-                member.getAccountNumber(),
+                member.getAccount() != null ? member.getAccount().getAccountNumber() : null ,
                 member.getNickname(),
                 member.isSocial(),
                 member.getAddress(),

@@ -40,8 +40,22 @@ export const loginPost = async (loginParam) => {
 
 //회원 가입
 export const registerMember = async (member) => {
-  const res = await axios.post(`${host}/register`, member);
-  return res.data;
+  try {
+    const response = await axios.post(
+      "http://localhost:8080/api/member/register",
+      member,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error registering member:", error);
+    throw error;
+  }
 };
 
 //회원 수정
