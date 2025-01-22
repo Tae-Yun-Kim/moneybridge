@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.moneybridge.dto.MemberDTO;
-import com.moneybridge.service.MemberService;
+import com.moneybridge.service.member.MemberService;
 import com.moneybridge.util.JWTUtil;
 
 import lombok.RequiredArgsConstructor;

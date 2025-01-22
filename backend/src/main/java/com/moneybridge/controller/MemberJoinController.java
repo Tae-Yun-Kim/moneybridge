@@ -1,8 +1,8 @@
 package com.moneybridge.controller;
 
-import com.moneybridge.domain.Member;
+import com.moneybridge.domain.member.Member;
 import com.moneybridge.dto.MemberDTO;
-import com.moneybridge.service.MemberService;
+import com.moneybridge.service.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
