@@ -2,13 +2,13 @@ package com.moneybridge.security;
 
 import java.util.stream.Collectors;
 
-import com.moneybridge.domain.Member;
+import com.moneybridge.domain.member.Member;
 import com.moneybridge.dto.MemberDTO;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import com.moneybridge.repository.MemberRepository;
+import com.moneybridge.repository.member.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
