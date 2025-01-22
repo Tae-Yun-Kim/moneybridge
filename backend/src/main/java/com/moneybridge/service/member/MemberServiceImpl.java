@@ -57,6 +57,7 @@ public class MemberServiceImpl implements MemberService {
                 .residentNumber(memberDTO.getResidentNumber())
                 .phoneNumber(memberDTO.getPhoneNumber())
                 .email(memberDTO.getEmail())
+                .creditScore(memberDTO.getCreditScore())
 //                .accountNumber(memberDTO.getAccountNumber())
                 .nickname(memberDTO.getNickname())
                 .social(memberDTO.isSocial())
