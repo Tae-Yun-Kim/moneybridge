@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=edge"/>
+<title>Test results - LoanProductServiceTests</title>
+<link href="../css/base-style.css" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css" rel="stylesheet" type="text/css"/>
+<script src="../js/report.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="content">
+<h1>LoanProductServiceTests</h1>
+<div class="breadcrumbs">
+<a href="../index.html">all</a> &gt; 
+<a href="../packages/com.moneybridge.repository.html">com.moneybridge.repository</a> &gt; LoanProductServiceTests</div>
+<div id="summary">
+<table>
+<tr>
+<td>
+<div class="summaryGroup">
+<table>
+<tr>
+<td>
+<div class="infoBox" id="tests">
+<div class="counter">1</div>
+<p>tests</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="failures">
+<div class="counter">0</div>
+<p>failures</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="ignored">
+<div class="counter">0</div>
+<p>ignored</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="duration">
+<div class="counter">1.110s</div>
+<p>duration</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+<td>
+<div class="infoBox success" id="successRate">
+<div class="percent">100%</div>
+<p>successful</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="tabs">
+<ul class="tabLinks">
+<li>
+<a href="#tab0">Tests</a>
+</li>
+<li>
+<a href="#tab1">Standard output</a>
+</li>
+</ul>
+<div id="tab0" class="tab">
+<h2>Tests</h2>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Duration</th>
+<th>Result</th>
+</tr>
+</thead>
+<tr>
+<td class="success">testFetchAndSaveLoanProduct()</td>
+<td class="success">1.110s</td>
+<td class="success">passed</td>
+</tr>
+</table>
+</div>
+<div id="tab1" class="tab">
+<h2>Standard output</h2>
+<span class="code">
+<pre>11:12:18.368 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.moneybridge.repository.LoanProductServiceTests]: LoanProductServiceTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+11:12:18.433 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.moneybridge.MoneybridgeApplication for test class com.moneybridge.repository.LoanProductServiceTests
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v3.1.0)
+
+2025-01-17T11:12:18.660+09:00  INFO 9908 --- [    Test worker] c.m.repository.LoanProductServiceTests   : Starting LoanProductServiceTests using Java 17.0.13 with PID 9908 (started by EZEN in C:\Users\EZEN\Desktop\backend)
+2025-01-17T11:12:18.661+09:00  INFO 9908 --- [    Test worker] c.m.repository.LoanProductServiceTests   : No active profile set, falling back to 1 default profile: &quot;default&quot;
+2025-01-17T11:12:19.049+09:00  INFO 9908 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-01-17T11:12:19.092+09:00  INFO 9908 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 36 ms. Found 2 JPA repository interfaces.
+2025-01-17T11:12:19.425+09:00  INFO 9908 --- [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-01-17T11:12:19.465+09:00  INFO 9908 --- [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.2.2.Final
+2025-01-17T11:12:19.467+09:00  INFO 9908 --- [    Test worker] org.hibernate.cfg.Environment            : HHH000406: Using bytecode reflection optimizer
+2025-01-17T11:12:19.577+09:00  INFO 9908 --- [    Test worker] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
+2025-01-17T11:12:19.681+09:00  INFO 9908 --- [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-01-17T11:12:19.694+09:00  INFO 9908 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-01-17T11:12:19.747+09:00  INFO 9908 --- [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.mariadb.jdbc.Connection@14485747
+2025-01-17T11:12:19.748+09:00  INFO 9908 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-01-17T11:12:19.773+09:00  INFO 9908 --- [    Test worker] org.hibernate.orm.dialect                : HHH035001: Using dialect: org.hibernate.dialect.MariaDBDialect, version: 11.6
+2025-01-17T11:12:19.917+09:00  INFO 9908 --- [    Test worker] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
+2025-01-17T11:12:20.330+09:00  INFO 9908 --- [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+Hibernate: 
+    alter table if exists loan_product 
+       modify column crdt_grad_avg  float(53)
+2025-01-17T11:12:20.379+09:00  INFO 9908 --- [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-01-17T11:12:20.619+09:00  INFO 9908 --- [    Test worker] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-01-17T11:12:20.877+09:00  WARN 9908 --- [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-01-17T11:12:20.943+09:00  INFO 9908 --- [    Test worker] c.m.config.CustomSecurityConfig          : ---------------------security config---------------------------
+2025-01-17T11:12:20.978+09:00  INFO 9908 --- [    Test worker] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@14c1cba6, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@6f78c132, org.springframework.security.web.context.SecurityContextHolderFilter@57e83608, org.springframework.security.web.header.HeaderWriterFilter@4b4b02d, org.springframework.web.filter.CorsFilter@2a4bee4e, org.springframework.security.web.authentication.logout.LogoutFilter@4c9235c0, com.moneybridge.security.filter.JWTCheckFilter@7127f04b, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@727b3b0, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@2f726cf4, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@514eefc4, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@6ba19932, org.springframework.security.web.session.SessionManagementFilter@12d24c43, org.springframework.security.web.access.ExceptionTranslationFilter@20673498]
+2025-01-17T11:12:21.361+09:00  INFO 9908 --- [    Test worker] c.m.repository.LoanProductServiceTests   : Started LoanProductServiceTests in 2.832 seconds (process running for 3.485)
+Hibernate: 
+    select
+        l1_0.fin_prdt_cd,
+        l1_0.crdt_grad_avg,
+        l1_0.crdt_lend_rate_type_nm,
+        l1_0.crdt_prdt_type,
+        l1_0.crdt_prdt_type_nm,
+        l1_0.dcls_end_day,
+        l1_0.dcls_month,
+        l1_0.dcls_strt_day,
+        l1_0.fin_co_no,
+        l1_0.fin_co_subm_day,
+        l1_0.fin_prdt_nm,
+        l1_0.kor_co_nm 
+    from
+        loan_product l1_0 
+    where
+        l1_0.fin_prdt_cd=?
+Hibernate: 
+    select
+        l1_0.fin_prdt_cd,
+        l1_0.crdt_grad_avg,
+        l1_0.crdt_lend_rate_type_nm,
+        l1_0.crdt_prdt_type,
+        l1_0.crdt_prdt_type_nm,
+        l1_0.dcls_end_day,
+        l1_0.dcls_month,
+        l1_0.dcls_strt_day,
+        l1_0.fin_co_no,
+        l1_0.fin_co_subm_day,
+        l1_0.fin_prdt_nm,
+        l1_0.kor_co_nm 
+    from
+        loan_product l1_0 
+    where
+        l1_0.fin_prdt_cd=?
+Hibernate: 
+    select
+        l1_0.fin_prdt_cd,
+        l1_0.crdt_grad_avg,
+        l1_0.crdt_lend_rate_type_nm,
+        l1_0.crdt_prdt_type,
+        l1_0.crdt_prdt_type_nm,
+        l1_0.dcls_end_day,
+        l1_0.dcls_month,
+        l1_0.dcls_strt_day,
+        l1_0.fin_co_no,
+        l1_0.fin_co_subm_day,
+        l1_0.fin_prdt_nm,
+        l1_0.kor_co_nm 
+    from
+        loan_product l1_0 
+    where
+        l1_0.fin_prdt_cd=?
+Hibernate: 
+    select
+        l1_0.fin_prdt_cd,
+        l1_0.crdt_grad_avg,
+        l1_0.crdt_lend_rate_type_nm,
+        l1_0.crdt_prdt_type,
+        l1_0.crdt_prdt_type_nm,
+        l1_0.dcls_end_day,
+        l1_0.dcls_month,
+        l1_0.dcls_strt_day,
+        l1_0.fin_co_no,
+        l1_0.fin_co_subm_day,
+        l1_0.fin_prdt_nm,
+        l1_0.kor_co_nm 
+    from
+        loan_product l1_0 
+    where
+        l1_0.fin_prdt_cd=?
+Hibernate: 
+    select
+        l1_0.fin_prdt_cd,
+        l1_0.crdt_grad_avg,
+        l1_0.crdt_lend_rate_type_nm,
+        l1_0.crdt_prdt_type,
+        l1_0.crdt_prdt_type_nm,
+        l1_0.dcls_end_day,
+        l1_0.dcls_month,
+        l1_0.dcls_strt_day,
+        l1_0.fin_co_no,
+        l1_0.fin_co_subm_day,
+        l1_0.fin_prdt_nm,
+        l1_0.kor_co_nm 
+    from
+        loan_product l1_0 
+    where
+        l1_0.fin_prdt_cd=?
+Hibernate: 
+    select
+        l1_0.fin_prdt_cd,
+        l1_0.crdt_grad_avg,
+        l1_0.crdt_lend_rate_type_nm,
+        l1_0.crdt_prdt_type,
+        l1_0.crdt_prdt_type_nm,
+        l1_0.dcls_end_day,
+        l1_0.dcls_month,
+        l1_0.dcls_strt_day,
+        l1_0.fin_co_no,
+        l1_0.fin_co_subm_day,
+        l1_0.fin_prdt_nm,
+        l1_0.kor_co_nm 
+    from
+        loan_product l1_0 
+    where
+        l1_0.fin_prdt_cd=?
+Hibernate: 
+    select
+        l1_0.fin_prdt_cd,
+        l1_0.crdt_grad_avg,
+        l1_0.crdt_lend_rate_type_nm,
+        l1_0.crdt_prdt_type,
+        l1_0.crdt_prdt_type_nm,
+        l1_0.dcls_end_day,
+        l1_0.dcls_month,
+        l1_0.dcls_strt_day,
+        l1_0.fin_co_no,
+        l1_0.fin_co_subm_day,
+        l1_0.fin_prdt_nm,
+        l1_0.kor_co_nm 
+    from
+        loan_product l1_0 
+    where
+        l1_0.fin_prdt_cd=?
+Hibernate: 
+    select
+        l1_0.fin_prdt_cd,
+        l1_0.crdt_grad_avg,
+        l1_0.crdt_lend_rate_type_nm,
+        l1_0.crdt_prdt_type,
+        l1_0.crdt_prdt_type_nm,
+        l1_0.dcls_end_day,
+        l1_0.dcls_month,
+        l1_0.dcls_strt_day,
+        l1_0.fin_co_no,
+        l1_0.fin_co_subm_day,
+        l1_0.fin_prdt_nm,
+        l1_0.kor_co_nm 
+    from
+        loan_product l1_0 
+    where
+        l1_0.fin_prdt_cd=?
+Hibernate: 
+    select
+        l1_0.fin_prdt_cd,
+        l1_0.crdt_grad_avg,
+        l1_0.crdt_lend_rate_type_nm,
+        l1_0.crdt_prdt_type,
+        l1_0.crdt_prdt_type_nm,
+        l1_0.dcls_end_day,
+        l1_0.dcls_month,
+        l1_0.dcls_strt_day,
+        l1_0.fin_co_no,
+        l1_0.fin_co_subm_day,
+        l1_0.fin_prdt_nm,
+        l1_0.kor_co_nm 
+    from
+        loan_product l1_0 
+    where
+        l1_0.fin_prdt_cd=?
+Hibernate: 
+    select
+        l1_0.fin_prdt_cd,
+        l1_0.crdt_grad_avg,
+        l1_0.crdt_lend_rate_type_nm,
+        l1_0.crdt_prdt_type,
+        l1_0.crdt_prdt_type_nm,
+        l1_0.dcls_end_day,
+        l1_0.dcls_month,
+        l1_0.dcls_strt_day,
+        l1_0.fin_co_no,
+        l1_0.fin_co_subm_day,
+        l1_0.fin_prdt_nm,
+        l1_0.kor_co_nm 
+    from
+        loan_product l1_0 
+    where
+        l1_0.fin_prdt_cd=?
+Hibernate: 
+    select
+        l1_0.fin_prdt_cd,
+        l1_0.crdt_grad_avg,
+        l1_0.crdt_lend_rate_type_nm,
+        l1_0.crdt_prdt_type,
+        l1_0.crdt_prdt_type_nm,
+        l1_0.dcls_end_day,
+        l1_0.dcls_month,
+        l1_0.dcls_strt_day,
+        l1_0.fin_co_no,
+        l1_0.fin_co_subm_day,
+        l1_0.fin_prdt_nm,
+        l1_0.kor_co_nm 
+    from
+        loan_product l1_0 
+    where
+        l1_0.fin_prdt_cd=?
+Hibernate: 
+    select
+        l1_0.fin_prdt_cd,
+        l1_0.crdt_grad_avg,
+        l1_0.crdt_lend_rate_type_nm,
+        l1_0.crdt_prdt_type,
+        l1_0.crdt_prdt_type_nm,
+        l1_0.dcls_end_day,
+        l1_0.dcls_month,
+        l1_0.dcls_strt_day,
+        l1_0.fin_co_no,
+        l1_0.fin_co_subm_day,
+        l1_0.fin_prdt_nm,
+        l1_0.kor_co_nm 
+    from
+        loan_product l1_0 
+    where
+        l1_0.fin_prdt_cd=?
+Hibernate: 
+    select
+        l1_0.fin_prdt_cd,
+        l1_0.crdt_grad_avg,
+        l1_0.crdt_lend_rate_type_nm,
+        l1_0.crdt_prdt_type,
+        l1_0.crdt_prdt_type_nm,
+        l1_0.dcls_end_day,
+        l1_0.dcls_month,
+        l1_0.dcls_strt_day,
+        l1_0.fin_co_no,
+        l1_0.fin_co_subm_day,
+        l1_0.fin_prdt_nm,
+        l1_0.kor_co_nm 
+    from
+        loan_product l1_0 
+    where
+        l1_0.fin_prdt_cd=?
+Hibernate: 
+    select
+        l1_0.fin_prdt_cd,
+        l1_0.crdt_grad_avg,
+        l1_0.crdt_lend_rate_type_nm,
+        l1_0.crdt_prdt_type,
+        l1_0.crdt_prdt_type_nm,
+        l1_0.dcls_end_day,
+        l1_0.dcls_month,
+        l1_0.dcls_strt_day,
+        l1_0.fin_co_no,
+        l1_0.fin_co_subm_day,
+        l1_0.fin_prdt_nm,
+        l1_0.kor_co_nm 
+    from
+        loan_product l1_0 
+    where
+        l1_0.fin_prdt_cd=?
+Hibernate: 
+    select
+        l1_0.fin_prdt_cd,
+        l1_0.crdt_grad_avg,
+        l1_0.crdt_lend_rate_type_nm,
+        l1_0.crdt_prdt_type,
+        l1_0.crdt_prdt_type_nm,
+        l1_0.dcls_end_day,
+        l1_0.dcls_month,
+        l1_0.dcls_strt_day,
+        l1_0.fin_co_no,
+        l1_0.fin_co_subm_day,
+        l1_0.fin_prdt_nm,
+        l1_0.kor_co_nm 
+    from
+        loan_product l1_0 
+    where
+        l1_0.fin_prdt_cd=?
+Hibernate: 
+    select
+        l1_0.fin_prdt_cd,
+        l1_0.crdt_grad_avg,
+        l1_0.crdt_lend_rate_type_nm,
+        l1_0.crdt_prdt_type,
+        l1_0.crdt_prdt_type_nm,
+        l1_0.dcls_end_day,
+        l1_0.dcls_month,
+        l1_0.dcls_strt_day,
+        l1_0.fin_co_no,
+        l1_0.fin_co_subm_day,
+        l1_0.fin_prdt_nm,
+        l1_0.kor_co_nm 
+    from
+        loan_product l1_0 
+    where
+        l1_0.fin_prdt_cd=?
+Hibernate: 
+    select
+        l1_0.fin_prdt_cd,
+        l1_0.crdt_grad_avg,
+        l1_0.crdt_lend_rate_type_nm,
+        l1_0.crdt_prdt_type,
+        l1_0.crdt_prdt_type_nm,
+        l1_0.dcls_end_day,
+        l1_0.dcls_month,
+        l1_0.dcls_strt_day,
+        l1_0.fin_co_no,
+        l1_0.fin_co_subm_day,
+        l1_0.fin_prdt_nm,
+        l1_0.kor_co_nm 
+    from
+        loan_product l1_0 
+    where
+        l1_0.fin_prdt_cd=?
+Hibernate: 
+    select
+        l1_0.fin_prdt_cd,
+        l1_0.crdt_grad_avg,
+        l1_0.crdt_lend_rate_type_nm,
+        l1_0.crdt_prdt_type,
+        l1_0.crdt_prdt_type_nm,
+        l1_0.dcls_end_day,
+        l1_0.dcls_month,
+        l1_0.dcls_strt_day,
+        l1_0.fin_co_no,
+        l1_0.fin_co_subm_day,
+        l1_0.fin_prdt_nm,
+        l1_0.kor_co_nm 
+    from
+        loan_product l1_0 
+    where
+        l1_0.fin_prdt_cd=?
+Hibernate: 
+    select
+        l1_0.fin_prdt_cd,
+        l1_0.crdt_grad_avg,
+        l1_0.crdt_lend_rate_type_nm,
+        l1_0.crdt_prdt_type,
+        l1_0.crdt_prdt_type_nm,
+        l1_0.dcls_end_day,
+        l1_0.dcls_month,
+        l1_0.dcls_strt_day,
+        l1_0.fin_co_no,
+        l1_0.fin_co_subm_day,
+        l1_0.fin_prdt_nm,
+        l1_0.kor_co_nm 
+    from
+        loan_product l1_0 
+    where
+        l1_0.fin_prdt_cd=?
+Hibernate: 
+    select
+        l1_0.fin_prdt_cd,
+        l1_0.crdt_grad_avg,
+        l1_0.crdt_lend_rate_type_nm,
+        l1_0.crdt_prdt_type,
+        l1_0.crdt_prdt_type_nm,
+        l1_0.dcls_end_day,
+        l1_0.dcls_month,
+        l1_0.dcls_strt_day,
+        l1_0.fin_co_no,
+        l1_0.fin_co_subm_day,
+        l1_0.fin_prdt_nm,
+        l1_0.kor_co_nm 
+    from
+        loan_product l1_0 
+    where
+        l1_0.fin_prdt_cd=?
+Hibernate: 
+    select
+        l1_0.fin_prdt_cd,
+        l1_0.crdt_grad_avg,
+        l1_0.crdt_lend_rate_type_nm,
+        l1_0.crdt_prdt_type,
+        l1_0.crdt_prdt_type_nm,
+        l1_0.dcls_end_day,
+        l1_0.dcls_month,
+        l1_0.dcls_strt_day,
+        l1_0.fin_co_no,
+        l1_0.fin_co_subm_day,
+        l1_0.fin_prdt_nm,
+        l1_0.kor_co_nm 
+    from
+        loan_product l1_0 
+    where
+        l1_0.fin_prdt_cd=?
+Hibernate: 
+    select
+        l1_0.fin_prdt_cd,
+        l1_0.crdt_grad_avg,
+        l1_0.crdt_lend_rate_type_nm,
+        l1_0.crdt_prdt_type,
+        l1_0.crdt_prdt_type_nm,
+        l1_0.dcls_end_day,
+        l1_0.dcls_month,
+        l1_0.dcls_strt_day,
+        l1_0.fin_co_no,
+        l1_0.fin_co_subm_day,
+        l1_0.fin_prdt_nm,
+        l1_0.kor_co_nm 
+    from
+        loan_product l1_0 
+    where
+        l1_0.fin_prdt_cd=?
+Hibernate: 
+    select
+        l1_0.fin_prdt_cd,
+        l1_0.crdt_grad_avg,
+        l1_0.crdt_lend_rate_type_nm,
+        l1_0.crdt_prdt_type,
+        l1_0.crdt_prdt_type_nm,
+        l1_0.dcls_end_day,
+        l1_0.dcls_month,
+        l1_0.dcls_strt_day,
+        l1_0.fin_co_no,
+        l1_0.fin_co_subm_day,
+        l1_0.fin_prdt_nm,
+        l1_0.kor_co_nm 
+    from
+        loan_product l1_0 
+    where
+        l1_0.fin_prdt_cd=?
+Hibernate: 
+    select
+        l1_0.fin_prdt_cd,
+        l1_0.crdt_grad_avg,
+        l1_0.crdt_lend_rate_type_nm,
+        l1_0.crdt_prdt_type,
+        l1_0.crdt_prdt_type_nm,
+        l1_0.dcls_end_day,
+        l1_0.dcls_month,
+        l1_0.dcls_strt_day,
+        l1_0.fin_co_no,
+        l1_0.fin_co_subm_day,
+        l1_0.fin_prdt_nm,
+        l1_0.kor_co_nm 
+    from
+        loan_product l1_0 
+    where
+        l1_0.fin_prdt_cd=?
+Hibernate: 
+    insert 
+    into
+        loan_product
+        (crdt_grad_avg,crdt_lend_rate_type_nm,crdt_prdt_type,crdt_prdt_type_nm,dcls_end_day,dcls_month,dcls_strt_day,fin_co_no,fin_co_subm_day,fin_prdt_nm,kor_co_nm,fin_prdt_cd) 
+    values
+        (?,?,?,?,?,?,?,?,?,?,?,?)
+Hibernate: 
+    insert 
+    into
+        loan_product
+        (crdt_grad_avg,crdt_lend_rate_type_nm,crdt_prdt_type,crdt_prdt_type_nm,dcls_end_day,dcls_month,dcls_strt_day,fin_co_no,fin_co_subm_day,fin_prdt_nm,kor_co_nm,fin_prdt_cd) 
+    values
+        (?,?,?,?,?,?,?,?,?,?,?,?)
+Hibernate: 
+    insert 
+    into
+        loan_product
+        (crdt_grad_avg,crdt_lend_rate_type_nm,crdt_prdt_type,crdt_prdt_type_nm,dcls_end_day,dcls_month,dcls_strt_day,fin_co_no,fin_co_subm_day,fin_prdt_nm,kor_co_nm,fin_prdt_cd) 
+    values
+        (?,?,?,?,?,?,?,?,?,?,?,?)
+Hibernate: 
+    insert 
+    into
+        loan_product
+        (crdt_grad_avg,crdt_lend_rate_type_nm,crdt_prdt_type,crdt_prdt_type_nm,dcls_end_day,dcls_month,dcls_strt_day,fin_co_no,fin_co_subm_day,fin_prdt_nm,kor_co_nm,fin_prdt_cd) 
+    values
+        (?,?,?,?,?,?,?,?,?,?,?,?)
+Hibernate: 
+    insert 
+    into
+        loan_product
+        (crdt_grad_avg,crdt_lend_rate_type_nm,crdt_prdt_type,crdt_prdt_type_nm,dcls_end_day,dcls_month,dcls_strt_day,fin_co_no,fin_co_subm_day,fin_prdt_nm,kor_co_nm,fin_prdt_cd) 
+    values
+        (?,?,?,?,?,?,?,?,?,?,?,?)
+Hibernate: 
+    insert 
+    into
+        loan_product
+        (crdt_grad_avg,crdt_lend_rate_type_nm,crdt_prdt_type,crdt_prdt_type_nm,dcls_end_day,dcls_month,dcls_strt_day,fin_co_no,fin_co_subm_day,fin_prdt_nm,kor_co_nm,fin_prdt_cd) 
+    values
+        (?,?,?,?,?,?,?,?,?,?,?,?)
+Hibernate: 
+    insert 
+    into
+        loan_product
+        (crdt_grad_avg,crdt_lend_rate_type_nm,crdt_prdt_type,crdt_prdt_type_nm,dcls_end_day,dcls_month,dcls_strt_day,fin_co_no,fin_co_subm_day,fin_prdt_nm,kor_co_nm,fin_prdt_cd) 
+    values
+        (?,?,?,?,?,?,?,?,?,?,?,?)
+Hibernate: 
+    insert 
+    into
+        loan_product
+        (crdt_grad_avg,crdt_lend_rate_type_nm,crdt_prdt_type,crdt_prdt_type_nm,dcls_end_day,dcls_month,dcls_strt_day,fin_co_no,fin_co_subm_day,fin_prdt_nm,kor_co_nm,fin_prdt_cd) 
+    values
+        (?,?,?,?,?,?,?,?,?,?,?,?)
+Hibernate: 
+    insert 
+    into
+        loan_product
+        (crdt_grad_avg,crdt_lend_rate_type_nm,crdt_prdt_type,crdt_prdt_type_nm,dcls_end_day,dcls_month,dcls_strt_day,fin_co_no,fin_co_subm_day,fin_prdt_nm,kor_co_nm,fin_prdt_cd) 
+    values
+        (?,?,?,?,?,?,?,?,?,?,?,?)
+Hibernate: 
+    insert 
+    into
+        loan_product
+        (crdt_grad_avg,crdt_lend_rate_type_nm,crdt_prdt_type,crdt_prdt_type_nm,dcls_end_day,dcls_month,dcls_strt_day,fin_co_no,fin_co_subm_day,fin_prdt_nm,kor_co_nm,fin_prdt_cd) 
+    values
+        (?,?,?,?,?,?,?,?,?,?,?,?)
+Hibernate: 
+    insert 
+    into
+        loan_product
+        (crdt_grad_avg,crdt_lend_rate_type_nm,crdt_prdt_type,crdt_prdt_type_nm,dcls_end_day,dcls_month,dcls_strt_day,fin_co_no,fin_co_subm_day,fin_prdt_nm,kor_co_nm,fin_prdt_cd) 
+    values
+        (?,?,?,?,?,?,?,?,?,?,?,?)
+Hibernate: 
+    insert 
+    into
+        loan_product
+        (crdt_grad_avg,crdt_lend_rate_type_nm,crdt_prdt_type,crdt_prdt_type_nm,dcls_end_day,dcls_month,dcls_strt_day,fin_co_no,fin_co_subm_day,fin_prdt_nm,kor_co_nm,fin_prdt_cd) 
+    values
+        (?,?,?,?,?,?,?,?,?,?,?,?)
+Hibernate: 
+    insert 
+    into
+        loan_product
+        (crdt_grad_avg,crdt_lend_rate_type_nm,crdt_prdt_type,crdt_prdt_type_nm,dcls_end_day,dcls_month,dcls_strt_day,fin_co_no,fin_co_subm_day,fin_prdt_nm,kor_co_nm,fin_prdt_cd) 
+    values
+        (?,?,?,?,?,?,?,?,?,?,?,?)
+Hibernate: 
+    insert 
+    into
+        loan_product
+        (crdt_grad_avg,crdt_lend_rate_type_nm,crdt_prdt_type,crdt_prdt_type_nm,dcls_end_day,dcls_month,dcls_strt_day,fin_co_no,fin_co_subm_day,fin_prdt_nm,kor_co_nm,fin_prdt_cd) 
+    values
+        (?,?,?,?,?,?,?,?,?,?,?,?)
+Hibernate: 
+    insert 
+    into
+        loan_product
+        (crdt_grad_avg,crdt_lend_rate_type_nm,crdt_prdt_type,crdt_prdt_type_nm,dcls_end_day,dcls_month,dcls_strt_day,fin_co_no,fin_co_subm_day,fin_prdt_nm,kor_co_nm,fin_prdt_cd) 
+    values
+        (?,?,?,?,?,?,?,?,?,?,?,?)
+Hibernate: 
+    insert 
+    into
+        loan_product
+        (crdt_grad_avg,crdt_lend_rate_type_nm,crdt_prdt_type,crdt_prdt_type_nm,dcls_end_day,dcls_month,dcls_strt_day,fin_co_no,fin_co_subm_day,fin_prdt_nm,kor_co_nm,fin_prdt_cd) 
+    values
+        (?,?,?,?,?,?,?,?,?,?,?,?)
+Hibernate: 
+    insert 
+    into
+        loan_product
+        (crdt_grad_avg,crdt_lend_rate_type_nm,crdt_prdt_type,crdt_prdt_type_nm,dcls_end_day,dcls_month,dcls_strt_day,fin_co_no,fin_co_subm_day,fin_prdt_nm,kor_co_nm,fin_prdt_cd) 
+    values
+        (?,?,?,?,?,?,?,?,?,?,?,?)
+Hibernate: 
+    insert 
+    into
+        loan_product
+        (crdt_grad_avg,crdt_lend_rate_type_nm,crdt_prdt_type,crdt_prdt_type_nm,dcls_end_day,dcls_month,dcls_strt_day,fin_co_no,fin_co_subm_day,fin_prdt_nm,kor_co_nm,fin_prdt_cd) 
+    values
+        (?,?,?,?,?,?,?,?,?,?,?,?)
+Hibernate: 
+    insert 
+    into
+        loan_product
+        (crdt_grad_avg,crdt_lend_rate_type_nm,crdt_prdt_type,crdt_prdt_type_nm,dcls_end_day,dcls_month,dcls_strt_day,fin_co_no,fin_co_subm_day,fin_prdt_nm,kor_co_nm,fin_prdt_cd) 
+    values
+        (?,?,?,?,?,?,?,?,?,?,?,?)
+Hibernate: 
+    insert 
+    into
+        loan_product
+        (crdt_grad_avg,crdt_lend_rate_type_nm,crdt_prdt_type,crdt_prdt_type_nm,dcls_end_day,dcls_month,dcls_strt_day,fin_co_no,fin_co_subm_day,fin_prdt_nm,kor_co_nm,fin_prdt_cd) 
+    values
+        (?,?,?,?,?,?,?,?,?,?,?,?)
+Hibernate: 
+    insert 
+    into
+        loan_product
+        (crdt_grad_avg,crdt_lend_rate_type_nm,crdt_prdt_type,crdt_prdt_type_nm,dcls_end_day,dcls_month,dcls_strt_day,fin_co_no,fin_co_subm_day,fin_prdt_nm,kor_co_nm,fin_prdt_cd) 
+    values
+        (?,?,?,?,?,?,?,?,?,?,?,?)
+Hibernate: 
+    insert 
+    into
+        loan_product
+        (crdt_grad_avg,crdt_lend_rate_type_nm,crdt_prdt_type,crdt_prdt_type_nm,dcls_end_day,dcls_month,dcls_strt_day,fin_co_no,fin_co_subm_day,fin_prdt_nm,kor_co_nm,fin_prdt_cd) 
+    values
+        (?,?,?,?,?,?,?,?,?,?,?,?)
+Hibernate: 
+    insert 
+    into
+        loan_product
+        (crdt_grad_avg,crdt_lend_rate_type_nm,crdt_prdt_type,crdt_prdt_type_nm,dcls_end_day,dcls_month,dcls_strt_day,fin_co_no,fin_co_subm_day,fin_prdt_nm,kor_co_nm,fin_prdt_cd) 
+    values
+        (?,?,?,?,?,?,?,?,?,?,?,?)
+Hibernate: 
+    insert 
+    into
+        loan_product
+        (crdt_grad_avg,crdt_lend_rate_type_nm,crdt_prdt_type,crdt_prdt_type_nm,dcls_end_day,dcls_month,dcls_strt_day,fin_co_no,fin_co_subm_day,fin_prdt_nm,kor_co_nm,fin_prdt_cd) 
+    values
+        (?,?,?,?,?,?,?,?,?,?,?,?)
+Hibernate: 
+    update
+        loan_product 
+    set
+        crdt_grad_avg=?,
+        crdt_lend_rate_type_nm=?,
+        crdt_prdt_type=?,
+        crdt_prdt_type_nm=?,
+        dcls_end_day=?,
+        dcls_month=?,
+        dcls_strt_day=?,
+        fin_co_no=?,
+        fin_co_subm_day=?,
+        fin_prdt_nm=?,
+        kor_co_nm=? 
+    where
+        fin_prdt_cd=?
+Hibernate: 
+    update
+        loan_product 
+    set
+        crdt_grad_avg=?,
+        crdt_lend_rate_type_nm=?,
+        crdt_prdt_type=?,
+        crdt_prdt_type_nm=?,
+        dcls_end_day=?,
+        dcls_month=?,
+        dcls_strt_day=?,
+        fin_co_no=?,
+        fin_co_subm_day=?,
+        fin_prdt_nm=?,
+        kor_co_nm=? 
+    where
+        fin_prdt_cd=?
+Hibernate: 
+    update
+        loan_product 
+    set
+        crdt_grad_avg=?,
+        crdt_lend_rate_type_nm=?,
+        crdt_prdt_type=?,
+        crdt_prdt_type_nm=?,
+        dcls_end_day=?,
+        dcls_month=?,
+        dcls_strt_day=?,
+        fin_co_no=?,
+        fin_co_subm_day=?,
+        fin_prdt_nm=?,
+        kor_co_nm=? 
+    where
+        fin_prdt_cd=?
+Hibernate: 
+    update
+        loan_product 
+    set
+        crdt_grad_avg=?,
+        crdt_lend_rate_type_nm=?,
+        crdt_prdt_type=?,
+        crdt_prdt_type_nm=?,
+        dcls_end_day=?,
+        dcls_month=?,
+        dcls_strt_day=?,
+        fin_co_no=?,
+        fin_co_subm_day=?,
+        fin_prdt_nm=?,
+        kor_co_nm=? 
+    where
+        fin_prdt_cd=?
+Hibernate: 
+    update
+        loan_product 
+    set
+        crdt_grad_avg=?,
+        crdt_lend_rate_type_nm=?,
+        crdt_prdt_type=?,
+        crdt_prdt_type_nm=?,
+        dcls_end_day=?,
+        dcls_month=?,
+        dcls_strt_day=?,
+        fin_co_no=?,
+        fin_co_subm_day=?,
+        fin_prdt_nm=?,
+        kor_co_nm=? 
+    where
+        fin_prdt_cd=?
+Hibernate: 
+    update
+        loan_product 
+    set
+        crdt_grad_avg=?,
+        crdt_lend_rate_type_nm=?,
+        crdt_prdt_type=?,
+        crdt_prdt_type_nm=?,
+        dcls_end_day=?,
+        dcls_month=?,
+        dcls_strt_day=?,
+        fin_co_no=?,
+        fin_co_subm_day=?,
+        fin_prdt_nm=?,
+        kor_co_nm=? 
+    where
+        fin_prdt_cd=?
+Hibernate: 
+    update
+        loan_product 
+    set
+        crdt_grad_avg=?,
+        crdt_lend_rate_type_nm=?,
+        crdt_prdt_type=?,
+        crdt_prdt_type_nm=?,
+        dcls_end_day=?,
+        dcls_month=?,
+        dcls_strt_day=?,
+        fin_co_no=?,
+        fin_co_subm_day=?,
+        fin_prdt_nm=?,
+        kor_co_nm=? 
+    where
+        fin_prdt_cd=?
+</pre>
+</span>
+</div>
+</div>
+<div id="footer">
+<p>
+<div>
+<label class="hidden" id="label-for-line-wrapping-toggle" for="line-wrapping-toggle">Wrap lines
+<input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
+</label>
+</div>Generated by 
+<a href="http://www.gradle.org">Gradle 8.11.1</a> at 2025. 1. 17. 오전 11:12:22</p>
+</div>
+</div>
+</body>
+</html>
