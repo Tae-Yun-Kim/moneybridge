@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import useCustomLogin from "../../hooks/useCustomLogin";
 
 const LogoutComponent = () => {
@@ -25,6 +26,14 @@ const LogoutComponent = () => {
             >
               LOGOUT
             </button>
+          </div>
+          <div className="relative mb-4 flex justify-center font-bold">
+            <Link
+              to="/member/update"
+              className="rounded p-4 w-36 bg-green-500 text-xl text-white text-center"
+            >
+              회원 수정
+            </Link>
           </div>
         </div>
       </div>
