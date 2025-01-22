@@ -1,17 +1,28 @@
 package com.moneybridge.repository;
 
+<<<<<<< HEAD
+import com.moneybridge.domain.member.MemberGrade;
+import com.moneybridge.repository.member.MemberRepository;
+=======
 import com.moneybridge.domain.account.Account;
 import com.moneybridge.domain.member.Member;
 import com.moneybridge.domain.member.MemberGrade;
 import com.moneybridge.domain.member.MemberRole;
 import com.moneybridge.repository.member.MemberRepository;
 import com.moneybridge.repository.account.AccountRepository;
+>>>>>>> 1ad78b99e14620fe3d0b28be2235ba78585b6f1e
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+<<<<<<< HEAD
+import com.moneybridge.domain.member.Member;
+import com.moneybridge.domain.member.MemberRole;
+
+=======
+>>>>>>> 1ad78b99e14620fe3d0b28be2235ba78585b6f1e
 @SpringBootTest
 @Log4j2
 public class MemberRepositoryTests {
