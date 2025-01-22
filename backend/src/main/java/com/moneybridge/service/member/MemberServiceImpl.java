@@ -1,9 +1,18 @@
 package com.moneybridge.service.member;
 
+<<<<<<< HEAD
 import com.moneybridge.domain.member.Member;
 import com.moneybridge.domain.member.MemberGrade;
 import com.moneybridge.domain.member.MemberRole;
 import com.moneybridge.dto.MemberDTO;
+=======
+import com.moneybridge.domain.account.Account;
+import com.moneybridge.domain.member.Member;
+import com.moneybridge.domain.member.MemberGrade;
+import com.moneybridge.domain.member.MemberRole;
+import com.moneybridge.dto.member.MemberDTO;
+import com.moneybridge.repository.account.AccountRepository;
+>>>>>>> 1ad78b99e14620fe3d0b28be2235ba78585b6f1e
 import com.moneybridge.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -30,6 +39,10 @@ public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder; // PasswordEncoder 주입
+<<<<<<< HEAD
+=======
+    private final AccountRepository accountRepository;
+>>>>>>> 1ad78b99e14620fe3d0b28be2235ba78585b6f1e
 
 
     @Override
@@ -38,6 +51,18 @@ public class MemberServiceImpl implements MemberService {
         // 비밀번호 암호화
         String encodedPassword = passwordEncoder.encode(memberDTO.getPassword());
 
+<<<<<<< HEAD
+=======
+        // Account 테이블에서 계좌 조회
+        Account account = accountRepository.findByAccountNumber(memberDTO.getAccountNumber())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 계좌입니다: " + memberDTO.getAccountNumber()));
+
+        // 계좌가 이미 다른 회원과 연결되어 있는지 확인
+        if (account.isLinkedToMember()) {
+            throw new IllegalArgumentException("이미 다른 회원과 연결된 계좌입니다: " + memberDTO.getAccountNumber());
+        }
+
+>>>>>>> 1ad78b99e14620fe3d0b28be2235ba78585b6f1e
         Member member = Member.builder()
                 .id(memberDTO.getId())
                 .password(encodedPassword)
@@ -45,7 +70,12 @@ public class MemberServiceImpl implements MemberService {
                 .residentNumber(memberDTO.getResidentNumber())
                 .phoneNumber(memberDTO.getPhoneNumber())
                 .email(memberDTO.getEmail())
+<<<<<<< HEAD
                 .accountNumber(memberDTO.getAccountNumber())
+=======
+                .creditScore(memberDTO.getCreditScore())
+//                .accountNumber(memberDTO.getAccountNumber())
+>>>>>>> 1ad78b99e14620fe3d0b28be2235ba78585b6f1e
                 .nickname(memberDTO.getNickname())
                 .social(memberDTO.isSocial())
                 .address(memberDTO.getAddress())
@@ -56,14 +86,27 @@ public class MemberServiceImpl implements MemberService {
         member.addRole(MemberRole.USER); // 기본 권한 추가
         member.addGrade(MemberGrade.BRONZE); // 기본 등급 추가
 
+<<<<<<< HEAD
+=======
+        // 계좌와 회원 연결
+        member.setAccount(account);
+
+>>>>>>> 1ad78b99e14620fe3d0b28be2235ba78585b6f1e
         return memberRepository.save(member);
     }
 
     @Override
     public Member update(MemberDTO memberDTO) {
+<<<<<<< HEAD
         Member member = memberRepository.findById(memberDTO.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Member not found: " + memberDTO.getId()));
 
+=======
+        Member member = memberRepository.findMemberWithAccount(memberDTO.getId());
+        if (member == null) {
+            throw new IllegalArgumentException("Member not found: " + memberDTO.getId());
+        }
+>>>>>>> 1ad78b99e14620fe3d0b28be2235ba78585b6f1e
         // 소셜 로그인 사용자의 이메일 수정 금지
         if (member.isSocial() && !member.getEmail().equals(memberDTO.getEmail())) {
             throw new IllegalArgumentException("소셜 로그인 사용자는 이메일을 수정할 수 없습니다.");
@@ -83,10 +126,24 @@ public class MemberServiceImpl implements MemberService {
                 memberRepository.existsByEmail(memberDTO.getEmail())) {
             throw new IllegalArgumentException("Duplicate email: " + memberDTO.getEmail());
         }
+<<<<<<< HEAD
         //계좌번호
         if (!member.getAccountNumber().equals(memberDTO.getAccountNumber()) &&
                 memberRepository.existsByAccountNumber(memberDTO.getAccountNumber())) {
             throw new IllegalArgumentException("Duplicate account number: " + memberDTO.getAccountNumber());
+=======
+        // 계좌번호 변경 및 검증
+        if (memberDTO.getAccountNumber() != null && !memberDTO.getAccountNumber().isEmpty()) {
+            Account account = accountRepository.findByAccountNumber(memberDTO.getAccountNumber())
+                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 계좌입니다: " + memberDTO.getAccountNumber()));
+
+            if (account.isLinkedToMember() && !account.getMember().getId().equals(member.getId())) {
+                throw new IllegalArgumentException("이미 다른 회원과 연결된 계좌입니다: " + memberDTO.getAccountNumber());
+            }
+
+            // 계좌를 회원과 연결
+            member.setAccount(account);
+>>>>>>> 1ad78b99e14620fe3d0b28be2235ba78585b6f1e
         }
         member.changeMemberinfo(memberDTO, passwordEncoder);
         return memberRepository.save(member);
@@ -101,6 +158,7 @@ public class MemberServiceImpl implements MemberService {
             throw new IllegalArgumentException("일반 회원은 소셜 수정 API를 사용할 수 없습니다.");
         }
 
+<<<<<<< HEAD
         if (memberDTO.getResidentNumber() != null && (member.getResidentNumber() == null || member.getResidentNumber().isEmpty())) {
             member.setResidentNumber(memberDTO.getResidentNumber());
         }
@@ -109,6 +167,30 @@ public class MemberServiceImpl implements MemberService {
         }
         if (memberDTO.getAccountNumber() != null && (member.getAccountNumber() == null || member.getAccountNumber().isEmpty())) {
             member.setAccountNumber(memberDTO.getAccountNumber());
+=======
+        // 주민번호 업데이트
+        if (memberDTO.getResidentNumber() != null && !memberDTO.getResidentNumber().isEmpty()) {
+            if (memberRepository.existsByResidentNumber(memberDTO.getResidentNumber())) {
+                throw new IllegalArgumentException("중복된 주민번호입니다: " + memberDTO.getResidentNumber());
+            }
+            member.setResidentNumber(memberDTO.getResidentNumber());
+        }
+
+        if (memberDTO.getPhoneNumber() != null && (member.getPhoneNumber() == null || member.getPhoneNumber().isEmpty())) {
+            member.setPhoneNumber(memberDTO.getPhoneNumber());
+        }
+
+        if (memberDTO.getAccountNumber() != null && !memberDTO.getAccountNumber().isEmpty()) {
+            Account account = accountRepository.findByAccountNumber(memberDTO.getAccountNumber())
+                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 계좌입니다: " + memberDTO.getAccountNumber()));
+
+            if (account.isLinkedToMember() && !account.getMember().getId().equals(member.getId())) {
+                throw new IllegalArgumentException("이미 다른 회원과 연결된 계좌입니다: " + memberDTO.getAccountNumber());
+            }
+
+            // 계좌를 회원과 연결
+            member.setAccount(account);
+>>>>>>> 1ad78b99e14620fe3d0b28be2235ba78585b6f1e
         }
         if (memberDTO.getAddress() != null && (member.getAddress() == null || member.getAddress().isEmpty())) {
             member.setAddress(memberDTO.getAddress());
@@ -147,7 +229,12 @@ public class MemberServiceImpl implements MemberService {
             if (memberRepository.existsByEmail(memberDTO.getEmail())) {
                 throw new IllegalArgumentException("Duplicate email: " + memberDTO.getEmail());
             }
+<<<<<<< HEAD
             if (memberRepository.existsByAccountNumber(memberDTO.getAccountNumber())) {
+=======
+            if (memberDTO.getAccountNumber() != null &&
+                    memberRepository.existsByAccount_AccountNumberAndIdNot(memberDTO.getAccountNumber(), null)) {
+>>>>>>> 1ad78b99e14620fe3d0b28be2235ba78585b6f1e
                 throw new IllegalArgumentException("Duplicate account number: " + memberDTO.getAccountNumber());
             }
         } else {
@@ -164,7 +251,12 @@ public class MemberServiceImpl implements MemberService {
             if (memberRepository.existsByEmailAndIdNot(memberDTO.getEmail(), memberId)) {
                 throw new IllegalArgumentException("Duplicate email: " + memberDTO.getEmail());
             }
+<<<<<<< HEAD
             if (memberRepository.existsByAccountNumberAndIdNot(memberDTO.getAccountNumber(), memberId)) {
+=======
+            if (memberDTO.getAccountNumber() != null &&
+                    memberRepository.existsByAccount_AccountNumberAndIdNot(memberDTO.getAccountNumber(), memberId)) {
+>>>>>>> 1ad78b99e14620fe3d0b28be2235ba78585b6f1e
                 throw new IllegalArgumentException("Duplicate account number: " + memberDTO.getAccountNumber());
             }
         }
@@ -185,7 +277,13 @@ public class MemberServiceImpl implements MemberService {
             case "email":
                 return memberRepository.existsByEmailAndSocial(value, social);
             case "accountNumber":
+<<<<<<< HEAD
                 return memberRepository.existsByAccountNumber(value);
+=======
+                return accountRepository.findByAccountNumber(value)
+                        .map(Account::isLinkedToMember)
+                        .orElse(false); // 계좌가 존재하고 연결된 경우 true
+>>>>>>> 1ad78b99e14620fe3d0b28be2235ba78585b6f1e
             default:
                 throw new IllegalArgumentException("Invalid field: " + field);
         }
@@ -219,7 +317,10 @@ public class MemberServiceImpl implements MemberService {
                 .name("소셜회원")
                 .residentNumber("") // 소셜 회원의 경우 주민등록번호 미입력 처리
                 .phoneNumber("") // 소셜 회원의 경우 전화번호 미입력 처리
+<<<<<<< HEAD
                 .accountNumber("") // 소셜 회원의 경우 계좌번호 미입력 처리
+=======
+>>>>>>> 1ad78b99e14620fe3d0b28be2235ba78585b6f1e
                 .nickname("소셜회원") // 기본 닉네임 설정
                 .social(true) // 소셜 회원임을 표시
                 .address("") // 기본 주소값 비우기
@@ -227,6 +328,11 @@ public class MemberServiceImpl implements MemberService {
                 .accountLocked(false) // 기본적으로 계정 잠금 해제 상태
                 .build();
 
+<<<<<<< HEAD
+=======
+        socialMember.setAccount(null);
+
+>>>>>>> 1ad78b99e14620fe3d0b28be2235ba78585b6f1e
         // 소셜 회원 등급 및 권한 추가
         socialMember.addRole(MemberRole.USER); // 기본 권한
         socialMember.addGrade(MemberGrade.BRONZE); // 기본 등급
@@ -287,7 +393,11 @@ public class MemberServiceImpl implements MemberService {
                 member.getResidentNumber(),
                 member.getPhoneNumber(),
                 member.getEmail(),
+<<<<<<< HEAD
                 member.getAccountNumber(),
+=======
+                member.getAccount() != null ? member.getAccount().getAccountNumber() : null ,
+>>>>>>> 1ad78b99e14620fe3d0b28be2235ba78585b6f1e
                 member.getNickname(),
                 member.isSocial(),
                 member.getAddress(),

@@ -1,6 +1,11 @@
 package com.moneybridge.domain.member;
 
+<<<<<<< HEAD
 import com.moneybridge.dto.MemberDTO;
+=======
+import com.moneybridge.domain.account.Account;
+import com.moneybridge.dto.member.MemberDTO;
+>>>>>>> 1ad78b99e14620fe3d0b28be2235ba78585b6f1e
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,11 +38,21 @@ public class Member {
     @Column(unique = true, nullable = false)
     private String email;
 
+<<<<<<< HEAD
     @Column(unique = true, nullable = false)
     private String accountNumber;
 
     private String nickname;
 
+=======
+//    @Column(unique = true, nullable = false)
+//    private String accountNumber;
+
+    private String nickname;
+
+    private int creditScore;
+
+>>>>>>> 1ad78b99e14620fe3d0b28be2235ba78585b6f1e
     private boolean social;
 
     private String address;
@@ -46,6 +61,13 @@ public class Member {
 
     private boolean accountLocked;
 
+<<<<<<< HEAD
+=======
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JoinColumn(name = "account_number", referencedColumnName = "accountNumber", unique = true)
+    private Account account;
+
+>>>>>>> 1ad78b99e14620fe3d0b28be2235ba78585b6f1e
     @ElementCollection(fetch = FetchType.LAZY)
     @Builder.Default
     private List<MemberRole> memberRoleList = new ArrayList<>();
@@ -78,6 +100,18 @@ public class Member {
         this.social = social;
     }
 
+<<<<<<< HEAD
+=======
+    public void setAccount(Account account) {
+        if (account != null) {
+            this.account = account;
+            account.setMember(this);
+        } else {
+            this.account = null;
+        }
+    }
+
+>>>>>>> 1ad78b99e14620fe3d0b28be2235ba78585b6f1e
     public void changeMemberinfo(MemberDTO memberDTO, PasswordEncoder passwordEncoder){
         // 비밀번호 암호화 후 변경
         if (memberDTO.getPassword() != null && !memberDTO.getPassword().isEmpty()) {

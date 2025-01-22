@@ -24,13 +24,26 @@ public interface MemberRepository extends JpaRepository<Member, String> {
     boolean existsByResidentNumber(String residentNumber); // 주민번호 중복 확인
     boolean existsByPhoneNumber(String phoneNumber); // 전화번호 중복 확인
     boolean existsByEmail(String email); // 이메일 중복 확인
+<<<<<<< HEAD
     boolean existsByAccountNumber(String accountNumber); // 계좌번호 중복 확인
+=======
+    boolean existsByAccount_AccountNumber(String accountNumber); // 계좌번호 중복 확인
+>>>>>>> 1ad78b99e14620fe3d0b28be2235ba78585b6f1e
 
     boolean existsByIdAndIdNot(String id, String memberId);
     boolean existsByResidentNumberAndIdNot(String residentNumber, String memberId);
     boolean existsByEmailAndIdNot(String email, String memberId);
     boolean existsByPhoneNumberAndIdNot(String phoneNumber, String memberId);
+<<<<<<< HEAD
     boolean existsByAccountNumberAndIdNot(String accountNumber, String memberId);
     boolean existsByEmailAndSocial(String email, boolean social);
 
+=======
+    boolean existsByAccount_AccountNumberAndIdNot(String accountNumber, String memberId);
+    boolean existsByEmailAndSocial(String email, boolean social);
+
+
+    @Query("SELECT m FROM Member m JOIN FETCH m.account WHERE m.id = :id")
+    Member findMemberWithAccount(@Param("id") String id);
+>>>>>>> 1ad78b99e14620fe3d0b28be2235ba78585b6f1e
 }

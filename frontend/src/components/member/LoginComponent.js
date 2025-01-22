@@ -1,6 +1,7 @@
 import { useState } from "react";
 import useCustomLogin from "../../hooks/useCustomLogin";
 import KakaoLoginComponent from "./KakaoLoginComponent";
+import { Link } from "react-router-dom";
 
 const initState = {
   id: "",
@@ -53,7 +54,7 @@ const LoginComponent = () => {
       </div>
       <div className="flex justify-center">
         <div className="relative mb-4 flex w-full flex-wrap items-stretch">
-          <div className="w-full p-3 text-left font-bold">Password</div>
+          <div className="w-full p-3 text-left font-bold">비밀번호</div>
           <input
             className="w-full p-3 rounded-r border border-solid border-neutral-500 shadow-md"
             name="password"
@@ -70,8 +71,16 @@ const LoginComponent = () => {
               className="rounded p-4 w-36 bg-blue-500 text-xl  text-white"
               onClick={handleClickLogin}
             >
-              LOGIN
+              로그인
             </button>
+          </div>
+          <div className="relative mb-4 flex justify-center font-bold">
+            <Link
+              to="/member/signup"
+              className="rounded p-4 w-36 bg-green-500 text-xl text-white text-center"
+            >
+              회원 가입
+            </Link>
           </div>
         </div>
       </div>
