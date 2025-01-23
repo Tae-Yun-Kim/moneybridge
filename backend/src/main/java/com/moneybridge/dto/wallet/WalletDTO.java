@@ -1,6 +1,7 @@
 package com.moneybridge.dto.wallet;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.moneybridge.domain.account.Account;
 import lombok.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

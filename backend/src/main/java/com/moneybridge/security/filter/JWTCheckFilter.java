@@ -58,6 +58,7 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             log.info("JWT claims: " + claims);
 
             String id = (String) claims.get("id");
+            String username = (String) claims.get("username");
             String email = (String) claims.get("email");
             String residentNumber = (String) claims.get("residentNumber");
             String name = (String) claims.get("name");

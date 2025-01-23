@@ -2,6 +2,7 @@ package com.moneybridge.domain.account;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.moneybridge.domain.member.Member;
+import com.moneybridge.domain.wallet.Wallet;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -31,7 +32,7 @@ public class Account {
     private String accountHolderName;
 
     @Column(nullable = false)
-    private Double balance;
+    private Long balance;
 
 //    @OneToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "member_id", nullable = false)
@@ -40,20 +41,37 @@ public class Account {
     @JsonIgnore
     private Member member;
 
+    @OneToOne(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true) // 선택적 관계로 설정)
+    private Wallet wallet;
+
     // 계좌 잔액 변경 메서드
-    public void deposit(Double amount) {
+    public void deposit(Long amount) {
         if (amount <= 0) {
             throw new IllegalArgumentException("입금 금액은 0보다 커야 합니다.");
         }
         this.balance += amount;
     }
 
-    public void withdraw(Double amount) {
+    public void withdraw(Long amount) {
         if (amount <= 0) {
             throw new IllegalArgumentException("출금 금액은 0보다 커야 합니다.");
         }
         if (this.balance < amount) {
             throw new IllegalArgumentException("잔액이 부족합니다.");
+        }
+        this.balance -= amount;
+    }
+
+    public void updateBalance(Long amount) {
+        if (this.balance + amount < 0) {
+            throw new IllegalArgumentException("Insufficient account balance");
+        }
+        this.balance += amount;
+    }
+
+    public void decreaseBalance(Long amount) {
+        if (this.balance - amount < 0) {
+            throw new IllegalArgumentException("Insufficient account balance");
         }
         this.balance -= amount;
     }
