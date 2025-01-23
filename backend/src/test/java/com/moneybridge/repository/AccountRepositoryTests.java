@@ -27,7 +27,7 @@ public class AccountRepositoryTests {
                                     .accountPassword("1111")
                                             .bankName("bank"+i)
                                                     .accountHolderName("tester"+i)
-                                                            .balance(10000000000d)
+                                                            .balance(10000000000L)
                                                                     .build();
 
             accountRepository.save(account);

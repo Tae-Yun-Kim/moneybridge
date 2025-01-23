@@ -12,4 +12,8 @@ public interface WalletService {
     void incrementTransactionCount(String walletId);
     void lockWallet(String walletId);
     void unlockWallet(String walletId);
+    void updatePinNumber(String walletId, String oldPin, String newPin);
+    void transferFromWalletToAccount(String memberId, Long amount);
+    void transferFromAccountToWallet(String memberId, Long amount);
+    void transferBetweenWallets(String fromWalletId, String toWalletId, Long amount);
 }

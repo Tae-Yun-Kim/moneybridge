@@ -3,6 +3,7 @@ import { createBrowserRouter } from "react-router-dom";
 // import todoRouter from "./todoRouter";
 // import productsRouter from "./productsRouter";
 import memberRouter from "./memberRouter";
+import walletRouter from "./walletRouter";
 
 const Loading = <div>Loading....</div>;
 const Main = lazy(() => import("../pages/MainPage"));
@@ -49,6 +50,10 @@ const root = createBrowserRouter([
   {
     path: "member",
     children: memberRouter(),
+  },
+  {
+    path: "wallet",
+    children: walletRouter(),
   },
 ]);
 
