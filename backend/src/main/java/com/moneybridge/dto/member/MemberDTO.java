@@ -22,7 +22,6 @@ public class MemberDTO extends User {
     private String phoneNumber;
     private String accountNumber;
     private String nickname;
-    private int creditScore;
     private boolean social;
     private String address;
     private boolean isLender;
