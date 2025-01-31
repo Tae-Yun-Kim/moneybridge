@@ -8,4 +8,5 @@ public interface WalletTransactionService {
     WalletTransactionDTO getWalletTransactionById(String transactionId);
     List<WalletTransactionDTO> getWalletTransactionsByFromWalletId(String fromWalletId);
     List<WalletTransactionDTO> getWalletTransactionsByToWalletId(String toWalletId);
+    List<WalletTransactionDTO> getAllTransactionsByWalletId(String walletId);
 }

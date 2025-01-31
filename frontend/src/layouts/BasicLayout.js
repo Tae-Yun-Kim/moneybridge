@@ -1,20 +1,31 @@
 import BasicMenu from "../components/menus/BasicMenu";
-// import CartComponent from "../components/menus/CartComponent";
+import Rightsidemenu from "../components/menus/Rightsidemenu";
+import Leftsidemenu from "../components/menus/Leftsidemenu";
+import Footerbar from "../components/menus/Footerbar";
+import "./BasicLayout.css"; // CSS 파일 import
 
+// 메인화면 출력
 const BasicLayout = ({ children }) => {
   return (
     <>
-      <BasicMenu></BasicMenu>
+      <BasicMenu />
+      <div>
+        <div className="layout-container">
+          {/* Left Sidebar */}
+          <div className="sidebar left-sidebar">
+            <Leftsidemenu />
+          </div>
 
-      <div className="bg-white my-5 w-full flex flex-col space-y-1 md:flex-row md:space-x-1 md:space-y-0">
-        <main className="bg-sky-300 md:w-4/5 lg:w-3/4 px-5 py-5">
-          {children}
-        </main>
+          {/* Main Content */}
+          <main className="main-content">{children}</main>
 
-        {/* <aside className="bg-gray-300 md:w-1/3 lg:w-1/4 px-5 flex py-5"> */}
-        {/* 상단 여백 py-40 wprj flex 제거 */}
-        {/* <CartComponent /> */}
-        {/* </aside> */}
+          {/* Right Sidebar */}
+          <div className="sidebar right-sidebar">
+            <Rightsidemenu />
+          </div>
+        </div>
+
+        <Footerbar />
       </div>
     </>
   );

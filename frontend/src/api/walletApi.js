@@ -154,3 +154,70 @@ export const transferBetweenWallets = async (
     throw error;
   }
 };
+
+// 거래 생성
+export const createWalletTransaction = async (transactionData) => {
+  try {
+    const response = await jwtAxios.post(
+      `${API_SERVER_HOST}/api/wallet-transactions`,
+      transactionData
+    );
+    console.log("거래 생성 성공:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("거래 생성 실패:", error.message);
+    throw error;
+  }
+};
+
+// 특정 거래 ID로 거래 조회
+export const getWalletTransactionById = async (transactionId) => {
+  try {
+    const response = await jwtAxios.get(
+      `${API_SERVER_HOST}/api/wallet-transactions/${transactionId}`
+    );
+    console.log("거래 조회 성공:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("거래 조회 실패:", error.message);
+    throw error;
+  }
+};
+
+// 특정 지갑 ID로 송금 내역 조회
+export const getTransactionsFromWallet = async (walletId) => {
+  try {
+    const response = await jwtAxios.get(
+      `${API_SERVER_HOST}/api/wallet-transactions/from/${walletId}`
+    );
+    console.log("송금 내역 조회 성공:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("송금 내역 조회 실패:", error.message);
+    throw error;
+  }
+};
+
+// 특정 지갑 ID로 입금 내역 조회
+export const getTransactionsToWallet = async (walletId) => {
+  try {
+    const response = await jwtAxios.get(
+      `${API_SERVER_HOST}/api/wallet-transactions/to/${walletId}`
+    );
+    console.log("입금 내역 조회 성공:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("입금 내역 조회 실패:", error.message);
+    throw error;
+  }
+};
+
+export const getAllTransactionsByWallet = async (walletId) => {
+  try {
+    const response = await jwtAxios.get(`/api/wallet-transactions/${walletId}/all`);
+    return response.data;
+  } catch (error) {
+    console.error("거래 기록 조회 실패:", error.message);
+    throw error;
+  }
+};

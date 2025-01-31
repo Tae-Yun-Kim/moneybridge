@@ -1,0 +1,29 @@
+/* BasicLayout.css */
+
+/* 레이아웃 전체 스타일 */
+.layout-container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  background-color: white;
+  margin: 0.25rem 0; /* Tailwind의 `my-1` 대체 */
+}
+
+/* 사이드바 스타일 */
+.sidebar {
+  height: auto;
+}
+
+.left-sidebar {
+  width: 15%; /* Tailwind의 `w-1/6` 대체 */
+}
+
+.right-sidebar {
+  width: 15%; /* Tailwind의 `w-1/6` 대체 */
+}
+
+/* 메인 콘텐츠 스타일 */
+.main-content {
+  width: 70%; /* Tailwind의 `w-4/6` 대체 */
+  height: auto;
+}
