@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { createSearchParams, Navigate, useNavigate } from "react-router-dom";
 import { loginPostAsync, logout } from "../slices/loginSlice";
-import { kakaoDisconnect, kakaoLogout, kakaoSdkLogout } from "../api/kakaoApi";
+import { kakaoLogout } from "../api/kakaoApi";
 
 const useCustomLogin = () => {
   const navigate = useNavigate();
@@ -25,6 +25,7 @@ const useCustomLogin = () => {
       // 로컬 스토리지의 토큰 삭제
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
+      localStorage.removeItem("member");
 
       // Redux 상태 초기화
       dispatch(logout());

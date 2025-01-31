@@ -32,6 +32,13 @@ public class APILoginSuccessHandler implements AuthenticationSuccessHandler{
         // 추가적인 정보: 사용자의 역할, 권한,  사용자 정의 속성 등
         Map<String, Object> claims  = memberDTO.getClaims();
 
+        // 사용자의 권한 정보 추가
+        String role = authentication.getAuthorities().stream()
+                .findFirst()
+                .map(grantedAuthority -> grantedAuthority.getAuthority())
+                .orElse("ROLE_USER");
+        claims.put("role", role);
+
         // jwt토큰 생성과 메서드 처리
         String accessToken = JWTUtil.generateToken(claims, 60);
         String refreshToken = JWTUtil.generateToken(claims,60*24);

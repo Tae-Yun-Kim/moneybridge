@@ -16,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString(exclude = "memberRoleList")
+@ToString(exclude = {"wallet", "account", "memberRoleList", "memberGradeList", "lenderStatus"})
 public class Member {
 
     @Id
@@ -46,7 +46,16 @@ public class Member {
 
     private String address;
 
+    @Column(nullable = false)
+    private int transactionCount;
+
     private boolean isLender;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private List<LenderStatus> lenderStatus = new ArrayList<>(); // 신청 상태
 
     private boolean accountLocked;
 
@@ -88,6 +97,24 @@ public class Member {
     public void setSocial(boolean social) {
         this.social = social;
     }
+
+    public void incrementTransactionCount() {
+        this.transactionCount++;
+        updateMemberGrade(); // 거래 횟수 증가 후 등급 업데이트
+    }
+
+    private void updateMemberGrade() {
+        clearGrades(); // 기존 등급 초기화
+        if (transactionCount >= 20) {
+            addGrade(MemberGrade.GOLD);
+        } else if (transactionCount >= 5) {
+            addGrade(MemberGrade.SILVER);
+        } else {
+            addGrade(MemberGrade.BRONZE);
+        }
+    }
+
+
 
     public void setAccount(Account account) {
         if (account != null) {

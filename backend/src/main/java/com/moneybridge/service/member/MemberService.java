@@ -4,6 +4,8 @@ import com.moneybridge.domain.member.Member;
 import com.moneybridge.dto.member.MemberDTO;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Transactional
 public interface MemberService {
 
@@ -20,4 +22,11 @@ public interface MemberService {
     boolean checkFieldDuplicate(String field, String value, boolean social);
 
     MemberDTO getKakaoMember(String accessToken);
+
+    String requestLenderToggle(String userId);
+
+    String approveLenderRequest(String id, boolean approve);
+    String surrenderLender(String memberId);
+
+    List<Member> getPendingLenderRequests();
 }

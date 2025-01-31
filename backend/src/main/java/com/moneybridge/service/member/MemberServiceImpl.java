@@ -1,6 +1,7 @@
 package com.moneybridge.service.member;
 
 import com.moneybridge.domain.account.Account;
+import com.moneybridge.domain.member.LenderStatus;
 import com.moneybridge.domain.member.Member;
 import com.moneybridge.domain.member.MemberGrade;
 import com.moneybridge.domain.member.MemberRole;
@@ -23,6 +24,7 @@ import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -182,6 +184,177 @@ public class MemberServiceImpl implements MemberService {
                 .orElseThrow(() -> new IllegalArgumentException("Member not found: " + id));
 
         memberRepository.delete(member);
+    }
+
+    // 사용자가 신청 또는 포기를 요청
+    @Transactional
+    @Override
+//    public String requestLenderToggle(String userId) {
+//        Member member = memberRepository.findById(userId)
+//                .orElseThrow(() -> new RuntimeException("회원이 존재하지 않습니다."));
+//
+//        log.info("변경 전 LenderStatus: {}", member.getLenderStatus());
+//
+//        if (member.getLenderStatus().contains(LenderStatus.PENDING)) {
+//            return "이미 신청 대기 중입니다. 관리자의 승인을 기다려주세요.";
+//        }
+//
+//        if (member.isLender()) {
+//            member.getLenderStatus().clear();
+//            member.getLenderStatus().add(LenderStatus.PENDING); // 채권자 포기 신청
+//            member.setLender(false); // isLender 필드 false로 설정
+//            memberRepository.save(member); // 명시적으로 저장
+//            log.info("채권자 포기 신청: {}, isLender: {}", member.getLenderStatus(), member.isLender());
+//            return "채권자 포기 신청이 접수되었습니다. 관리자의 승인을 기다려주세요.";
+//        } else {
+//            member.getLenderStatus().clear(); // 채권자 신청
+//            member.getLenderStatus().add(LenderStatus.PENDING);
+//            member.setLender(false); // 신청 상태에서 false 유지
+//            memberRepository.save(member); // 명시적으로 저장
+//            log.info("채권자 신청: {}, isLender: {}", member.getLenderStatus(), member.isLender());
+//            return "채권자 신청이 접수되었습니다. 관리자의 승인을 기다려주세요.";
+//        }
+//    }
+    public String requestLenderToggle(String userId) {
+        Member member = memberRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("회원이 존재하지 않습니다."));
+
+        log.info("변경 전 LenderStatus: {}, isLender: {}", member.getLenderStatus(), member.isLender());
+
+        if (member.getLenderStatus().contains(LenderStatus.PENDING) || member.getLenderStatus().contains(LenderStatus.PENDING_SURRENDER)) {
+            return "이미 신청 대기 중입니다. 관리자의 승인을 기다려주세요.";
+        }
+
+        if (member.isLender()) {
+            member.getLenderStatus().clear();
+            member.getLenderStatus().add(LenderStatus.PENDING_SURRENDER);
+//            member.setLender(false); // isLender를 false로 변경
+            memberRepository.saveAndFlush(member); // 변경 즉시 반영
+            log.info("채권자 포기 신청 완료. LenderStatus: {}, isLender: {}", member.getLenderStatus(), member.isLender());
+            return "채권자 포기 신청이 접수되었습니다. 관리자의 승인을 기다려주세요.";
+        } else {
+            member.getLenderStatus().clear();
+            member.getLenderStatus().add(LenderStatus.PENDING);
+//            member.setLender(false); // 신청 상태에서는 false 유지
+            memberRepository.saveAndFlush(member); // 변경 즉시 반영
+            log.info("채권자 신청 완료. LenderStatus: {}, isLender: {}", member.getLenderStatus(), member.isLender());
+            return "채권자 신청이 접수되었습니다. 관리자의 승인을 기다려주세요.";
+        }
+    }
+
+    // 관리자가 승인 또는 거절
+    @Transactional
+    @Override
+//    public String approveLenderRequest(String memberId, boolean approve) {
+//        Member member = memberRepository.findById(memberId)
+//                .orElseThrow(() -> new RuntimeException("회원이 존재하지 않습니다."));
+//
+//        if (!member.getLenderStatus().contains(LenderStatus.PENDING)) {
+//            return "승인 대기 중인 신청이 없습니다.";
+//        }
+//
+//        member.getLenderStatus().clear();
+//        if (approve) {
+//            member.getLenderStatus().add(LenderStatus.APPROVED);
+//            member.setLender(true); // isLender 필드 true로 설정
+//        } else {
+//            member.getLenderStatus().add(LenderStatus.REJECTED);
+//            member.setLender(false); // isLender 필드 false로 설정
+//        }
+//
+//        memberRepository.save(member);
+//
+//        return approve ? "승인이 완료되었습니다." : "거절이 완료되었습니다.";
+//    }
+    public String approveLenderRequest(String memberId, boolean approve) {
+        // 회원 조회
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new RuntimeException("회원이 존재하지 않습니다."));
+
+        // 상태 확인: PENDING 또는 PENDING_SURRENDER 상태여야 승인 가능
+        boolean isPendingApplication = member.getLenderStatus().contains(LenderStatus.PENDING);
+        boolean isPendingSurrender = member.getLenderStatus().contains(LenderStatus.PENDING_SURRENDER);
+
+        if (!isPendingApplication && !isPendingSurrender) {
+            return "승인 대기 중인 신청이 없습니다.";
+        }
+
+        // 상태 초기화
+        member.getLenderStatus().clear();
+
+        if (approve) {
+            if (isPendingApplication) {
+                // 채권자 신청 승인
+                member.getLenderStatus().add(LenderStatus.APPROVED);
+                member.setLender(true); // 채권자 상태로 설정
+            } else if (isPendingSurrender) {
+                // 채권자 포기 승인
+                member.getLenderStatus().add(LenderStatus.APPROVED);
+                member.setLender(false); // 채무자 상태로 설정
+            }
+        } else {
+            // 거절 처리
+            member.getLenderStatus().add(LenderStatus.REJECTED);
+        }
+
+        // 변경 사항 저장
+        memberRepository.saveAndFlush(member);
+
+        log.info("변경 후 상태: LenderStatus={}, isLender={}", member.getLenderStatus(), member.isLender());
+
+        return approve ? "승인이 완료되었습니다." : "거절이 완료되었습니다.";
+    }
+
+    @Override
+    @Transactional
+    public String surrenderLender(String memberId) {
+        // 회원 정보 조회
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new RuntimeException("회원이 존재하지 않습니다."));
+
+        // 현재 채권자 상태인지 확인
+        if (!member.isLender()) {
+            return "회원은 이미 채무자 상태입니다.";
+        }
+
+        // 채권자 포기 처리
+        member.getLenderStatus().clear(); // LenderStatus 초기화
+        member.setLender(false);          // isLender를 false로 설정
+        memberRepository.saveAndFlush(member); // 즉시 변경 반영
+
+        log.info("회원 {}가 채권자 포기를 완료했습니다. 현재 상태: isLender={}, LenderStatus={}",
+                member.getId(), member.isLender(), member.getLenderStatus());
+
+        return "채권자 포기가 완료되었습니다. 이제 회원은 채무자로 돌아갑니다.";
+    }
+
+
+    @Override
+    public List<Member> getPendingLenderRequests() {
+//        List<Member> pendingMembers = memberRepository.findMembersByLenderStatus(LenderStatus.PENDING);
+//
+//        pendingMembers.forEach(member -> {
+//            log.info("대기 중인 멤버: ID={}, Name={}, LenderStatus={}",
+//                    member.getId(),
+//                    member.getName(),
+//                    member.getLenderStatus());
+//        });
+//        return pendingMembers;
+//    }
+        List<Member> pendingMembers = memberRepository.findAll()
+                .stream()
+                .filter(member -> member.getLenderStatus().contains(LenderStatus.PENDING)
+                        || member.getLenderStatus().contains(LenderStatus.PENDING_SURRENDER)) // ✅ 포기 신청도 포함
+                .collect(Collectors.toList());
+
+        pendingMembers.forEach(member -> {
+            log.info("대기 중인 멤버: ID={}, Name={}, LenderStatus={}",
+                    member.getId(),
+                    member.getName(),
+                    member.getLenderStatus());
+        });
+
+        return pendingMembers;
     }
 
     public void validateDuplicateMember(MemberDTO memberDTO, String memberId) {
@@ -350,6 +523,9 @@ public class MemberServiceImpl implements MemberService {
                 member.getAddress(),
                 member.isLender(),
                 member.isAccountLocked(),
+                member.getLenderStatus().stream()
+                                .map(lenderStatus -> lenderStatus.name())
+                                        .collect(Collectors.toList()),
                 member.getMemberRoleList().stream()
                         .map(role -> role.name()) // 역할 리스트를 문자열로 변환
                         .collect(Collectors.toList())

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getCookie } from "../../util/cookieUtil";
 import { transferBetweenWallets } from "../../api/walletApi";
 import WalletTransferComponent from "../../components/wallet/WalletTransferComponent";
+import BasicMenu from "../../components/menus/BasicMenu";
 
 const WalletTransferPage = () => {
   const [fromWalletId, setFromWalletId] = useState("");
@@ -29,6 +30,7 @@ const WalletTransferPage = () => {
 
   return (
     <div className="fixed top-0 left-0 z-[1055] flex flex-col h-full w-full">
+      <BasicMenu />
       <div className="w-full flex flex-wrap  h-full justify-center items-center border-2">
         <WalletTransferComponent
           fromWalletId={fromWalletId}

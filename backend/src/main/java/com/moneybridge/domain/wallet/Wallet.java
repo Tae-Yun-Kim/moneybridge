@@ -43,6 +43,11 @@ public class Wallet extends BaseEntity {
 
     public void incrementTransactionCount() {
         this.transactionCount++;
+
+        // Member와 연동된 경우, Member의 transactionCount도 증가
+        if (this.member != null) {
+            this.member.incrementTransactionCount();
+        }
     }
 
     // 계좌와 연동된 지갑 잔액 업데이트 (계좌 -> 지갑 또는 지갑 -> 계좌)
