@@ -42,6 +42,7 @@ public class Account {
     private Member member;
 
     @OneToOne(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true) // 선택적 관계로 설정)
+    @JsonIgnore
     private Wallet wallet;
 
     // 계좌 잔액 변경 메서드

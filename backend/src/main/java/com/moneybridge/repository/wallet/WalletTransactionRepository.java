@@ -11,4 +11,7 @@ import java.util.List;
 public interface WalletTransactionRepository extends JpaRepository<WalletTransaction, String> {
     List<WalletTransaction> findByFromWallet(Wallet fromWallet);
     List<WalletTransaction> findByToWallet(Wallet toWallet);
+
+    // 추가: 특정 지갑의 모든 거래 내역 (입/출금)
+    List<WalletTransaction> findByFromWalletOrToWallet(Wallet fromWallet, Wallet toWallet);
 }

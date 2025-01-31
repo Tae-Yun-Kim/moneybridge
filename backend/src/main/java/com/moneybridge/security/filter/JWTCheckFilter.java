@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
 
+import com.moneybridge.domain.member.LenderStatus;
 import com.moneybridge.dto.member.MemberDTO;
 import com.moneybridge.util.JWTUtil;
 import com.google.gson.Gson;
@@ -70,9 +71,10 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             Boolean social = (Boolean) claims.get("social");
             Boolean isLender = (Boolean) claims.get("isLender");
             Boolean accountLocked = (Boolean) claims.get("accountLocked");
+            List<String> lenderStatus = (List<String>) claims.get("lenderStatus");
             List<String> roleNames = (List<String>) claims.get("roleNames");
 
-            MemberDTO memberDTO = new MemberDTO(id, name, email, residentNumber , password, phoneNumber, accountNumber, nickname, social.booleanValue(), address, isLender, accountLocked, roleNames);
+            MemberDTO memberDTO = new MemberDTO(id, name, email, residentNumber , password, phoneNumber, accountNumber, nickname, social.booleanValue(), address, isLender, accountLocked, lenderStatus, roleNames);
 
             log.info("-----------------------------------");
             log.info(memberDTO);
