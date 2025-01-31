@@ -12,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.Collections;
+import java.util.List;
+
 @SpringBootTest
 @Log4j2
 public class MemberRepositoryTests {
@@ -82,5 +85,25 @@ public class MemberRepositoryTests {
         log.info("-----------------");
         log.info(member);
         log.info("Account: " + member.getAccount());
+    }
+
+    @Test
+    public void testAdminRegister() {
+        Member member = Member.builder()
+                .id("admin")
+                .password(passwordEncoder.encode("1111"))
+                .name("admin")
+                .nickname("admin")
+                .residentNumber("000000-000000")
+                .phoneNumber("000-0000-000")
+                .email("admin" + "@aaa.com")
+                .address("서울시 강남구")
+                .isLender(true)
+                .accountLocked(false)
+                .build();
+
+        member.addRole(MemberRole.ADMIN);
+
+        memberRepository.save(member);
     }
 }

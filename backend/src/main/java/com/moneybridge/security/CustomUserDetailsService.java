@@ -44,6 +44,9 @@ public class CustomUserDetailsService implements UserDetailsService{
                 member.getAddress(),
                 member.isLender(),
                 member.isAccountLocked(),
+                member.getLenderStatus()
+                                .stream()
+                                        .map(lenderStatus -> lenderStatus.name()).collect(Collectors.toList()),
                 member.getMemberRoleList()
                         .stream()
                         .map(memberRole -> memberRole.name()).collect(Collectors.toList()));

@@ -1,5 +1,6 @@
 package com.moneybridge.dto.member;
 
+import com.moneybridge.domain.member.LenderStatus;
 import lombok.*;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -26,9 +27,10 @@ public class MemberDTO extends User {
     private String address;
     private boolean isLender;
     private boolean accountLocked;
+    private List<String> lenderStatus; // LenderStatus 필드 추가
     private List<String> roleNames = new ArrayList<>();
 
-    public MemberDTO(String id, String password, String name, String residentNumber, String phoneNumber, String email, String accountNumber, String nickname, boolean social, String address, boolean isLender, boolean accountLocked, List<String> roleNames) {
+    public MemberDTO(String id, String password, String name, String residentNumber, String phoneNumber, String email, String accountNumber, String nickname, boolean social, String address, boolean isLender, boolean accountLocked, List<String> lenderStatus, List<String> roleNames) {
         super(
                 id,
                 password,
@@ -51,6 +53,7 @@ public class MemberDTO extends User {
         this.address = address;
         this.isLender = isLender;
         this.accountLocked = accountLocked;
+        this.lenderStatus = lenderStatus;
         this.roleNames = roleNames;
     }
 
@@ -70,6 +73,7 @@ public class MemberDTO extends User {
         dataMap.put("address", address);
         dataMap.put("isLender", isLender);
         dataMap.put("accountLocked", accountLocked);
+        dataMap.put("lenderStatus", lenderStatus);
         dataMap.put("roleNames", roleNames);
 
         return dataMap;

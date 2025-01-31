@@ -1,44 +1,62 @@
-import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import logo from "../../images/logo.png";
+import { FaSearch } from "react-icons/fa"; // 아이콘 추가
+import "./BasicMenu.css"; // 일반 CSS import
+import { useSelector } from "react-redux";
 
 const BasicMenu = () => {
   const loginState = useSelector((state) => state.loginSlice);
   return (
-    <nav id="navbar" className=" flex  bg-blue-300">
-      <div className="w-4/5 bg-gray-500">
-        <ul className="flex p-4 text-white font-bold">
-          <li className="pr-6 text-2xl">
-            <Link to={"/"}>Main</Link>
-          </li>
-          <li className="pr-6 text-2xl">
-            <Link to={"/about"}>About</Link>
-          </li>
-          {loginState.id ? ( // 로그인한 사용자만 출력되는 메뉴
-            <>
-              <li className="pr-6 text-2xl">
-                <Link to={"/todo/"}>Todo</Link>
-              </li>
-              <li className="pr-6 text-2xl">
-                <Link to={"/products/"}>Products</Link>
-              </li>
-            </>
+    <nav id="navbar" className="navbar">
+      {/* 상단 바 */}
+      <div className="nav-container">
+        <div className="nav-header">
+          {/* 로고 */}
+          <div className="nav-logo">
+            <Link to={"/"}>
+              <img src={logo} alt="Logo" />
+            </Link>
+          </div>
+
+          {/* 로그인/로그아웃 */}
+          {!loginState.id ? (
+            <div className="nav-login">
+              <Link to={"/member/login"}>Login</Link>
+            </div>
           ) : (
-            <></>
+            <div className="nav-login">
+              <Link to={"/member/logout"}>Logout</Link>
+              <Link to={"/member/mypage"}>마이페이지</Link>
+            </div>
           )}
-        </ul>
+        </div>
       </div>
 
-      <div className="w-1/5 flex justify-end bg-orange-300 p-4 font-medium">
-        {!loginState.id ? (
-          <div className="text-white text-sm m-1 rounded">
-            <Link to={"/member/login"}>Login</Link>
-          </div>
-        ) : (
-          <div className="text-white text-sm m-1 rounded">
-            <Link to={"/member/logout"}>Logout</Link>
-          </div>
-        )}
+      {/* 서치바 */}
+      <div className="search-bar">
+        <form>
+          <input type="text" placeholder="검색어를 입력해주세요" />
+          <button>
+            <FaSearch />
+          </button>
+        </form>
       </div>
+
+      {/* 하단 메뉴바 */}
+      <ul className="menu-bar">
+        <li>
+          <Link to={"/wallet/get"}>내지갑</Link>
+        </li>
+        <li>
+          <Link to={"/post/"}>빌려드려요</Link>
+        </li>
+        <li>
+          <Link to={"/debtCollection"}>대행서비스</Link>
+        </li>
+        <li>
+          <Link to={"/qna/"}>QnA</Link>
+        </li>
+      </ul>
     </nav>
   );
 };

@@ -20,11 +20,11 @@ public class WalletTransaction extends BaseEntity {
     private String transactionId;
 
     @ManyToOne
-    @JoinColumn(name = "fromWalletId", referencedColumnName = "walletId", nullable = false)
+    @JoinColumn(name = "from_wallet_id", referencedColumnName = "walletId", nullable = true)
     private Wallet fromWallet;
 
     @ManyToOne
-    @JoinColumn(name = "toWalletId", referencedColumnName = "walletId", nullable = false)
+    @JoinColumn(name = "to_wallet_id", referencedColumnName = "walletId", nullable = true)
     private Wallet toWallet;
 
     @Column(nullable = false)

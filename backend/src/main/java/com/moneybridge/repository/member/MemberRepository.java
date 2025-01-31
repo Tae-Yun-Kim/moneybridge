@@ -1,5 +1,6 @@
 package com.moneybridge.repository.member;
 
+import com.moneybridge.domain.member.LenderStatus;
 import com.moneybridge.domain.member.Member;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -7,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -36,4 +38,8 @@ public interface MemberRepository extends JpaRepository<Member, String> {
 
     @Query("SELECT m FROM Member m JOIN FETCH m.account WHERE m.id = :id")
     Member findMemberWithAccount(@Param("id") String id);
+
+    @Query("SELECT m FROM Member m JOIN m.lenderStatus ls WHERE ls = :status")
+    List<Member> findMembersByLenderStatus(@Param("status") LenderStatus status);
+
 }
