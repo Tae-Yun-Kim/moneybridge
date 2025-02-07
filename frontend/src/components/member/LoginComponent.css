@@ -1,0 +1,95 @@
+.login-wrapper {
+  display: flex;
+  justify-content: center; /* 수평 중앙 정렬 */
+  /* align-items: center; 수직 중앙 정렬 */
+  min-height: 100vh;
+  background: linear-gradient(135deg, #e9f5ff, #dceeff); /* 배경 그라데이션 */
+}
+
+/* 로그인 카드 */
+.login-card {
+  height: 30%;
+  width: 50%; /* 부모 컨테이너의 절반 크기 */
+  max-width: 400px; /* 최대 크기 제한 */
+  padding: 30px;
+  margin-top: 3%;
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* 마우스 오버 애니메이션 */
+}
+
+/* 제목 스타일 */
+.login-title {
+  font-size: 22px;
+  font-weight: bold;
+  color: #007bff;
+  margin-bottom: 20px;
+}
+
+/* 입력 필드 컨테이너 */
+.login-field {
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.login-field label {
+  display: block;
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #495057;
+}
+
+.login-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  font-size: 14px;
+}
+
+/* 버튼 스타일 */
+.login-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.login-button,
+.signup-button {
+  flex: 1;
+  padding: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.login-button {
+  background-color: #007bff;
+  color: white;
+}
+
+.login-button:hover {
+  background-color: #0056b3;
+}
+
+.signup-button {
+  background-color: #28a745;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+}
+
+.signup-button:hover {
+  background-color: #218838;
+}
+
+.kakao-login {
+  background-color: #fc0;
+}
