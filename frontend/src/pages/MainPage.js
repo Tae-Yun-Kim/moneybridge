@@ -13,10 +13,13 @@
 import BasicLayout from "../layouts/BasicLayout";
 import zannen from "../images/정말유감인.png";
 import "./Page.css"; // CSS 파일 import
+<<<<<<< HEAD
 import { useEffect, useState } from "react";
 import { getWalletByMemberId } from "../api/walletApi";
 import VideoSequence from "./VideoSequence";
 import DonationProgress from "../components/menus/DonationProgress";
+=======
+>>>>>>> c18324b9960a4447aa724017219b545b773bffeb
 
 // 메인페이지
 const MainPage = () => {
@@ -74,6 +77,7 @@ const MainPage = () => {
   return (
     <BasicLayout>
       <div className="main-container">
+<<<<<<< HEAD
         {/* <div className="youtube">
           <VideoSequence />
         </div> */}
@@ -89,6 +93,16 @@ const MainPage = () => {
               {userInfo ? "정보 제공 예정" : "로그인이 필요합니다"}
             </p>
           </div>
+=======
+        {/* 첫 번째 박스 */}
+        <div className="main-box">
+          <div className="main-title">내정보</div>
+          <ul className="main-list">
+            <li>내등급</li>
+            <li>페이금액</li>
+            <li>대출/변제금액</li>
+          </ul>
+>>>>>>> c18324b9960a4447aa724017219b545b773bffeb
         </div>
 
         {/* 두 번째 박스 */}
@@ -105,9 +119,12 @@ const MainPage = () => {
               <div>-먹튀당해도 해당사이트는 책임지지않음</div>
             </div>
           </div>
+<<<<<<< HEAD
           <div className="donation-container">
             <DonationProgress donation={50} goal={100} />
           </div>
+=======
+>>>>>>> c18324b9960a4447aa724017219b545b773bffeb
         </div>
       </div>
     </BasicLayout>

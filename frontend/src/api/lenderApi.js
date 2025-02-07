@@ -22,7 +22,11 @@ export const requestLenderToggle = async (id) => {
   }
 };
 
+<<<<<<< HEAD
 // 2. 채권자 요청
+=======
+// 2. 관리자 승인/거절 요청
+>>>>>>> c18324b9960a4447aa724017219b545b773bffeb
 export const approveLenderRequest = async (id, approve) => {
   console.log("보낼 데이터:", { id, approve }); // 디버깅 로그 추가
   try {
@@ -37,6 +41,7 @@ export const approveLenderRequest = async (id, approve) => {
   }
 };
 
+<<<<<<< HEAD
 // 채권자 포기 요청
 export const surrenderLender = async (id) => {
   try {
@@ -50,6 +55,8 @@ export const surrenderLender = async (id) => {
   }
 };
 
+=======
+>>>>>>> c18324b9960a4447aa724017219b545b773bffeb
 // 3. 신청 상태가 PENDING인 목록 가져오기
 export const getPendingLenderRequests = async () => {
   const token = localStorage.getItem("accessToken");

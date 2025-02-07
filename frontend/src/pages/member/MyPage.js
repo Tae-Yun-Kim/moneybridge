@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // import { useEffect, useState } from "react";
 // import BasicMenu from "../../components/menus/BasicMenu";
 // import MyPageComponent from "../../components/member/MyPageComponent";
@@ -126,6 +127,8 @@
 
 // export default MyPage;
 
+=======
+>>>>>>> c18324b9960a4447aa724017219b545b773bffeb
 import { useEffect, useState } from "react";
 import BasicMenu from "../../components/menus/BasicMenu";
 import MyPageComponent from "../../components/member/MyPageComponent";
@@ -134,6 +137,7 @@ import {
   getTransactionsToWallet,
   getWalletByMemberId,
 } from "../../api/walletApi";
+<<<<<<< HEAD
 import BasicLayout from "../../layouts/BasicLayout";
 
 const MyPage = () => {
@@ -147,33 +151,75 @@ const MyPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+=======
+
+const MyPage = () => {
+  const [userInfo, setUserInfo] = useState(null);
+  const [walletBalance, setWalletBalance] = useState(0); // 초기 잔액
+  const [transactionsFrom, setTransactionsFrom] = useState([]); // 송금 내역
+  const [transactionsTo, setTransactionsTo] = useState([]); // 입금 내역
+  const [walletToWalletTransactions, setWalletToWalletTransactions] = useState(
+    []
+  ); // 지갑 간 거래 내역
+  const [loading, setLoading] = useState(true); // 로딩 상태
+  const [error, setError] = useState(null); // 에러 상태
+  //   useEffect(() => {
+  //     // 로컬 스토리지에서 회원 정보 가져오기
+  //     const storedUserInfo = localStorage.getItem("member");
+  //     if (storedUserInfo) {
+  //       setUserInfo(JSON.parse(storedUserInfo)); // JSON 문자열을 객체로 변환
+  //     }
+  //   }, []);
+
+  // **로컬 스토리지에서 userInfo 가져오기**
+>>>>>>> c18324b9960a4447aa724017219b545b773bffeb
   useEffect(() => {
     console.log("🚀 [MyPage] 로컬 스토리지에서 userInfo 가져오기");
     const storedUserInfo = localStorage.getItem("member");
     if (storedUserInfo) {
       const user = JSON.parse(storedUserInfo);
+<<<<<<< HEAD
+=======
+
+      // 불필요한 업데이트 방지
+>>>>>>> c18324b9960a4447aa724017219b545b773bffeb
       if (!userInfo || userInfo.id !== user.id) {
         console.log("userInfo 설정:", user);
         setUserInfo(user);
       }
     }
+<<<<<<< HEAD
   }, []);
 
   useEffect(() => {
     if (!userInfo) return;
+=======
+  }, []); // ✅ 한 번만 실행
+
+  // **userInfo가 설정된 경우 지갑 데이터 가져오기**
+  useEffect(() => {
+    if (!userInfo) return; // userInfo가 없으면 실행하지 않음
+>>>>>>> c18324b9960a4447aa724017219b545b773bffeb
 
     console.log("🔄 [MyPage] userInfo 기반으로 지갑 데이터 요청 시작");
 
     const fetchWalletData = async () => {
       try {
+<<<<<<< HEAD
         setLoading(true);
 
+=======
+        setLoading(true); // 로딩 시작
+
+        // 1. 지갑 데이터 가져오기
+>>>>>>> c18324b9960a4447aa724017219b545b773bffeb
         const walletData = await getWalletByMemberId(userInfo.id);
         console.log("지갑 데이터 가져옴:", walletData);
 
         if (!walletData || !walletData.walletId) {
           throw new Error("지갑 데이터가 올바르지 않습니다.");
         }
+<<<<<<< HEAD
         setWalletBalance(walletData.balance);
 
         const fromTransactions = await getTransactionsFromWallet(
@@ -190,12 +236,36 @@ const MyPage = () => {
           (transaction) => transaction.fromWalletId === "N/A"
         );
 
+=======
+        setWalletBalance(walletData.balance); // 지갑 잔액 설정
+
+        // 2. 송금 내역 필터링
+        const fromTransactions = await getTransactionsFromWallet(
+          walletData.walletId
+        );
+        const filteredFromTransactions = fromTransactions.filter(
+          (transaction) => transaction.toWalletId === "N/A"
+        );
+        setTransactionsFrom(filteredFromTransactions);
+
+        // 3. 입금 내역 필터링
+        const toTransactions = await getTransactionsToWallet(
+          walletData.walletId
+        );
+        const filteredToTransactions = toTransactions.filter(
+          (transaction) => transaction.fromWalletId === "N/A"
+        );
+        setTransactionsTo(filteredToTransactions);
+
+        // 4. 지갑 간 거래 필터링
+>>>>>>> c18324b9960a4447aa724017219b545b773bffeb
         const walletToWalletFrom = fromTransactions.filter(
           (transaction) => transaction.toWalletId !== "N/A"
         );
         const walletToWalletTo = toTransactions.filter(
           (transaction) => transaction.fromWalletId !== "N/A"
         );
+<<<<<<< HEAD
 
         // 최신순 정렬 (날짜 기준)
         const sortByDateDesc = (transactions) =>
@@ -208,16 +278,30 @@ const MyPage = () => {
         setWalletToWalletTransactions(
           sortByDateDesc([...walletToWalletFrom, ...walletToWalletTo])
         );
+=======
+        setWalletToWalletTransactions([
+          ...walletToWalletFrom,
+          ...walletToWalletTo,
+        ]);
+>>>>>>> c18324b9960a4447aa724017219b545b773bffeb
       } catch (error) {
         console.error("지갑 데이터 가져오는 중 에러 발생:", error.message);
         setError(error.message);
       } finally {
+<<<<<<< HEAD
         setLoading(false);
+=======
+        setLoading(false); // 로딩 종료
+>>>>>>> c18324b9960a4447aa724017219b545b773bffeb
       }
     };
 
     fetchWalletData();
+<<<<<<< HEAD
   }, [userInfo]);
+=======
+  }, [userInfo]); // ✅ userInfo가 변경될 때만 실행
+>>>>>>> c18324b9960a4447aa724017219b545b773bffeb
 
   if (loading) {
     return <div className="loading-message">데이터를 불러오는 중입니다...</div>;
@@ -229,6 +313,7 @@ const MyPage = () => {
 
   return (
     <div className="mypage-container">
+<<<<<<< HEAD
       {/* <BasicMenu /> */}
       {/* <BasicLayout /> */}
       <div className="mypage-content">
@@ -241,6 +326,18 @@ const MyPage = () => {
             walletToWalletTransactions={walletToWalletTransactions}
           />
         </BasicLayout>
+=======
+      <BasicMenu />
+
+      <div className="mypage-content">
+        <MyPageComponent
+          userInfo={userInfo}
+          walletBalance={walletBalance}
+          transactionsFrom={transactionsFrom}
+          transactionsTo={transactionsTo}
+          walletToWalletTransactions={walletToWalletTransactions} // 지갑 간 거래 전달
+        />
+>>>>>>> c18324b9960a4447aa724017219b545b773bffeb
       </div>
     </div>
   );

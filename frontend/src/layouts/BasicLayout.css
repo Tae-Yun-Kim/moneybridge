@@ -1,5 +1,6 @@
 /* BasicLayout.css */
 
+<<<<<<< HEAD
 /* 레이아웃 컨테이너 */
 .layout-container {
   display: flex;
@@ -11,10 +12,20 @@
   width: 100%; /* 전체 너비 */
   box-sizing: border-box; /* 패딩 포함 크기 계산 */
   border-bottom: 1px solid black;
+=======
+/* 레이아웃 전체 스타일 */
+.layout-container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  background-color: white;
+  margin: 0.25rem 0; /* Tailwind의 `my-1` 대체 */
+>>>>>>> c18324b9960a4447aa724017219b545b773bffeb
 }
 
 /* 사이드바 스타일 */
 .sidebar {
+<<<<<<< HEAD
   flex: 1; /* 기본 비율 */
   max-width: 20%; /* 최대 너비 */
   min-width: 200px; /* 최소 너비 */
@@ -51,10 +62,22 @@
   border-left: 1px solid black; /* 테두리 */
   padding: 10px; /* 내부 여백 */
   z-index: 100; /* 다른 요소 위로 표시 */
+=======
+  height: auto;
+}
+
+.left-sidebar {
+  width: 15%; /* Tailwind의 `w-1/6` 대체 */
+}
+
+.right-sidebar {
+  width: 15%; /* Tailwind의 `w-1/6` 대체 */
+>>>>>>> c18324b9960a4447aa724017219b545b773bffeb
 }
 
 /* 메인 콘텐츠 스타일 */
 .main-content {
+<<<<<<< HEAD
   flex: 3; /* 메인 콘텐츠가 더 많은 공간 차지 */
   max-width: auto; /* 최대 너비 */
   min-width: 300px; /* 최소 너비 */
@@ -90,4 +113,8 @@
   .main-content {
     min-width: 100%; /* 메인 콘텐츠도 100% */
   }
+=======
+  width: 70%; /* Tailwind의 `w-4/6` 대체 */
+  height: auto;
+>>>>>>> c18324b9960a4447aa724017219b545b773bffeb
 }
