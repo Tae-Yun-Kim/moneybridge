@@ -26,6 +26,7 @@ public class CustomUserDetailsService implements UserDetailsService{
         log.info("----------------loadUserByUsername-----------------------------");
 
         Member member = memberRepository.getWithRoles(username);
+        memberRepository.getWithGrades(username); // Grades를 Lazy Loading
 
         if(member == null){
             throw new UsernameNotFoundException("Not Found");
@@ -49,7 +50,10 @@ public class CustomUserDetailsService implements UserDetailsService{
                                         .map(lenderStatus -> lenderStatus.name()).collect(Collectors.toList()),
                 member.getMemberRoleList()
                         .stream()
-                        .map(memberRole -> memberRole.name()).collect(Collectors.toList()));
+                        .map(memberRole -> memberRole.name()).collect(Collectors.toList()),
+                member.getMemberGradeList()
+                        .stream()
+                        .map(memberGrade -> memberGrade.name()).collect(Collectors.toList()));
 
         log.info(memberDTO);
 

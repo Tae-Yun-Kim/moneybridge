@@ -1,0 +1,53 @@
+/* 전체 컨테이너 */
+.top-members-container {
+  max-width: 400px;
+  margin: auto auto;
+  padding: 0 20px;
+  /* background-color: #e7f3fe; */
+  /* border-radius: 10px; */
+  /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
+  text-align: center;
+}
+
+/* 제목 스타일 */
+.title {
+  font-size: 22px;
+  font-weight: bold;
+  color: #007bff;
+  margin-bottom: 20px;
+}
+
+/* 회원 리스트 */
+.member-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.member-item {
+  display: flex;
+  justify-content: space-around;
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: white;
+  /* border-radius: 8px; */
+  /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
+}
+
+.member-item .rank {
+  font-size: 18px;
+  font-weight: bold;
+  color: #495057;
+}
+
+.member-item .name {
+  font-size: 16px;
+  font-weight: bold;
+  color: black;
+}
+
+.member-item .transaction-count {
+  font-size: 14px;
+  color: black;
+  font-weight: bold;
+}

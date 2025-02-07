@@ -31,12 +31,8 @@ public class MemberDTO extends User {
     private List<String> roleNames = new ArrayList<>();
     private List<String> memberGradeList; // 등급 추가
 
-<<<<<<< HEAD
 
     public MemberDTO(String id, String password, String name, String residentNumber, String phoneNumber, String email, String accountNumber, String nickname, boolean social, String address, boolean isLender, boolean accountLocked, List<String> lenderStatus, List<String> roleNames, List<String> memberGradeList) {
-=======
-    public MemberDTO(String id, String password, String name, String residentNumber, String phoneNumber, String email, String accountNumber, String nickname, boolean social, String address, boolean isLender, boolean accountLocked, List<String> lenderStatus, List<String> roleNames) {
->>>>>>> c18324b9960a4447aa724017219b545b773bffeb
         super(
                 id,
                 password,

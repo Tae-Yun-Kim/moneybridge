@@ -39,11 +39,11 @@ export const loginPost = async (loginParam) => {
 };
 
 //회원 가입
-export const registerMember = async (member) => {
+export const registerMember = async (memberData) => {
   try {
     const response = await axios.post(
       "http://localhost:8080/api/member/register",
-      member,
+      memberData,
       {
         headers: {
           "Content-Type": "application/json",
@@ -80,11 +80,32 @@ export const deleteMember = async (id, password) => {
 };
 
 // 중복 체크 API 호출
+// export const checkDuplicate = async (field, value, social = false) => {
+//   const response = await axios.get(`${host}/check-duplicate`, {
+//     params: { field, value, social },
+//   });
+//   return response.data; // true (중복), false (사용 가능)
+// };
 export const checkDuplicate = async (field, value, social = false) => {
-  const response = await axios.get(`${host}/check-duplicate`, {
-    params: { field, value, social },
-  });
-  return response.data; // true (중복), false (사용 가능)
+  try {
+    const response = await axios.post(
+      `${host}/check-duplicate`,
+      {
+        field,
+        value,
+        social,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.data; // true (중복), false (사용 가능)
+  } catch (error) {
+    console.error("중복 체크 API 오류:", error);
+    return null; // 오류 발생 시 null 반환
+  }
 };
 
 // 소셜 회원 정보 업데이트 API

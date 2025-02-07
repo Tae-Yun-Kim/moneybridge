@@ -39,14 +39,11 @@ public class APILoginSuccessHandler implements AuthenticationSuccessHandler{
                 .orElse("ROLE_USER");
         claims.put("role", role);
 
-<<<<<<< HEAD
         String grade = memberDTO.getMemberGradeList().stream()
                 .findFirst()
                 .orElse("BRONZE"); // 기본값 설정
         claims.put("grade", grade);
 
-=======
->>>>>>> c18324b9960a4447aa724017219b545b773bffeb
         // jwt토큰 생성과 메서드 처리
         String accessToken = JWTUtil.generateToken(claims, 60);
         String refreshToken = JWTUtil.generateToken(claims,60*24);

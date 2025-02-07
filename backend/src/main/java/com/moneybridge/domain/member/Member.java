@@ -107,7 +107,7 @@ public class Member {
         clearGrades(); // 기존 등급 초기화
         if (transactionCount >= 20) {
             addGrade(MemberGrade.GOLD);
-        } else if (transactionCount >= 5) {
+        } else if (transactionCount >= 10) {
             addGrade(MemberGrade.SILVER);
         } else {
             addGrade(MemberGrade.BRONZE);

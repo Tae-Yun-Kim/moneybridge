@@ -1,6 +1,5 @@
 import "./BasicMenu.css"; // 일반 CSS import
 import run from "../../images/따봉도로롱.gif";
-<<<<<<< HEAD
 import LoanProductList from "./LoanProductList";
 import Chatbot from "../../Chatbot";
 import { useState } from "react";
@@ -41,36 +40,19 @@ const Rightsidemenu = () => {
       </div>
 
       {/* 첫 번째 박스
-=======
-
-const Rightsidemenu = () => {
-  return (
-    <div className="flex flex-col">
-      {/* 첫 번째 박스 */}
->>>>>>> c18324b9960a4447aa724017219b545b773bffeb
       <div className="menu-box">
         <h3>챗봇기능칸</h3>
         <div className="textarea-box">
           <textarea rows="4" placeholder="아직 미구현..."></textarea>
         </div>
-<<<<<<< HEAD
       </div> */}
       {/* 두 번째 박스
-=======
-      </div>
-
-      {/* 두 번째 박스 */}
->>>>>>> c18324b9960a4447aa724017219b545b773bffeb
       <div className="menu-box green">
         <h3>월간기부현황</h3>
         <div className="image-container">
           <img src={run} alt="Logo" />
         </div>
-<<<<<<< HEAD
       </div> */}
-=======
-      </div>
->>>>>>> c18324b9960a4447aa724017219b545b773bffeb
     </div>
   );
 };
