@@ -140,16 +140,19 @@ const MyPageComponent = ({
   return (
     <div className="mypage-component">
       {/* 제목 */}
-      <h1 className="mypage-title">마이페이지</h1>
+      <h1 className="mypage-title">내 지갑</h1>
 
       {/* 회원 정보와 지갑 정보를 나란히 배치 */}
       <div className="user-wallet-container">
         {/* 회원 정보 */}
         <div className="user-info-box">
           <h2 className="section-title">회원 정보</h2>
-          <p>아이디: {userInfo.id}</p>
-          <p>이름: {userInfo.name}</p>
+          <div className="infoi">
+            <p>아이디: {userInfo.id}</p>
+            <p className="infon">이름: {userInfo.name}</p>
+          </div>
           <p>이메일: {userInfo.email}</p>
+          <p>등급: {userInfo.grade}</p>
           <div style={{ marginTop: "10px" }}>
             <Link to="/member/update" className="bg-green button">
               회원 수정
@@ -173,7 +176,7 @@ const MyPageComponent = ({
       </div>
 
       {/* 송금 내역 */}
-      <div>
+      <div className="withdraw">
         <h2 className="section-title">출금 내역</h2>
         <ul className="list-disc">
           {transactionsFrom.map((transaction) => (
@@ -190,7 +193,7 @@ const MyPageComponent = ({
       </div>
 
       {/* 입금 내역 */}
-      <div>
+      <div className="deposit">
         <h2 className="section-title">입금 내역</h2>
         <ul className="list-disc">
           {transactionsTo.map((transaction) => (
@@ -207,7 +210,7 @@ const MyPageComponent = ({
       </div>
 
       {/* 거래 내역 */}
-      <div>
+      <div className="transfer">
         <h2 className="section-title">거래 내역</h2>
         <ul className="list-disc">
           {walletToWalletTransactions.map((transaction) => (
