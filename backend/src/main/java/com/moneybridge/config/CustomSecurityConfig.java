@@ -56,6 +56,9 @@ public class CustomSecurityConfig {
                         .requestMatchers("/api/member/top-members/**").permitAll()  // ✅ TOP 회원 조회 API 추가
                         .requestMatchers("/api/member/check-duplicate").permitAll() // 중복 체크 API 허용
                         .requestMatchers("/api/member/login","/api/member/register").permitAll() // 로그인 API도 허용
+                        .requestMatchers("/api/post/list").permitAll() // 게시글 리스트 조회 API도 허용
+                        .requestMatchers("/api/post/view/{id}").permitAll() // 게시글 상세 페이지 API도 허용
+                        .requestMatchers("/api/post/{postId}/comments").permitAll() // 댓글 조회 API도 허용
                         .anyRequest().authenticated() // ✅ 그 외 모든 API는 인증 필요
         );
 

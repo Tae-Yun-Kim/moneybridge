@@ -40,6 +40,22 @@ public class JWTCheckFilter extends OncePerRequestFilter {
         if (path.startsWith("/api/products/view/")) {
             return true;
         }
+
+        // 게시글 리스트 조회 경로는 체크하지 않음 (JWT 인증 제외)
+        if (path.startsWith("/api/post/list")) {
+            return true;
+        }
+
+        // 게시글 상세 조회 경로는 체크하지 않음 (JWT 인증 제외)
+        if (path.startsWith("/api/post/view/")) {
+            return true;
+        }
+
+        // 댓글 조회 경로는 체크하지 않음 (JWT 인증 제외)
+        // /api/post/{postId}/comments 형식이므로, {postId} 부분을 동적으로 처리
+        if (path.matches("/api/post/\\d+/comments")) {
+            return true;
+        }
         return false;
     }
 

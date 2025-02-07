@@ -186,7 +186,7 @@ const BasicMenu = () => {
               </li>
               <li>
                 <Link
-                  to={"/post/"}
+                  to={"/post/list"}
                   className={location.pathname === "/post/" ? "active" : ""}
                 >
                   빌려드려요

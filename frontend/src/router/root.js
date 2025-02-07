@@ -4,6 +4,8 @@ import { createBrowserRouter } from "react-router-dom";
 // import productsRouter from "./productsRouter";
 import memberRouter from "./memberRouter";
 import walletRouter from "./walletRouter";
+import debtRouter from "./debtRouter";
+import loanPostRouter from "./postRouter"
 
 const Loading = <div>Loading....</div>;
 const Main = lazy(() => import("../pages/MainPage"));
@@ -52,9 +54,17 @@ const root = createBrowserRouter([
     children: memberRouter(),
   },
   {
+    path: "post", // loanPostRouter의 경로 설정
+    children: loanPostRouter(),
+  },
+  {
     path: "wallet",
     children: walletRouter(),
   },
+  {
+    path: "debt",
+    children: debtRouter(),
+  }
 ]);
 
 export default root;

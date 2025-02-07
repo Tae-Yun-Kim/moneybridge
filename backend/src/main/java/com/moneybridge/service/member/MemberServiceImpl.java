@@ -1,0 +1,560 @@
+package com.moneybridge.service.member;
+
+import com.moneybridge.domain.account.Account;
+import com.moneybridge.domain.member.LenderStatus;
+import com.moneybridge.domain.member.Member;
+import com.moneybridge.domain.member.MemberGrade;
+import com.moneybridge.domain.member.MemberRole;
+import com.moneybridge.dto.member.MemberDTO;
+import com.moneybridge.repository.account.AccountRepository;
+import com.moneybridge.repository.member.MemberRepository;
+import com.moneybridge.service.wallet.WalletService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+@Service
+@RequiredArgsConstructor
+@Transactional
+@Log4j2
+public class MemberServiceImpl implements MemberService {
+
+    private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder; // PasswordEncoder 주입
+    private final AccountRepository accountRepository;
+    private final WalletService walletService;
+
+    @Override
+    public Member register(MemberDTO memberDTO) {
+        validateDuplicateMember(memberDTO, null);
+        // 비밀번호 암호화
+        String encodedPassword = passwordEncoder.encode(memberDTO.getPassword());
+
+        // Account 테이블에서 계좌 조회
+        Account account = accountRepository.findByAccountNumber(memberDTO.getAccountNumber())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 계좌입니다: " + memberDTO.getAccountNumber()));
+
+        // 계좌가 이미 다른 회원과 연결되어 있는지 확인
+        if (account.isLinkedToMember()) {
+            throw new IllegalArgumentException("이미 다른 회원과 연결된 계좌입니다: " + memberDTO.getAccountNumber());
+        }
+
+        Member member = Member.builder()
+                .id(memberDTO.getId())
+                .password(encodedPassword)
+                .name(memberDTO.getName())
+                .residentNumber(memberDTO.getResidentNumber())
+                .phoneNumber(memberDTO.getPhoneNumber())
+                .email(memberDTO.getEmail())
+//                .accountNumber(memberDTO.getAccountNumber())
+                .nickname(memberDTO.getNickname())
+                .social(memberDTO.isSocial())
+                .address(memberDTO.getAddress())
+                .isLender(memberDTO.isLender())
+                .accountLocked(false)
+                .build();
+
+        member.addRole(MemberRole.USER); // 기본 권한 추가
+        member.addGrade(MemberGrade.BRONZE); // 기본 등급 추가
+
+        // 계좌와 회원 연결
+        member.setAccount(account);
+
+        // 회원 저장
+        Member savedMember = memberRepository.save(member);
+        memberRepository.flush(); // 즉시 반영
+
+        log.info("✅ 회원가입 완료: ID = " + savedMember.getId());
+
+//         WalletService를 통해 지갑 생성
+//        WalletDTO walletDTO = WalletDTO.builder()
+//                .memberId(savedMember.getId())
+//                .accountNumber(savedMember.getAccount().getAccountNumber())
+//                .pinNumber("1234")
+//                .build();
+//        walletService.createWallet(walletDTO);
+
+        //        return memberRepository.save(member);
+        return savedMember;
+    }
+
+
+    @Override
+    public Member update(MemberDTO memberDTO) {
+        Member member = memberRepository.findMemberWithAccount(memberDTO.getId());
+        if (member == null) {
+            throw new IllegalArgumentException("Member not found: " + memberDTO.getId());
+        }
+        // 소셜 로그인 사용자의 이메일 수정 금지
+        if (member.isSocial() && !member.getEmail().equals(memberDTO.getEmail())) {
+            throw new IllegalArgumentException("소셜 로그인 사용자는 이메일을 수정할 수 없습니다.");
+        }
+        //주민번호 중복검사
+        if (!member.getResidentNumber().equals(memberDTO.getResidentNumber()) &&
+                memberRepository.existsByResidentNumber(memberDTO.getResidentNumber())) {
+            throw new IllegalArgumentException("Duplicate resident number: " + memberDTO.getResidentNumber());
+        }
+        //전화번호
+        if (!member.getPhoneNumber().equals(memberDTO.getPhoneNumber()) &&
+                memberRepository.existsByPhoneNumber(memberDTO.getPhoneNumber())) {
+            throw new IllegalArgumentException("Duplicate phone number: " + memberDTO.getPhoneNumber());
+        }
+        //이메일
+        if (!member.getEmail().equals(memberDTO.getEmail()) &&
+                memberRepository.existsByEmail(memberDTO.getEmail())) {
+            throw new IllegalArgumentException("Duplicate email: " + memberDTO.getEmail());
+        }
+        // 계좌번호 변경 및 검증
+        if (memberDTO.getAccountNumber() != null && !memberDTO.getAccountNumber().isEmpty()) {
+            Account account = accountRepository.findByAccountNumber(memberDTO.getAccountNumber())
+                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 계좌입니다: " + memberDTO.getAccountNumber()));
+
+            if (account.isLinkedToMember() && !account.getMember().getId().equals(member.getId())) {
+                throw new IllegalArgumentException("이미 다른 회원과 연결된 계좌입니다: " + memberDTO.getAccountNumber());
+            }
+
+            // 계좌를 회원과 연결
+            member.setAccount(account);
+        }
+        member.changeMemberinfo(memberDTO, passwordEncoder);
+        return memberRepository.save(member);
+    }
+
+    @Override
+    public MemberDTO updateSocialMember(MemberDTO memberDTO) {
+        Member member = memberRepository.findById(memberDTO.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Member not found: " + memberDTO.getId()));
+
+        if (!member.isSocial()) {
+            throw new IllegalArgumentException("일반 회원은 소셜 수정 API를 사용할 수 없습니다.");
+        }
+
+        // 주민번호 업데이트
+        if (memberDTO.getResidentNumber() != null && !memberDTO.getResidentNumber().isEmpty()) {
+            if (memberRepository.existsByResidentNumber(memberDTO.getResidentNumber())) {
+                throw new IllegalArgumentException("중복된 주민번호입니다: " + memberDTO.getResidentNumber());
+            }
+            member.setResidentNumber(memberDTO.getResidentNumber());
+        }
+
+        if (memberDTO.getPhoneNumber() != null && (member.getPhoneNumber() == null || member.getPhoneNumber().isEmpty())) {
+            member.setPhoneNumber(memberDTO.getPhoneNumber());
+        }
+
+        if (memberDTO.getAccountNumber() != null && !memberDTO.getAccountNumber().isEmpty()) {
+            Account account = accountRepository.findByAccountNumber(memberDTO.getAccountNumber())
+                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 계좌입니다: " + memberDTO.getAccountNumber()));
+
+            if (account.isLinkedToMember() && !account.getMember().getId().equals(member.getId())) {
+                throw new IllegalArgumentException("이미 다른 회원과 연결된 계좌입니다: " + memberDTO.getAccountNumber());
+            }
+
+            // 계좌를 회원과 연결
+            member.setAccount(account);
+        }
+        if (memberDTO.getAddress() != null && (member.getAddress() == null || member.getAddress().isEmpty())) {
+            member.setAddress(memberDTO.getAddress());
+        }
+
+        memberRepository.save(member);
+        return entityToDTO(member);
+    }
+
+    @Override
+    public Member findById(String memberId) {
+        System.out.println("🔍 findById() 호출: " + memberId);
+
+        if (memberId == null || memberId.equals("login")) {
+            throw new IllegalArgumentException("❌ 잘못된 회원 ID입니다: " + memberId);
+        }
+
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("❌ 회원을 찾을 수 없습니다: " + memberId));
+    }
+
+
+    @Override
+    public void delete(String id, String password) {
+        Member member = memberRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Member not found: " + id));
+
+        memberRepository.delete(member);
+    }
+
+    // 사용자가 신청 또는 포기를 요청
+    @Transactional
+    @Override
+//    public String requestLenderToggle(String userId) {
+//        Member member = memberRepository.findById(userId)
+//                .orElseThrow(() -> new RuntimeException("회원이 존재하지 않습니다."));
+//
+//        log.info("변경 전 LenderStatus: {}", member.getLenderStatus());
+//
+//        if (member.getLenderStatus().contains(LenderStatus.PENDING)) {
+//            return "이미 신청 대기 중입니다. 관리자의 승인을 기다려주세요.";
+//        }
+//
+//        if (member.isLender()) {
+//            member.getLenderStatus().clear();
+//            member.getLenderStatus().add(LenderStatus.PENDING); // 채권자 포기 신청
+//            member.setLender(false); // isLender 필드 false로 설정
+//            memberRepository.save(member); // 명시적으로 저장
+//            log.info("채권자 포기 신청: {}, isLender: {}", member.getLenderStatus(), member.isLender());
+//            return "채권자 포기 신청이 접수되었습니다. 관리자의 승인을 기다려주세요.";
+//        } else {
+//            member.getLenderStatus().clear(); // 채권자 신청
+//            member.getLenderStatus().add(LenderStatus.PENDING);
+//            member.setLender(false); // 신청 상태에서 false 유지
+//            memberRepository.save(member); // 명시적으로 저장
+//            log.info("채권자 신청: {}, isLender: {}", member.getLenderStatus(), member.isLender());
+//            return "채권자 신청이 접수되었습니다. 관리자의 승인을 기다려주세요.";
+//        }
+//    }
+    public String requestLenderToggle(String userId) {
+        Member member = memberRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("회원이 존재하지 않습니다."));
+
+        log.info("변경 전 LenderStatus: {}, isLender: {}", member.getLenderStatus(), member.isLender());
+
+        if (member.getLenderStatus().contains(LenderStatus.PENDING) || member.getLenderStatus().contains(LenderStatus.PENDING_SURRENDER)) {
+            return "이미 신청 대기 중입니다. 관리자의 승인을 기다려주세요.";
+        }
+
+        if (member.isLender()) {
+            member.getLenderStatus().clear();
+            member.getLenderStatus().add(LenderStatus.PENDING_SURRENDER);
+//            member.setLender(false); // isLender를 false로 변경
+            memberRepository.saveAndFlush(member); // 변경 즉시 반영
+            log.info("채권자 포기 신청 완료. LenderStatus: {}, isLender: {}", member.getLenderStatus(), member.isLender());
+            return "채권자 포기 신청이 접수되었습니다. 관리자의 승인을 기다려주세요.";
+        } else {
+            member.getLenderStatus().clear();
+            member.getLenderStatus().add(LenderStatus.PENDING);
+//            member.setLender(false); // 신청 상태에서는 false 유지
+            memberRepository.saveAndFlush(member); // 변경 즉시 반영
+            log.info("채권자 신청 완료. LenderStatus: {}, isLender: {}", member.getLenderStatus(), member.isLender());
+            return "채권자 신청이 접수되었습니다. 관리자의 승인을 기다려주세요.";
+        }
+    }
+
+    // 관리자가 승인 또는 거절
+    @Transactional
+    @Override
+//    public String approveLenderRequest(String memberId, boolean approve) {
+//        Member member = memberRepository.findById(memberId)
+//                .orElseThrow(() -> new RuntimeException("회원이 존재하지 않습니다."));
+//
+//        if (!member.getLenderStatus().contains(LenderStatus.PENDING)) {
+//            return "승인 대기 중인 신청이 없습니다.";
+//        }
+//
+//        member.getLenderStatus().clear();
+//        if (approve) {
+//            member.getLenderStatus().add(LenderStatus.APPROVED);
+//            member.setLender(true); // isLender 필드 true로 설정
+//        } else {
+//            member.getLenderStatus().add(LenderStatus.REJECTED);
+//            member.setLender(false); // isLender 필드 false로 설정
+//        }
+//
+//        memberRepository.save(member);
+//
+//        return approve ? "승인이 완료되었습니다." : "거절이 완료되었습니다.";
+//    }
+    public String approveLenderRequest(String memberId, boolean approve) {
+        // 회원 조회
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new RuntimeException("회원이 존재하지 않습니다."));
+
+        // 상태 확인: PENDING 또는 PENDING_SURRENDER 상태여야 승인 가능
+        boolean isPendingApplication = member.getLenderStatus().contains(LenderStatus.PENDING);
+        boolean isPendingSurrender = member.getLenderStatus().contains(LenderStatus.PENDING_SURRENDER);
+
+        if (!isPendingApplication && !isPendingSurrender) {
+            return "승인 대기 중인 신청이 없습니다.";
+        }
+
+        // 상태 초기화
+        member.getLenderStatus().clear();
+
+        if (approve) {
+            if (isPendingApplication) {
+                // 채권자 신청 승인
+                member.getLenderStatus().add(LenderStatus.APPROVED);
+                member.setLender(true); // 채권자 상태로 설정
+            } else if (isPendingSurrender) {
+                // 채권자 포기 승인
+                member.getLenderStatus().add(LenderStatus.APPROVED);
+                member.setLender(false); // 채무자 상태로 설정
+            }
+        } else {
+            // 거절 처리
+            member.getLenderStatus().add(LenderStatus.REJECTED);
+        }
+
+        // 변경 사항 저장
+        memberRepository.saveAndFlush(member);
+
+        log.info("변경 후 상태: LenderStatus={}, isLender={}", member.getLenderStatus(), member.isLender());
+
+        return approve ? "승인이 완료되었습니다." : "거절이 완료되었습니다.";
+    }
+
+    @Override
+    @Transactional
+    public String surrenderLender(String memberId) {
+        // 회원 정보 조회
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new RuntimeException("회원이 존재하지 않습니다."));
+
+        // 현재 채권자 상태인지 확인
+        if (!member.isLender()) {
+            return "회원은 이미 채무자 상태입니다.";
+        }
+
+        // 채권자 포기 처리
+        member.getLenderStatus().clear(); // LenderStatus 초기화
+        member.setLender(false);          // isLender를 false로 설정
+        memberRepository.saveAndFlush(member); // 즉시 변경 반영
+
+        log.info("회원 {}가 채권자 포기를 완료했습니다. 현재 상태: isLender={}, LenderStatus={}",
+                member.getId(), member.isLender(), member.getLenderStatus());
+
+        return "채권자 포기가 완료되었습니다. 이제 회원은 채무자로 돌아갑니다.";
+    }
+
+
+    @Override
+    public List<Member> getPendingLenderRequests() {
+//        List<Member> pendingMembers = memberRepository.findMembersByLenderStatus(LenderStatus.PENDING);
+//
+//        pendingMembers.forEach(member -> {
+//            log.info("대기 중인 멤버: ID={}, Name={}, LenderStatus={}",
+//                    member.getId(),
+//                    member.getName(),
+//                    member.getLenderStatus());
+//        });
+//        return pendingMembers;
+//    }
+        List<Member> pendingMembers = memberRepository.findAll()
+                .stream()
+                .filter(member -> member.getLenderStatus().contains(LenderStatus.PENDING)
+                        || member.getLenderStatus().contains(LenderStatus.PENDING_SURRENDER)) // ✅ 포기 신청도 포함
+                .collect(Collectors.toList());
+
+        pendingMembers.forEach(member -> {
+            log.info("대기 중인 멤버: ID={}, Name={}, LenderStatus={}",
+                    member.getId(),
+                    member.getName(),
+                    member.getLenderStatus());
+        });
+
+        return pendingMembers;
+    }
+
+    public void validateDuplicateMember(MemberDTO memberDTO, String memberId) {
+        if (memberId == null) {
+            System.out.println("🔍 회원가입 중복 체크 시작");
+            System.out.println("ID: " + memberDTO.getId());
+            System.out.println("주민번호: " + memberDTO.getResidentNumber());
+            System.out.println("핸드폰 번호: " + memberDTO.getPhoneNumber());
+            System.out.println("이메일: " + memberDTO.getEmail());
+            System.out.println("계좌번호: " + memberDTO.getAccountNumber());
+
+            if (memberRepository.existsById(memberDTO.getId())) {
+                throw new IllegalArgumentException("⚠️ 중복된 ID: " + memberDTO.getId());
+            }
+            if (memberRepository.existsByResidentNumber(memberDTO.getResidentNumber())) {
+                throw new IllegalArgumentException("⚠️ 중복된 주민번호: " + memberDTO.getResidentNumber());
+            }
+            if (memberRepository.existsByPhoneNumber(memberDTO.getPhoneNumber())) {
+                throw new IllegalArgumentException("⚠️ 중복된 전화번호: " + memberDTO.getPhoneNumber());
+            }
+            if (memberRepository.existsByEmail(memberDTO.getEmail())) {
+                throw new IllegalArgumentException("⚠️ 중복된 이메일: " + memberDTO.getEmail());
+            }
+            if (memberDTO.getAccountNumber() != null &&
+                    memberRepository.existsByAccount_AccountNumberAndIdNot(memberDTO.getAccountNumber(), null)) {
+                throw new IllegalArgumentException("⚠️ 중복된 계좌번호: " + memberDTO.getAccountNumber());
+            }
+        } else {
+            // 회원수정: 기존 회원을 제외하고 중복 여부 확인
+            if (memberRepository.existsByIdAndIdNot(memberDTO.getId(), memberId)) {
+                throw new IllegalArgumentException("Duplicate ID: " + memberDTO.getId());
+            }
+            if (memberRepository.existsByResidentNumberAndIdNot(memberDTO.getResidentNumber(), memberId)) {
+                throw new IllegalArgumentException("Duplicate resident number: " + memberDTO.getResidentNumber());
+            }
+            if (memberRepository.existsByPhoneNumberAndIdNot(memberDTO.getPhoneNumber(), memberId)) {
+                throw new IllegalArgumentException("Duplicate phone number: " + memberDTO.getPhoneNumber());
+            }
+            if (memberRepository.existsByEmailAndIdNot(memberDTO.getEmail(), memberId)) {
+                throw new IllegalArgumentException("Duplicate email: " + memberDTO.getEmail());
+            }
+            if (memberDTO.getAccountNumber() != null &&
+                    memberRepository.existsByAccount_AccountNumberAndIdNot(memberDTO.getAccountNumber(), memberId)) {
+                throw new IllegalArgumentException("Duplicate account number: " + memberDTO.getAccountNumber());
+            }
+        }
+    }
+
+    public boolean checkFieldDuplicate(String field, String value, boolean social) {
+        if ("email".equals(field) && social) {
+            return false; // 소셜 사용자의 이메일 중복 체크 제외
+        }
+
+        switch (field) {
+            case "id":
+                return memberRepository.existsById(value);
+            case "residentNumber":
+                return memberRepository.existsByResidentNumber(value);
+            case "phoneNumber":
+                return memberRepository.existsByPhoneNumber(value);
+            case "email":
+                return memberRepository.existsByEmailAndSocial(value, social);
+            case "accountNumber":
+                return accountRepository.findByAccountNumber(value)
+                        .map(Account::isLinkedToMember)
+                        .orElse(false); // 계좌가 존재하고 연결된 경우 true
+            default:
+                throw new IllegalArgumentException("Invalid field: " + field);
+        }
+    }
+
+    @Override
+    public MemberDTO getKakaoMember(String accessToken) {
+        // Kakao AccessToken을 이용해 이메일 가져오기
+        String email = getEmailFromKakaoAccessToken(accessToken);
+
+        log.info("Kakao에서 가져온 이메일: " + email);
+
+        // 이메일로 회원 조회
+        Optional<Member> result = memberRepository.findByEmail(email);
+
+        if (result.isPresent()) {
+            // 기존 회원이라면 DTO로 변환 후 반환
+            MemberDTO memberDTO = entityToDTO(result.get());
+            log.info("기존 회원으로 로그인 처리: " + memberDTO);
+            return memberDTO;
+        }
+
+        // 신규 회원일 경우 처리
+        log.info("신규 Kakao 회원 등록 시작...");
+
+        // 닉네임은 '소셜회원', 임시 패스워드 생성
+        Member socialMember = Member.builder()
+                .id(email) // 이메일을 회원 ID로 사용
+                .email(email)
+                .password(passwordEncoder.encode("SOCIAL_MEMBER_TEMP_PASSWORD")) // 임시 패스워드
+                .name("소셜회원")
+                .residentNumber("") // 소셜 회원의 경우 주민등록번호 미입력 처리
+                .phoneNumber("") // 소셜 회원의 경우 전화번호 미입력 처리
+                .nickname("소셜회원") // 기본 닉네임 설정
+                .social(true) // 소셜 회원임을 표시
+                .address("") // 기본 주소값 비우기
+                .isLender(false) // 기본적으로 대출자로 설정하지 않음
+                .accountLocked(false) // 기본적으로 계정 잠금 해제 상태
+                .build();
+
+        socialMember.setAccount(null);
+
+        // 소셜 회원 등급 및 권한 추가
+        socialMember.addRole(MemberRole.USER); // 기본 권한
+        socialMember.addGrade(MemberGrade.BRONZE); // 기본 등급
+
+        // DB에 저장
+        memberRepository.save(socialMember);
+
+        // DTO로 변환 후 반환
+        MemberDTO memberDTO = entityToDTO(socialMember);
+        log.info("신규 Kakao 회원 등록 완료: " + memberDTO);
+        return memberDTO;
+    }
+
+    // accesstoken을 기반으로 사용자의 정보를 얻기위한 메서드
+    private String getEmailFromKakaoAccessToken(String accessToken){
+
+        String kakaoGetUserURL = "https://kapi.kakao.com/v2/user/me";
+
+        if(accessToken == null){
+            throw new RuntimeException("Access Token is null");
+        }
+        RestTemplate restTemplate = new RestTemplate();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + accessToken);
+        headers.add("Content-Type","application/x-www-form-urlencoded");
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+
+        UriComponents uriBuilder = UriComponentsBuilder.fromHttpUrl(kakaoGetUserURL).build();
+
+        ResponseEntity<LinkedHashMap> response =
+                restTemplate.exchange(
+                        uriBuilder.toString(),
+                        HttpMethod.GET,
+                        entity,
+                        LinkedHashMap.class);
+
+        log.info(response);
+
+        LinkedHashMap<String, LinkedHashMap> bodyMap = response.getBody();
+
+        log.info("------------------------------");
+        log.info(bodyMap);
+
+        LinkedHashMap<String, String> kakaoAccount = bodyMap.get("kakao_account");
+
+        log.info("kakaoAccount: " + kakaoAccount);
+
+        return kakaoAccount.get("email");
+
+    }
+
+    @Override
+    public List<Member> getTop10MembersByTransactionCount() {
+        return memberRepository.findTop10ByTransactionCount();
+    }
+
+    private MemberDTO entityToDTO(Member member) {
+        return new MemberDTO(
+                member.getId(),
+                member.getPassword(),
+                member.getName(),
+                member.getResidentNumber(),
+                member.getPhoneNumber(),
+                member.getEmail(),
+                member.getAccount() != null ? member.getAccount().getAccountNumber() : null ,
+                member.getNickname(),
+                member.isSocial(),
+                member.getAddress(),
+                member.isLender(),
+                member.isAccountLocked(),
+                member.getLenderStatus().stream()
+                        .map(lenderStatus -> lenderStatus.name())
+                        .collect(Collectors.toList()),
+                member.getMemberRoleList().stream()
+                        .map(role -> role.name()) // 역할 리스트를 문자열로 변환
+                        .collect(Collectors.toList()),
+                member.getMemberGradeList().stream()
+                        .map(grade -> grade.name()) // 역할 리스트를 문자열로 변환
+                        .collect(Collectors.toList())
+        );
+    }
+
+
+}
+
