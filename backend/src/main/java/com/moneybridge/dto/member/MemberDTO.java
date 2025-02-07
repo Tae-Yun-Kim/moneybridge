@@ -29,8 +29,10 @@ public class MemberDTO extends User {
     private boolean accountLocked;
     private List<String> lenderStatus; // LenderStatus 필드 추가
     private List<String> roleNames = new ArrayList<>();
+    private List<String> memberGradeList; // 등급 추가
 
-    public MemberDTO(String id, String password, String name, String residentNumber, String phoneNumber, String email, String accountNumber, String nickname, boolean social, String address, boolean isLender, boolean accountLocked, List<String> lenderStatus, List<String> roleNames) {
+
+    public MemberDTO(String id, String password, String name, String residentNumber, String phoneNumber, String email, String accountNumber, String nickname, boolean social, String address, boolean isLender, boolean accountLocked, List<String> lenderStatus, List<String> roleNames, List<String> memberGradeList) {
         super(
                 id,
                 password,
@@ -55,6 +57,7 @@ public class MemberDTO extends User {
         this.accountLocked = accountLocked;
         this.lenderStatus = lenderStatus;
         this.roleNames = roleNames;
+        this.memberGradeList = memberGradeList;
     }
 
     public Map<String, Object> getClaims() {
@@ -75,6 +78,7 @@ public class MemberDTO extends User {
         dataMap.put("accountLocked", accountLocked);
         dataMap.put("lenderStatus", lenderStatus);
         dataMap.put("roleNames", roleNames);
+        dataMap.put("memberGradeList", memberGradeList);
 
         return dataMap;
     }

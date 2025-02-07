@@ -2,11 +2,15 @@ package com.moneybridge.controller.member;
 
 import com.moneybridge.domain.member.Member;
 import com.moneybridge.dto.member.MemberDTO;
+import com.moneybridge.repository.member.MemberRepository;
 import com.moneybridge.service.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/member")
@@ -15,6 +19,7 @@ public class MemberJoinController {
 
     private final MemberService memberService;
     private final PasswordEncoder passwordEncoder;
+    private final MemberRepository memberRepository;
 
     // 회원가입
     @PostMapping("/register")
@@ -55,14 +60,65 @@ public class MemberJoinController {
         return ResponseEntity.ok("Member deleted successfully.");
     }
 
-    @GetMapping("/check-duplicate")
-    public ResponseEntity<Boolean> checkDuplicate(
-            @RequestParam String field,
-            @RequestParam String value,
-            @RequestParam(required = false, defaultValue = "false") boolean social) {
-        boolean isDuplicate = memberService.checkFieldDuplicate(field, value, social);
-        return ResponseEntity.ok(isDuplicate);
+    // API: 상위 10명 반환
+    @GetMapping("/top-members")
+    public List<Member> getTopMembers() {
+        return memberService.getTop10MembersByTransactionCount();
     }
+
+    @PostMapping("/check-duplicate")
+//    public ResponseEntity<Boolean> checkDuplicate(
+//            @RequestParam String field,
+//            @RequestParam String value,
+//            @RequestParam(required = false, defaultValue = "false") boolean social) {
+//        boolean isDuplicate = memberService.checkFieldDuplicate(field, value, social);
+//        return ResponseEntity.ok(isDuplicate);
+//    }
+
+//    public ResponseEntity<String> checkDuplicate(@RequestBody MemberDTO memberDTO) {
+//        try {
+//            System.out.println("🔍 중복 체크 API 호출: " + memberDTO.getEmail());
+//            memberService.validateDuplicateMember(memberDTO, null);
+//            return ResponseEntity.ok("사용 가능한 정보입니다.");
+//        } catch (IllegalArgumentException e) {
+//            return ResponseEntity.badRequest().body(e.getMessage());
+//        }
+//    }
+
+    public ResponseEntity<Boolean> checkDuplicate(@RequestBody Map<String, String> requestData) {
+        String field = requestData.get("field");
+        String value = requestData.get("value");
+
+        if (field == null || value == null) {
+            return ResponseEntity.badRequest().body(null);
+        }
+
+        System.out.println("🔍 중복 체크 API 호출: " + field + " = " + value);
+
+        boolean exists;
+        switch (field) {
+            case "id":
+                exists = memberRepository.existsById(value);
+                break;
+            case "residentNumber":
+                exists = memberRepository.existsByResidentNumber(value);
+                break;
+            case "phoneNumber":
+                exists = memberRepository.existsByPhoneNumber(value);
+                break;
+            case "email":
+                exists = memberRepository.existsByEmail(value);
+                break;
+            case "accountNumber":
+                exists = memberRepository.existsByAccount_AccountNumber(value);
+                break;
+            default:
+                return ResponseEntity.badRequest().body(null);
+        }
+
+        return ResponseEntity.ok(exists);
+    }
+
 
 }
 

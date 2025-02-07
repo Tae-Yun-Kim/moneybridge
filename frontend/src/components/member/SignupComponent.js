@@ -47,21 +47,52 @@ const SignupComponent = () => {
     }
   };
 
+  // const handleDuplicateCheck = async (field) => {
+  //   try {
+  //     const value = registerParam[field];
+  //     const isDuplicate = await checkDuplicate(field, value);
+  //     if (isDuplicate) {
+  //       alert(`${field}가 이미 사용 중입니다.`);
+  //     } else {
+  //       alert(`${field}를 사용할 수 있습니다.`);
+  //       setDuplicateChecks({
+  //         ...duplicateChecks,
+  //         [field]: true,
+  //       });
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //     alert("중복 체크 중 오류가 발생했습니다.");
+  //   }
+  // };
   const handleDuplicateCheck = async (field) => {
+    const value = registerParam[field];
+
+    if (!value) {
+      alert(`${field} 값을 입력해주세요.`);
+      return;
+    }
+
+    console.log(`🔍 중복 체크 요청: ${field} = ${value}`);
+
     try {
-      const value = registerParam[field];
       const isDuplicate = await checkDuplicate(field, value);
+      if (isDuplicate === null) {
+        alert("서버 오류로 중복 체크를 수행할 수 없습니다.");
+        return;
+      }
+
       if (isDuplicate) {
-        alert(`${field}가 이미 사용 중입니다.`);
+        alert(`⚠️ ${field}가 이미 사용 중입니다.`);
       } else {
-        alert(`${field}를 사용할 수 있습니다.`);
+        alert(`✅ ${field}를 사용할 수 있습니다.`);
         setDuplicateChecks({
           ...duplicateChecks,
           [field]: true,
         });
       }
     } catch (error) {
-      console.error(error);
+      console.error("중복 체크 중 오류 발생:", error);
       alert("중복 체크 중 오류가 발생했습니다.");
     }
   };

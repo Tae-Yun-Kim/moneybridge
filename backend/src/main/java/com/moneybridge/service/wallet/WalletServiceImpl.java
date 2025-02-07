@@ -16,6 +16,9 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Optional;
+
 
 @Service
 @RequiredArgsConstructor
@@ -30,8 +33,12 @@ public class WalletServiceImpl implements WalletService {
     @Override
     @Transactional
     public WalletDTO createWallet(WalletDTO walletDTO) {
-        Member member = memberRepository.findById(walletDTO.getMemberId())
-                .orElseThrow(() -> new RuntimeException("Member not found"));
+        Optional<Member> optionalMember = memberRepository.findById(walletDTO.getMemberId());
+        if (optionalMember.isEmpty()) {
+            throw new RuntimeException("⚠️ 회원이 존재하지 않습니다: " + walletDTO.getMemberId());
+        }
+        Member member = optionalMember.get();
+        System.out.println("✅ 회원 조회 성공: " + member.getId());
 
         // 2. Account 조회
         System.out.println("Received accountNumber: " + walletDTO.getAccountNumber());
@@ -310,8 +317,6 @@ public void transferFromWalletToAccount(String memberId, Long amount) {
         walletRepository.save(fromWallet);
         walletRepository.save(toWallet);
     }
-
-
 
     private WalletDTO convertToDTO(Wallet wallet) {
         return WalletDTO.builder()

@@ -70,7 +70,7 @@ public class Member {
     @Builder.Default
     private List<MemberRole> memberRoleList = new ArrayList<>();
 
-    @ElementCollection(fetch = FetchType.LAZY)
+    @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
     private List<MemberGrade> memberGradeList = new ArrayList<>();
 
@@ -107,14 +107,12 @@ public class Member {
         clearGrades(); // 기존 등급 초기화
         if (transactionCount >= 20) {
             addGrade(MemberGrade.GOLD);
-        } else if (transactionCount >= 5) {
+        } else if (transactionCount >= 10) {
             addGrade(MemberGrade.SILVER);
         } else {
             addGrade(MemberGrade.BRONZE);
         }
     }
-
-
 
     public void setAccount(Account account) {
         if (account != null) {

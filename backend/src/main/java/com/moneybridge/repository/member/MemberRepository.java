@@ -2,6 +2,7 @@ package com.moneybridge.repository.member;
 
 import com.moneybridge.domain.member.LenderStatus;
 import com.moneybridge.domain.member.Member;
+import com.moneybridge.dto.member.MemberDTO;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -41,5 +42,18 @@ public interface MemberRepository extends JpaRepository<Member, String> {
 
     @Query("SELECT m FROM Member m JOIN m.lenderStatus ls WHERE ls = :status")
     List<Member> findMembersByLenderStatus(@Param("status") LenderStatus status);
+
+    // transaction_count 기준 상위 10명 조회
+    @Query("SELECT m FROM Member m ORDER BY m.transactionCount DESC")
+    List<Member> findTop10ByTransactionCount();
+
+    @Query("SELECT m FROM Member m LEFT JOIN FETCH m.memberGradeList WHERE m.id = :id")
+    Optional<Member> findByIdWithGrades(@Param("id") String id);
+
+
+    @Query("SELECT m FROM Member m " +
+            "LEFT JOIN FETCH m.memberGradeList " +
+            "WHERE m.id = :id")
+    Member getWithGrades(@Param("id") String id);
 
 }

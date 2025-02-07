@@ -12,11 +12,11 @@ const LogoutComponent = () => {
 
   return (
     <div className="border-2 border-red-200 mt-10 m-2 p-4">
-      <div className="flex justify-center">
+      {/* <div className="flex justify-center">
         <div className="text-4xl m-4 p-4 font-extrabold text-red-500">
           Logout Component
         </div>
-      </div>
+      </div> */}
       <div className="flex justify-center">
         <div className="relative mb-4 flex w-full justify-center">
           <div className="w-2/5 p-6 flex justify-center font-bold">

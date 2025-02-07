@@ -1,230 +1,153 @@
-/* 일반 CSS */
-/* 헤더css */
-#navbar {
-  background-color: white;
+/* 전체 네비게이션 */
+.navbar {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  font-family: Arial, sans-serif;
+  background-color: #fff;
+  border-bottom: 1px solid #ddd;
+  padding: 0 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
+/* 상단 컨테이너 */
 .nav-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  padding-top: 10px;
+  gap: 20px; /* 요소 간격 추가 */
+}
+
+.navbar .nav-container .second {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0rem;
-  min-height: 110px;
-  padding-top: 50px;
+  justify-content: center;
 }
 
-.nav-header {
-  position: relative;
-  display: flex;
-  align-items: center;
-  width: 100%;
-  padding: 0 1rem;
-}
-
-.nav-logo {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
+/* 로고 */
 .nav-logo img {
-  height: 5rem;
-  max-width: 100%;
+  width: 150px;
+  height: auto;
 }
 
-.nav-login {
-  margin-left: auto;
+/* 상단 메뉴 */
+.nav-menu {
   display: flex;
-  gap: 1rem; /* 링크 사이의 간격 */
+  list-style: none;
+  gap: 15px;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-menu li a {
+  text-decoration: none;
+  color: #333;
+  font-size: 14px;
+}
+
+.nav-menu li a.active {
+  font-weight: bold;
+  border-bottom: 2px solid #0078ff;
+  color: #0078ff;
+}
+
+/* 로그인/로그아웃 */
+.nav-login {
+  font-size: 14px;
+  color: gray;
 }
 
 .nav-login a {
-  display: inline-block;
-  padding: 0.5rem 1rem; /* 상하, 좌우 여백 */
-  background-color: #9ae6b4; /* 초록색 배경 */
-  color: black; /* 텍스트 색상 */
-  border-radius: 0.5rem; /* 모서리 둥글게 */
-  font-size: 1rem; /* 텍스트 크기 */
-  text-decoration: none; /* 밑줄 제거 */
-  font-weight: bold; /* 텍스트 굵게 */
-  transition: background-color 0.3s ease; /* 배경색 전환 효과 */
+  text-decoration: none;
+  color: black;
+  margin-left: 10px; /* 버튼 간 간격 */
+  font-weight: bold;
 }
 
 .nav-login a:hover {
-  background-color: #68d391; /* 호버 시 더 진한 초록색 */
-  color: white; /* 호버 시 텍스트 색상 */
+  text-decoration: underline;
 }
 
+/* 기부 현황 */
+.donation-container {
+  margin-top: 10px;
+  display: flex; /* Flexbox를 활성화 */
+  justify-content: center; /* 가로 방향 가운데 정렬 */
+  align-items: center; /* 세로 방향 가운데 정렬 */
+  text-align: center; /* 내부 텍스트 가운데 정렬 */
+}
+/* 검색창 */
 .search-bar {
+  margin-top: 10px;
   display: flex;
-  align-items: center;
   justify-content: center;
   width: 100%;
-  margin-top: 1rem;
-  max-width: 48rem; /* max-w-3xl */
-  margin-left: auto;
-  margin-right: auto;
-  min-height: 50px;
 }
 
 .search-bar form {
-  position: relative;
-  flex-grow: 1;
+  display: flex;
   width: 100%;
+  max-width: 500px;
 }
 
 .search-bar input {
-  width: 100%;
-  border: 1px solid gray;
-  border-radius: 9999px;
-  padding: 0.75rem 1.25rem;
-  outline: none;
+  flex: 1;
+  padding: 8px 10px;
+  border: 1px solid #ddd;
+  /* border-radius: 4px 0 0 4px; */
 }
 
 .search-bar button {
-  position: absolute;
-  right: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
-  color: gray;
+  padding: 8px 10px;
+  background-color: gray;
+  border: none;
+  /* border-radius: 0 4px 4px 0; */
+  color: white;
+  cursor: pointer;
+}
+
+.search-bar button:hover {
+  background-color: black;
 }
 
 .menu-bar {
   display: flex;
-  padding: 5px;
-  color: black;
-  font-weight: bold;
-  justify-content: space-around;
-  list-style: none; /* 점 제거 */
-}
-
-.menu-bar li {
-  font-size: 1rem; /* text-2xl */
+  justify-content: center;
+  gap: 30px;
+  list-style: none;
+  padding: 0;
 }
 
 .menu-bar li a {
-  text-decoration: none; /* 밑줄 제거 */
-  color: inherit; /* 부모의 색상 상속 */
-}
-
-/* 양사이드바 */
-.menu-box {
-  background-color: #90cdf4; /* Tailwind: bg-blue-300 */
-  text-align: center;
-  font-size: 1rem; /* Tailwind: text-xl */
+  text-decoration: none;
+  color: #333;
+  font-size: 14px;
   font-weight: bold;
-  padding: 1rem; /* Tailwind: p-4 */
-  border-radius: 0.5rem; /* Tailwind: rounded */
-  margin: 0.5rem; /* Tailwind: m-2 */
-  height: auto;
-  overflow-y: auto; /* Tailwind: overflow-y-auto */
 }
 
-.menu-box.green {
-  background-color: #9ae6b4; /* Tailwind: bg-green-300 */
+.menu-bar li a:hover {
+  color: black;
+  border-bottom: 2px solid black;
 }
 
-.menu-box h2 {
-  font-size: 1.5rem; /* Tailwind: text-2xl */
+.menu-bar li a.active {
   font-weight: bold;
-  margin-bottom: 1rem; /* Tailwind: mb-4 */
+  border-bottom: 2px solid black;
+  color: black;
 }
 
-.textarea-box {
-  margin-top: 1rem; /* Tailwind: mt-4 */
-}
-
-.textarea-box textarea {
-  width: 100%; /* Tailwind: w-full */
-  padding: 0.5rem; /* Tailwind: p-2 */
-  border-radius: 0.25rem; /* Tailwind: rounded */
-  border: 1px solid #d1d5db; /* Tailwind: border-gray-300 */
-  outline: none;
-  transition: box-shadow 0.2s;
-}
-
-.textarea-box textarea:focus {
-  box-shadow: 0 0 0 2px #4299e1; /* Tailwind: focus:ring-blue-500 */
-}
-
-.image-container {
-  background-color: #ffffff; /* Tailwind: bg-white */
-  padding: 0;
-  border-radius: 0.5rem; /* Tailwind: rounded */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Tailwind: shadow-md */
-  margin-top: 1rem; /* Tailwind: mt-4 */
-  margin-left: auto;
-  margin-right: auto;
-  max-width: 100%; /* Tailwind: max-w-full */
-}
-
-.image-container img {
-  width: 100%; /* Tailwind: w-full */
-  object-fit: contain; /* Tailwind: object-contain */
-}
-
-/* Footerbar.css */
-
-/* 전체 컨테이너 */
 .footer-container {
   display: flex;
   flex-direction: column;
-  width: 100%;
-}
-
-/* 광고 박스 */
-.ad-box {
-  background-color: #86efac; /* Tailwind의 bg-green-300 */
+  align-content: center;
+  justify-content: center;
   text-align: center;
-  font-size: 1.25rem; /* Tailwind의 text-xl */
-  font-weight: bold;
-  padding: 1rem;
-  border-radius: 0.5rem; /* Tailwind의 rounded */
-  margin: 0.5rem;
-  cursor: pointer;
-  height: auto;
-  overflow-y: auto;
 }
 
-/* 광고 내용 */
-.ad-content {
-  background-color: white;
-  padding: 0;
-  border-radius: 0.5rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Tailwind의 shadow-md */
-  margin-top: 1rem;
-  margin-left: auto;
-  margin-right: auto;
-  display: flex;
-  align-items: center;
-  max-width: 100%;
-}
-
-/* 광고 이미지 */
-.ad-image {
-  max-height: 12rem; /* Tailwind의 max-h-48 */
-  width: auto;
-  margin-right: 1rem;
-  max-width: 50%;
-}
-
-/* 광고 텍스트 */
-.ad-text {
-  font-size: 1rem; /* Tailwind의 text-lg */
-  text-align: left;
-}
-
-/* 푸터 정보 */
-.footer-info {
-  background-color: white;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Tailwind의 shadow-md */
-  margin-top: 1rem;
-  margin-left: auto;
-  margin-right: auto;
-  max-width: 100%;
-  font-size: 0.875rem; /* Tailwind의 text-sm */
-  text-align: center;
-  color: #6b7280; /* Tailwind의 text-gray-600 */
+.ad-content img {
+  max-width: 100px;
+  max-height: 100px;
 }

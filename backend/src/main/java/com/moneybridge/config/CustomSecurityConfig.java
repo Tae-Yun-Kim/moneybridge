@@ -50,6 +50,15 @@ public class CustomSecurityConfig {
             config.failureHandler(new APILoginFailHandler());
         });
 
+        // ✅ 특정 API는 JWT 없이 접근 가능하도록 설정
+        http.authorizeHttpRequests(auth ->
+                auth.requestMatchers("/api/loan-products/**").permitAll() // ✅ 대출 상품 조회 API 인증 없이 접근 가능
+                        .requestMatchers("/api/member/top-members/**").permitAll()  // ✅ TOP 회원 조회 API 추가
+                        .requestMatchers("/api/member/check-duplicate").permitAll() // 중복 체크 API 허용
+                        .requestMatchers("/api/member/login","/api/member/register").permitAll() // 로그인 API도 허용
+                        .anyRequest().authenticated() // ✅ 그 외 모든 API는 인증 필요
+        );
+
         http.addFilterBefore(new JWTCheckFilter(), UsernamePasswordAuthenticationFilter.class); //JWT 체크
 
         http.exceptionHandling(config -> {config.accessDeniedHandler(new CustomAccessDeniedHandler());

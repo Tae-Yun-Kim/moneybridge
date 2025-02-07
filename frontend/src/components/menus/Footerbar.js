@@ -14,9 +14,9 @@ const Footerbar = () => {
         onClick={handleOpenNewPage} // 클릭 이벤트
       >
         <div className="ad-content">
-          <img src={die} alt="Logo" className="ad-image" />
+          {/* <img src={die} alt="Logo" className="ad-image" /> */}
           <div className="ad-text">
-            <h2>광고API</h2>
+            {/* <h2>광고API</h2> */}
             <div>과도한 빚은 당신에게 큰 불행을 안겨줄 수 있습니다.</div>
           </div>
         </div>
