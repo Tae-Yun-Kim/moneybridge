@@ -1,29 +1,93 @@
 /* BasicLayout.css */
 
-/* 레이아웃 전체 스타일 */
+/* 레이아웃 컨테이너 */
 .layout-container {
   display: flex;
-  flex-direction: row;
-  width: 100%;
+  flex-direction: row; /* 기본 가로 배치 */
+  justify-content: space-between; /* 양옆 사이드바와 메인 콘텐츠 간격 유지 */
+  gap: 1rem; /* 사이드바와 메인 콘텐츠 간격 */
+  padding: 1rem; /* 전체 레이아웃 여백 */
   background-color: white;
-  margin: 0.25rem 0; /* Tailwind의 `my-1` 대체 */
+  width: 100%; /* 전체 너비 */
+  box-sizing: border-box; /* 패딩 포함 크기 계산 */
+  border-bottom: 1px solid black;
 }
 
 /* 사이드바 스타일 */
 .sidebar {
-  height: auto;
+  flex: 1; /* 기본 비율 */
+  max-width: 20%; /* 최대 너비 */
+  min-width: 200px; /* 최소 너비 */
+  /* min-height: 100vh; 화면 높이 채우기 */
+  /* height: fit-content; */
+  /* border: 1px solid black; */
+  padding: 10px; /* 내부 여백 */
+  margin: 0 auto; /* 가운데 정렬 */
+  box-sizing: border-box; /* 테두리를 포함하여 크기 계산 */
+}
+
+.sidebar h3 {
+  text-align: center;
 }
 
 .left-sidebar {
-  width: 15%; /* Tailwind의 `w-1/6` 대체 */
+  position: sticky;
+  top: 10%;
+  border-right: 1px solid black;
+  height: fit-content; /* 내용에 맞게 높이 조정 */
+  width: 200px; /* 고정된 너비 */
+  margin-right: auto;
+  position: sticky; /* 스크롤 시 고정 */
+  /* max-height: calc(100vh - 20px); 화면 크기에 맞게 높이 조정 */
+  z-index: 100; /* 다른 요소 위로 표시 */
 }
 
 .right-sidebar {
-  width: 15%; /* Tailwind의 `w-1/6` 대체 */
+  position: sticky; /* 스크롤 시 고정 */
+  top: 10%; /* 상단에서의 고정 위치 */
+  height: fit-content; /* 내용에 맞게 높이 조정 */
+  margin-left: auto; /* 오른쪽으로 정렬 */
+  width: 200px; /* 고정된 너비 */
+  border-left: 1px solid black; /* 테두리 */
+  padding: 10px; /* 내부 여백 */
+  z-index: 100; /* 다른 요소 위로 표시 */
 }
 
 /* 메인 콘텐츠 스타일 */
 .main-content {
-  width: 70%; /* Tailwind의 `w-4/6` 대체 */
-  height: auto;
+  flex: 3; /* 메인 콘텐츠가 더 많은 공간 차지 */
+  max-width: auto; /* 최대 너비 */
+  min-width: 300px; /* 최소 너비 */
+  background-color: #ffffff; /* 메인 콘텐츠 배경색 */
+  padding: 1rem;
+  min-height: calc(100vh - 200px); /* 상단 메뉴와 푸터를 제외한 높이 계산 */
+  /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 부드러운 그림자 */
+  /* border-radius: 10px; 모서리 둥글게 */
+}
+
+/* 반응형 레이아웃 */
+@media (max-width: 768px) {
+  .layout-container {
+    flex-direction: column; /* 세로 배치 */
+    align-items: stretch; /* 가운데 정렬 */
+    gap: 1rem;
+  }
+
+  .sidebar {
+    max-width: 100%; /* 화면 전체 너비 */
+  }
+
+  .main-content {
+    max-width: 100%; /* 메인 콘텐츠가 화면을 꽉 채움 */
+  }
+}
+
+@media (max-width: 480px) {
+  .sidebar {
+    min-width: 100%; /* 작은 화면에서는 사이드바도 100% */
+  }
+
+  .main-content {
+    min-width: 100%; /* 메인 콘텐츠도 100% */
+  }
 }

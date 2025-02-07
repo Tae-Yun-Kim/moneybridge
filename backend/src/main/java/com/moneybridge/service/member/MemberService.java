@@ -29,4 +29,7 @@ public interface MemberService {
     String surrenderLender(String memberId);
 
     List<Member> getPendingLenderRequests();
+    List<Member> getTop10MembersByTransactionCount();
+
+    void validateDuplicateMember(MemberDTO memberDTO, String memberId);
 }

@@ -77,14 +77,17 @@ public class MemberServiceImpl implements MemberService {
 
         // 회원 저장
         Member savedMember = memberRepository.save(member);
+        memberRepository.flush(); // 즉시 반영
 
-        // WalletService를 통해 지갑 생성
-        WalletDTO walletDTO = WalletDTO.builder()
-                .memberId(savedMember.getId())
-                .accountNumber(savedMember.getAccount().getAccountNumber())
-                .pinNumber("1234")
-                .build();
-        walletService.createWallet(walletDTO);
+        log.info("✅ 회원가입 완료: ID = " + savedMember.getId());
+
+//         WalletService를 통해 지갑 생성
+//        WalletDTO walletDTO = WalletDTO.builder()
+//                .memberId(savedMember.getId())
+//                .accountNumber(savedMember.getAccount().getAccountNumber())
+//                .pinNumber("1234")
+//                .build();
+//        walletService.createWallet(walletDTO);
 
         //        return memberRepository.save(member);
         return savedMember;
@@ -173,10 +176,17 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Member findById(String id) {
-        return memberRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Member not found: " + id));
+    public Member findById(String memberId) {
+        System.out.println("🔍 findById() 호출: " + memberId);
+
+        if (memberId == null || memberId.equals("login")) {
+            throw new IllegalArgumentException("❌ 잘못된 회원 ID입니다: " + memberId);
+        }
+
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("❌ 회원을 찾을 수 없습니다: " + memberId));
     }
+
 
     @Override
     public void delete(String id, String password) {
@@ -359,22 +369,28 @@ public class MemberServiceImpl implements MemberService {
 
     public void validateDuplicateMember(MemberDTO memberDTO, String memberId) {
         if (memberId == null) {
-            // 회원가입: 모든 데이터가 중복되지 않아야 함
+            System.out.println("🔍 회원가입 중복 체크 시작");
+            System.out.println("ID: " + memberDTO.getId());
+            System.out.println("주민번호: " + memberDTO.getResidentNumber());
+            System.out.println("핸드폰 번호: " + memberDTO.getPhoneNumber());
+            System.out.println("이메일: " + memberDTO.getEmail());
+            System.out.println("계좌번호: " + memberDTO.getAccountNumber());
+
             if (memberRepository.existsById(memberDTO.getId())) {
-                throw new IllegalArgumentException("Duplicate ID: " + memberDTO.getId());
+                throw new IllegalArgumentException("⚠️ 중복된 ID: " + memberDTO.getId());
             }
             if (memberRepository.existsByResidentNumber(memberDTO.getResidentNumber())) {
-                throw new IllegalArgumentException("Duplicate resident number: " + memberDTO.getResidentNumber());
+                throw new IllegalArgumentException("⚠️ 중복된 주민번호: " + memberDTO.getResidentNumber());
             }
             if (memberRepository.existsByPhoneNumber(memberDTO.getPhoneNumber())) {
-                throw new IllegalArgumentException("Duplicate phone number: " + memberDTO.getPhoneNumber());
+                throw new IllegalArgumentException("⚠️ 중복된 전화번호: " + memberDTO.getPhoneNumber());
             }
             if (memberRepository.existsByEmail(memberDTO.getEmail())) {
-                throw new IllegalArgumentException("Duplicate email: " + memberDTO.getEmail());
+                throw new IllegalArgumentException("⚠️ 중복된 이메일: " + memberDTO.getEmail());
             }
             if (memberDTO.getAccountNumber() != null &&
                     memberRepository.existsByAccount_AccountNumberAndIdNot(memberDTO.getAccountNumber(), null)) {
-                throw new IllegalArgumentException("Duplicate account number: " + memberDTO.getAccountNumber());
+                throw new IllegalArgumentException("⚠️ 중복된 계좌번호: " + memberDTO.getAccountNumber());
             }
         } else {
             // 회원수정: 기존 회원을 제외하고 중복 여부 확인
@@ -509,6 +525,11 @@ public class MemberServiceImpl implements MemberService {
 
     }
 
+    @Override
+    public List<Member> getTop10MembersByTransactionCount() {
+        return memberRepository.findTop10ByTransactionCount();
+    }
+
     private MemberDTO entityToDTO(Member member) {
         return new MemberDTO(
                 member.getId(),
@@ -528,6 +549,9 @@ public class MemberServiceImpl implements MemberService {
                                         .collect(Collectors.toList()),
                 member.getMemberRoleList().stream()
                         .map(role -> role.name()) // 역할 리스트를 문자열로 변환
+                        .collect(Collectors.toList()),
+                member.getMemberGradeList().stream()
+                        .map(grade -> grade.name()) // 역할 리스트를 문자열로 변환
                         .collect(Collectors.toList())
         );
     }

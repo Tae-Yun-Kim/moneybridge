@@ -1,21 +1,40 @@
 /* 전체 컨테이너 */
 .mypage-component {
+  display: flex;
+  flex-direction: column;
   width: 90%;
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
   background-color: #ffffff; /* 흰색 배경 */
-  border-radius: 15px; /* 모서리 둥글게 */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 */
+  /* border-radius: 15px; 모서리 둥글게 */
+  /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 부드러운 그림자 */
   text-align: left;
   font-family: Arial, sans-serif;
+}
+
+.mypage-component .transfer {
+  margin-top: 20px; /* 개별 섹션 간격 추가 */
+  border: 1px solid black;
+  padding: 0 10px;
+}
+
+.mypage-component .deposit {
+  margin-top: 20px; /* 개별 섹션 간격 추가 */
+  border: 1px solid black;
+  padding: 0 10px;
+}
+
+.mypage-component .withdraw {
+  border: 1px solid black;
+  padding: 0 10px;
 }
 
 /* 제목 스타일 */
 .mypage-title {
   font-size: 2rem;
   font-weight: bold;
-  color: #2563eb; /* 파란색 텍스트 */
+  color: black; /* 파란색 텍스트 */
   text-align: center;
   margin-bottom: 20px;
 }
@@ -33,7 +52,7 @@ a {
   display: inline-block;
   padding: 10px 20px;
   border: none;
-  border-radius: 5px;
+  /* border-radius: 5px; */
   font-size: 1rem;
   font-weight: bold;
   text-align: center;
@@ -73,7 +92,7 @@ a.bg-blue:hover {
 .section-title {
   font-size: 1.5rem;
   font-weight: bold;
-  color: #2563eb; /* 파란색 텍스트 */
+  color: black; /* 파란색 텍스트 */
   margin-bottom: 10px;
 }
 
@@ -115,8 +134,9 @@ a.bg-blue:hover {
 /* 회원 정보와 지갑 정보를 감싸는 컨테이너 */
 .user-wallet-container {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: stretch;
+  flex-wrap: wrap;
   gap: 20px; /* 두 박스 사이 간격 */
   margin-bottom: 20px; /* 아래 섹션과 간격 */
 }
@@ -127,12 +147,24 @@ a.bg-blue:hover {
   flex: 1; /* 각 박스가 동일한 너비를 차지 */
   background-color: #ffffff; /* 흰색 배경 */
   padding: 20px;
-  border-radius: 10px; /* 모서리 둥글게 */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 */
+  /* border-radius: 10px; 모서리 둥글게 */
+  /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 그림자 */
+  border: 1px solid black;
   display: flex;
   flex-direction: column; /* 내부 요소 세로 정렬 */
   justify-content: space-between; /* 요소를 상하로 배치 */
   min-height: 200px; /* 최소 높이 지정 */
+}
+
+.infoi {
+  display: flex;
+}
+
+.infon {
+  padding-left: 5%;
+}
+
+.deposit {
 }
 
 /* 반응형 설정 */

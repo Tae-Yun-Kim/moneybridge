@@ -1,0 +1,79 @@
+/* 챗봇 컨테이너 */
+.chatbot {
+  position: absolute;
+  bottom: 60px; /* 버튼 바로 위에 표시 */
+  right: 0;
+  width: 300px;
+  height: 400px;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+  z-index: 1000; /* 가장 앞에 표시 */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.chatbot-toggle {
+  background-color: white;
+}
+
+/* 챗봇 헤더 */
+.chatbot-header {
+  background-color: black;
+  color: white;
+  padding: 10px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+/* 챗봇 내용 영역 */
+.chatbot-content {
+  flex: 1;
+  padding: 10px;
+  background-color: #f9f9f9;
+  overflow-y: auto;
+  font-size: 14px;
+  color: #333;
+}
+
+/* 챗봇 응답 텍스트 */
+.chatbot-response {
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+
+/* 챗봇 입력 폼 */
+.chatbot-form {
+  display: flex;
+  padding: 10px;
+  border-top: 1px solid #ddd;
+  background-color: #fff;
+}
+
+.chatbot-input {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+  margin-right: 5px;
+}
+
+.chatbot-send {
+  background-color: black;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.chatbot-send:hover {
+  background-color: gray;
+}
