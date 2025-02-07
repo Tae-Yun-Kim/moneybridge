@@ -51,6 +51,13 @@ public class JWTCheckFilter extends OncePerRequestFilter {
 
         String authHeaderStr = request.getHeader("Authorization");
 
+        // ✅ 1. JWT 헤더가 없는 경우 필터링하지 않고 요청을 다음 필터로 넘김
+        if (authHeaderStr == null || !authHeaderStr.startsWith("Bearer ")) {
+            log.info("✅ Authorization 헤더 없음, 필터 통과");
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         try {
             //Bearer accestoken...
             String accessToken = authHeaderStr.substring(7);
@@ -73,8 +80,9 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             Boolean accountLocked = (Boolean) claims.get("accountLocked");
             List<String> lenderStatus = (List<String>) claims.get("lenderStatus");
             List<String> roleNames = (List<String>) claims.get("roleNames");
+            List<String> memberGradeList = (List<String>) claims.get("memberGradeList");
 
-            MemberDTO memberDTO = new MemberDTO(id, name, email, residentNumber , password, phoneNumber, accountNumber, nickname, social.booleanValue(), address, isLender, accountLocked, lenderStatus, roleNames);
+            MemberDTO memberDTO = new MemberDTO(id, name, email, residentNumber , password, phoneNumber, accountNumber, nickname, social.booleanValue(), address, isLender, accountLocked, lenderStatus, roleNames, memberGradeList);
 
             log.info("-----------------------------------");
             log.info(memberDTO);

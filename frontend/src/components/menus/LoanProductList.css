@@ -1,0 +1,177 @@
+/* 전체 컨테이너 스타일 */
+.loan-product-container {
+  max-width: 500px;
+  margin: 30px auto;
+  padding: 0 20px;
+  /* background-color: #f8f9fa; */
+  /* border-radius: 10px; */
+  /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
+  text-align: center;
+}
+
+/* 제목 스타일 */
+.title {
+  font-size: 22px;
+  font-weight: bold;
+  color: #343a40;
+  margin-bottom: 20px;
+}
+
+/* 상품 리스트 컨테이너 */
+.product-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+/* 상품 카드 */
+.product-card {
+  padding: 0 15px;
+  border: 1px solid #dee2e6;
+  /* border-radius: 8px; */
+  background-color: white;
+  /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); */
+  text-align: left;
+}
+
+.product-name {
+  font-size: 13px;
+  font-weight: bold;
+  color: black;
+  margin-bottom: 5px;
+}
+
+.product-bank {
+  font-size: 15px;
+  color: black;
+  font-weight: bolder;
+  margin-bottom: 5px;
+}
+
+.product-rate {
+  font-size: 16px;
+  color: black;
+}
+
+.product-rate span {
+  font-weight: bold;
+  color: red;
+}
+
+/* 페이지네이션 */
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  flex-wrap: wrap; /* 기본적으로 한 줄 */
+}
+
+.page-button {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  background-color: #e9ecef;
+  color: black;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.page-button:hover {
+  background-color: gray;
+}
+
+.page-button.active {
+  background-color: black;
+  color: #ffffff;
+}
+
+/* 반응형 디자인 */
+
+/* 768px 이하 화면 */
+@media (max-width: 768px) {
+  .loan-product-container {
+    padding: 15px; /* 내부 여백 감소 */
+    max-width: 90%; /* 화면 너비에 맞춤 */
+    margin: 20px auto; /* 중앙 정렬 */
+  }
+
+  .title {
+    font-size: 18px; /* 제목 크기 감소 */
+  }
+
+  .product-card {
+    padding: 10px; /* 카드 내부 여백 감소 */
+  }
+
+  .product-name {
+    font-size: 12px; /* 글자 크기 감소 */
+  }
+
+  .product-bank {
+    font-size: 14px; /* 글자 크기 감소 */
+  }
+
+  .product-rate {
+    font-size: 14px; /* 글자 크기 감소 */
+  }
+
+  .pagination {
+    flex-wrap: wrap !important; /* 여러 줄로 표시 가능 */
+    gap: 3px !important; /* 간격 감소 */
+  }
+
+  .page-button {
+    padding: 6px 10px !important; /* 버튼 크기 감소 */
+    font-size: 14px !important; /* 텍스트 크기 축소 */
+    border-radius: 4px !important; /* 둥근 모서리 */
+  }
+
+  .page-button:hover {
+    background-color: #ced4da; /* 호버 시 배경색 변경 */
+  }
+
+  .page-button.active {
+    background-color: #007bff; /* 활성화된 버튼 배경색 */
+    color: #ffffff; /* 활성화된 버튼 글자색 */
+  }
+}
+
+/* 480px 이하 화면 */
+@media (max-width: 480px) {
+  .loan-product-container {
+    padding: 10px; /* 더 작은 여백 */
+    max-width: 95%; /* 화면 너비의 95% */
+    margin: 10px auto; /* 중앙 정렬 */
+  }
+
+  .title {
+    font-size: 16px; /* 제목 크기 더 감소 */
+  }
+
+  .product-card {
+    padding: 8px; /* 카드 내부 여백 더 감소 */
+    font-size: 12px; /* 텍스트 크기 통일 */
+  }
+
+  .pagination {
+    flex-wrap: wrap; /* 버튼이 여러 줄로 정렬 가능 */
+    justify-content: center; /* 가운데 정렬 */
+    gap: 2px; /* 간격 더 축소 */
+  }
+
+  .page-button {
+    font-size: 12px; /* 버튼 글자 크기 축소 */
+    padding: 4px 8px; /* 버튼 크기 축소 */
+    border-radius: 3px; /* 작은 화면에서 더 둥글게 */
+  }
+
+  .page-button:hover {
+    background-color: #ced4da; /* 호버 시 배경색 */
+  }
+
+  .page-button.active {
+    background-color: #007bff; /* 활성화된 버튼 배경색 */
+    color: #ffffff; /* 활성화된 버튼 글자색 */
+  }
+}

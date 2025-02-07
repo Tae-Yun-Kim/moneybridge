@@ -1,7 +1,7 @@
 import { RouterProvider } from "react-router-dom";
 import "./App.css";
 import root from "./router/root";
-// import ChatBot from "./ChatBot";
+import Chatbot from "./Chatbot";
 // import ImageAnalyzer from "./ImageAnalyzer";
 
 function App() {
@@ -9,7 +9,7 @@ function App() {
     <>
       {/* <ImageAnalyzer /> */}
       <RouterProvider router={root} />
-      {/* <ChatBot /> */}
+      {/* <Chatbot /> */}
     </>
   );
 }

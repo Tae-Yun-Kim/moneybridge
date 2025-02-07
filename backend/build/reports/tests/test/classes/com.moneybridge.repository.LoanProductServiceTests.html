@@ -41,7 +41,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">1.110s</div>
+<div class="counter">1.229s</div>
 <p>duration</p>
 </div>
 </td>
@@ -79,7 +79,7 @@
 </thead>
 <tr>
 <td class="success">testFetchAndSaveLoanProduct()</td>
-<td class="success">1.110s</td>
+<td class="success">1.229s</td>
 <td class="success">passed</td>
 </tr>
 </table>
@@ -87,8 +87,8 @@
 <div id="tab1" class="tab">
 <h2>Standard output</h2>
 <span class="code">
-<pre>11:12:18.368 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.moneybridge.repository.LoanProductServiceTests]: LoanProductServiceTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-11:12:18.433 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.moneybridge.MoneybridgeApplication for test class com.moneybridge.repository.LoanProductServiceTests
+<pre>16:29:50.878 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.moneybridge.repository.LoanProductServiceTests]: LoanProductServiceTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+16:29:50.947 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.moneybridge.MoneybridgeApplication for test class com.moneybridge.repository.LoanProductServiceTests
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -98,30 +98,51 @@
  =========|_|==============|___/=/_/_/_/
  :: Spring Boot ::                (v3.1.0)
 
-2025-01-17T11:12:18.660+09:00  INFO 9908 --- [    Test worker] c.m.repository.LoanProductServiceTests   : Starting LoanProductServiceTests using Java 17.0.13 with PID 9908 (started by EZEN in C:\Users\EZEN\Desktop\backend)
-2025-01-17T11:12:18.661+09:00  INFO 9908 --- [    Test worker] c.m.repository.LoanProductServiceTests   : No active profile set, falling back to 1 default profile: &quot;default&quot;
-2025-01-17T11:12:19.049+09:00  INFO 9908 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2025-01-17T11:12:19.092+09:00  INFO 9908 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 36 ms. Found 2 JPA repository interfaces.
-2025-01-17T11:12:19.425+09:00  INFO 9908 --- [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2025-01-17T11:12:19.465+09:00  INFO 9908 --- [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.2.2.Final
-2025-01-17T11:12:19.467+09:00  INFO 9908 --- [    Test worker] org.hibernate.cfg.Environment            : HHH000406: Using bytecode reflection optimizer
-2025-01-17T11:12:19.577+09:00  INFO 9908 --- [    Test worker] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
-2025-01-17T11:12:19.681+09:00  INFO 9908 --- [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-2025-01-17T11:12:19.694+09:00  INFO 9908 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2025-01-17T11:12:19.747+09:00  INFO 9908 --- [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.mariadb.jdbc.Connection@14485747
-2025-01-17T11:12:19.748+09:00  INFO 9908 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2025-01-17T11:12:19.773+09:00  INFO 9908 --- [    Test worker] org.hibernate.orm.dialect                : HHH035001: Using dialect: org.hibernate.dialect.MariaDBDialect, version: 11.6
-2025-01-17T11:12:19.917+09:00  INFO 9908 --- [    Test worker] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
-2025-01-17T11:12:20.330+09:00  INFO 9908 --- [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2025-02-03T16:29:51.169+09:00  INFO 10160 --- [    Test worker] c.m.repository.LoanProductServiceTests   : Starting LoanProductServiceTests using Java 17.0.12 with PID 10160 (started by EZEN in C:\Users\EZEN\Desktop\moneybridge_back)
+2025-02-03T16:29:51.170+09:00  INFO 10160 --- [    Test worker] c.m.repository.LoanProductServiceTests   : No active profile set, falling back to 1 default profile: &quot;default&quot;
+2025-02-03T16:29:51.555+09:00  INFO 10160 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-02-03T16:29:51.609+09:00  INFO 10160 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 47 ms. Found 6 JPA repository interfaces.
+2025-02-03T16:29:51.959+09:00  INFO 10160 --- [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-02-03T16:29:51.996+09:00  INFO 10160 --- [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.2.2.Final
+2025-02-03T16:29:51.998+09:00  INFO 10160 --- [    Test worker] org.hibernate.cfg.Environment            : HHH000406: Using bytecode reflection optimizer
+2025-02-03T16:29:52.091+09:00  INFO 10160 --- [    Test worker] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
+2025-02-03T16:29:52.178+09:00  INFO 10160 --- [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-02-03T16:29:52.189+09:00  INFO 10160 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-02-03T16:29:52.244+09:00  INFO 10160 --- [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.mariadb.jdbc.Connection@11574592
+2025-02-03T16:29:52.246+09:00  INFO 10160 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-02-03T16:29:52.274+09:00  INFO 10160 --- [    Test worker] org.hibernate.orm.dialect                : HHH035001: Using dialect: org.hibernate.dialect.MariaDBDialect, version: 11.5
+2025-02-03T16:29:52.475+09:00  INFO 10160 --- [    Test worker] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
+2025-02-03T16:29:52.929+09:00  INFO 10160 --- [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
 Hibernate: 
     alter table if exists loan_product 
        modify column crdt_grad_avg  float(53)
-2025-01-17T11:12:20.379+09:00  INFO 9908 --- [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2025-01-17T11:12:20.619+09:00  INFO 9908 --- [    Test worker] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
-2025-01-17T11:12:20.877+09:00  WARN 9908 --- [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2025-01-17T11:12:20.943+09:00  INFO 9908 --- [    Test worker] c.m.config.CustomSecurityConfig          : ---------------------security config---------------------------
-2025-01-17T11:12:20.978+09:00  INFO 9908 --- [    Test worker] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@14c1cba6, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@6f78c132, org.springframework.security.web.context.SecurityContextHolderFilter@57e83608, org.springframework.security.web.header.HeaderWriterFilter@4b4b02d, org.springframework.web.filter.CorsFilter@2a4bee4e, org.springframework.security.web.authentication.logout.LogoutFilter@4c9235c0, com.moneybridge.security.filter.JWTCheckFilter@7127f04b, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@727b3b0, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@2f726cf4, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@514eefc4, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@6ba19932, org.springframework.security.web.session.SessionManagementFilter@12d24c43, org.springframework.security.web.access.ExceptionTranslationFilter@20673498]
-2025-01-17T11:12:21.361+09:00  INFO 9908 --- [    Test worker] c.m.repository.LoanProductServiceTests   : Started LoanProductServiceTests in 2.832 seconds (process running for 3.485)
+Hibernate: 
+    alter table if exists member_lender_status 
+       modify column lender_status  enum ('APPROVED','PENDING','PENDING_SURRENDER','REJECTED') not null
+Hibernate: 
+    alter table if exists transaction 
+       modify column created_at  TIMESTAMP(0) null
+Hibernate: 
+    alter table if exists transaction 
+       modify column updated_at  TIMESTAMP(0) null
+Hibernate: 
+    alter table if exists wallet 
+       modify column created_at  TIMESTAMP(0) null
+Hibernate: 
+    alter table if exists wallet 
+       modify column updated_at  TIMESTAMP(0) null
+Hibernate: 
+    alter table if exists wallet_transaction 
+       modify column created_at  TIMESTAMP(0) null
+Hibernate: 
+    alter table if exists wallet_transaction 
+       modify column updated_at  TIMESTAMP(0) null
+2025-02-03T16:29:53.021+09:00  INFO 10160 --- [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-02-03T16:29:53.265+09:00  INFO 10160 --- [    Test worker] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-02-03T16:29:53.599+09:00  WARN 10160 --- [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-02-03T16:29:53.675+09:00  INFO 10160 --- [    Test worker] c.m.config.CustomSecurityConfig          : ---------------------security config---------------------------
+2025-02-03T16:29:53.708+09:00  INFO 10160 --- [    Test worker] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@1786e49f, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@3bfbe2a6, org.springframework.security.web.context.SecurityContextHolderFilter@482c8db4, org.springframework.security.web.header.HeaderWriterFilter@73ae084e, org.springframework.web.filter.CorsFilter@275ff5f8, org.springframework.security.web.authentication.logout.LogoutFilter@7e9b68c5, com.moneybridge.security.filter.JWTCheckFilter@62243a7a, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@4dea763c, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@41f274d, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@4b90a402, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@42a698bd, org.springframework.security.web.session.SessionManagementFilter@369958b0, org.springframework.security.web.access.ExceptionTranslationFilter@124e538e]
+2025-02-03T16:29:54.094+09:00  INFO 10160 --- [    Test worker] c.m.repository.LoanProductServiceTests   : Started LoanProductServiceTests in 3.056 seconds (process running for 3.707)
 Hibernate: 
     select
         l1_0.fin_prdt_cd,
@@ -852,7 +873,7 @@ Hibernate:
 <input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
 </label>
 </div>Generated by 
-<a href="http://www.gradle.org">Gradle 8.11.1</a> at 2025. 1. 17. 오전 11:12:22</p>
+<a href="http://www.gradle.org">Gradle 8.11.1</a> at 2025. 2. 3. 오후 4:29:55</p>
 </div>
 </div>
 </body>

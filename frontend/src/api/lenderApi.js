@@ -22,7 +22,7 @@ export const requestLenderToggle = async (id) => {
   }
 };
 
-// 2. 관리자 승인/거절 요청
+// 2. 채권자 요청
 export const approveLenderRequest = async (id, approve) => {
   console.log("보낼 데이터:", { id, approve }); // 디버깅 로그 추가
   try {
@@ -33,6 +33,19 @@ export const approveLenderRequest = async (id, approve) => {
     return response.data; // 성공 메시지 반환
   } catch (error) {
     console.error("채권자 승인/거절 요청 실패:", error);
+    throw error;
+  }
+};
+
+// 채권자 포기 요청
+export const surrenderLender = async (id) => {
+  try {
+    const response = await jwtAxios.post(`${lenderHost}/surrender`, null, {
+      params: { memberId: id },
+    });
+    return response.data; // 성공 메시지 반환
+  } catch (error) {
+    console.error("채권자 포기 요청 실패:", error);
     throw error;
   }
 };
