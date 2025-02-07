@@ -248,8 +248,7 @@
 
 .comment-count{
   max-width: 130px;
-  /* border: 3px solid #ddd; 
-  border-radius: 10px; */
+   /* border: 3px solid #ddd;  */
   font-size: 1.5rem;
   font-weight: bold;
 }
@@ -260,7 +259,7 @@
   font-size: 1.25rem; /* 제목 크기 크게 */
   font-weight: bold;
   color: #555; /* 회색으로 변경 */
-  margin-top: 15px;
+  margin-top: 50px;
 }
 
 .comment-body {
@@ -268,6 +267,8 @@
   padding: 4px;
   color: #666; /* 회색으로 변경 */
   line-height: 1.8; /* 줄 간격을 늘려서 글자 사이의 여백 추가 */
+  border-bottom: 2px solid #ddd;
+  margin: 10px;
 }
 
 .comment-footer {
@@ -301,8 +302,6 @@
 .button-container {
   display: flex;
   gap: 10px;
-
-  border-bottom: 2px solid #ddd;
 }
 
 
@@ -329,7 +328,7 @@
   display: flex;
   justify-content: flex-end; /* 버튼을 오른쪽으로 정렬 */
   gap: 10px; /* 버튼 간 간격 */
-  margin-top: -30px; /* 버튼을 위로 올리기 위한 음수 값 조정 */
+  margin-top: -60px; /* 버튼을 위로 올리기 위한 음수 값 조정 */
 }
 
 .comment-created-at {

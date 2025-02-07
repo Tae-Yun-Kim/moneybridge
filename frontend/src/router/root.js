@@ -9,6 +9,7 @@ import loanPostRouter from "./postRouter"
 
 const Loading = <div>Loading....</div>;
 const Main = lazy(() => import("../pages/MainPage"));
+const ContractPage = lazy(() => import("../pages/post/ContractPage")); // ✅ ContractPage 추가
 // const About = lazy(() => import("../pages/AboutPage"));
 // const TodoIndex = lazy(() => import("../pages/todo/IndexPage"));
 // const TodoList = lazy(() => import("../pages/todo/ListPage"));
@@ -64,7 +65,15 @@ const root = createBrowserRouter([
   {
     path: "debt",
     children: debtRouter(),
-  }
+  },
+  {
+    path: "contract/:contractId",
+    element: (
+      <Suspense fallback={Loading}>
+        <ContractPage />
+      </Suspense>
+    ),
+  },
 ]);
 
 export default root;

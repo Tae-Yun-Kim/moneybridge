@@ -138,11 +138,14 @@ const LoginComponent = () => {
           email: data.email, // 서버에서 반환된 사용자 이메일
           role: data.role,
           isLender: data.isLender,
+          grade:data.grade,
         };
         localStorage.setItem("member", JSON.stringify(userInfo)); // JSON으로 저장
         
         const userId = data.id;
         localStorage.setItem("userId", data.id);  // JSON.stringify 없이 저장
+
+        localStorage.setItem("memberGrade", data.grade);  // JSON.stringify 없이 저장
         
         localStorage.setItem("isLender", JSON.stringify(data.isLender)); 
         moveToPath("/");
