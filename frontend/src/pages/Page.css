@@ -9,12 +9,20 @@
 
 /* 첫 번째 박스 스타일 */
 .main-box {
+<<<<<<< HEAD
   /* background-color: #93c5fd; Tailwind bg-blue-300 */
+=======
+  background-color: #93c5fd; /* Tailwind bg-blue-300 */
+>>>>>>> c18324b9960a4447aa724017219b545b773bffeb
   text-align: center;
   font-size: 1.25rem; /* Tailwind text-xl */
   font-weight: bold;
   padding: 1rem; /* Tailwind p-4 */
+<<<<<<< HEAD
   /* border-radius: 0.5rem; Tailwind rounded */
+=======
+  border-radius: 0.5rem; /* Tailwind rounded */
+>>>>>>> c18324b9960a4447aa724017219b545b773bffeb
   margin: 0.5rem; /* Tailwind m-2 */
   height: auto;
   overflow-y: auto;
@@ -31,6 +39,7 @@
   font-size: 1.125rem; /* Tailwind text-lg */
 }
 
+<<<<<<< HEAD
 .info {
   background-color: white;
 }
@@ -40,11 +49,20 @@
   display: flex;
   flex-direction: column;
   /* background-color: #86efac; Tailwind bg-green-300 */
+=======
+/* 두 번째 박스 스타일 */
+.sub-box {
+  background-color: #86efac; /* Tailwind bg-green-300 */
+>>>>>>> c18324b9960a4447aa724017219b545b773bffeb
   text-align: center;
   font-size: 1.25rem; /* Tailwind text-xl */
   font-weight: bold;
   padding: 1rem; /* Tailwind p-4 */
+<<<<<<< HEAD
   /* border-radius: 0.5rem; Tailwind rounded */
+=======
+  border-radius: 0.5rem; /* Tailwind rounded */
+>>>>>>> c18324b9960a4447aa724017219b545b773bffeb
   margin: 0.5rem; /* Tailwind m-2 */
   height: auto;
   overflow-y: auto;
@@ -77,6 +95,7 @@
   font-weight: bold;
   font-size: 1.125rem; /* Tailwind text-lg */
 }
+<<<<<<< HEAD
 
 .youtube-container {
   position: relative;
@@ -99,3 +118,5 @@
   width: 100%; /* 부모 요소에 맞춤 */
   height: 100%; /* 부모 요소에 맞춤 */
 }
+=======
+>>>>>>> c18324b9960a4447aa724017219b545b773bffeb

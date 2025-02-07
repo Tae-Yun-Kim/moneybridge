@@ -43,6 +43,7 @@ public interface MemberRepository extends JpaRepository<Member, String> {
     @Query("SELECT m FROM Member m JOIN m.lenderStatus ls WHERE ls = :status")
     List<Member> findMembersByLenderStatus(@Param("status") LenderStatus status);
 
+<<<<<<< HEAD
     // transaction_count 기준 상위 10명 조회
     @Query("SELECT m FROM Member m ORDER BY m.transactionCount DESC")
     List<Member> findTop10ByTransactionCount();
@@ -56,4 +57,6 @@ public interface MemberRepository extends JpaRepository<Member, String> {
             "WHERE m.id = :id")
     Member getWithGrades(@Param("id") String id);
 
+=======
+>>>>>>> c18324b9960a4447aa724017219b545b773bffeb
 }
