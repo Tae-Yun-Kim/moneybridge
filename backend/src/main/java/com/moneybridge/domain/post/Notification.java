@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "Notification")
+@Table(name = "notification")
 @Getter
 @Setter
 @Builder
@@ -27,17 +27,25 @@ public class Notification extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private NotificationType type; // 알림 유형 (DEPOSIT, APPLICATION, APPROVAL, REJECTION, EXTENSION_REQUEST)
+    private NotificationType type; // 알림 유형
 
     @Column(nullable = true)
     private String message; // 알림 메시지
 
     // 알림 유형을 정의하는 Enum 타입
     public enum NotificationType {
-        DEPOSIT,          // 입금
-        APPLICATION,      // 신청
-        APPROVAL,         // 승인
-        REJECTION,        // 거절
-        EXTENSION_REQUEST // 연장 요청
+        PENDING,  // 계약 대기 (출자자가 선택한 후)
+        WAITING_FOR_APPROVAL, // 대출자의 승인 대기 상태
+        ACTIVE,   // 계약 진행 중 (대출 실행됨)
+        COMPLETED, // 계약 완료 (상환 완료)
+        OVERDUE,  // 연체 상태
+        CANCELLED, // 계약 취소됨
+        EXTENSION_REQUEST, // 연장 요청
+        TRANSFER_TO_WALLET,    // 계좌 -> 지갑 이체
+        TRANSFER_TO_ACCOUNT,   // 지갑 -> 계좌 이체
+        DEBTOR_TO_CREDITOR,    // 채무자 -> 채권자 이체
+        CREDITOR_TO_DEBTOR     // 채권자 -> 채무자 이체
     }
+
+
 }
