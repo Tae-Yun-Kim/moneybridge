@@ -18,11 +18,11 @@ public class Notification extends BaseEntity {
     private Long notificationId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "memberId", nullable = true)
+    @JoinColumn(name = "member_id", nullable = true)
     private Member member; // 사용자 참조 (채권자/채무자 구분은 isLender로 판단)
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "postId")
+    @JoinColumn(name = "post_id")
     private LoanPost postId; // 게시글 참조
 
     @Enumerated(EnumType.STRING)

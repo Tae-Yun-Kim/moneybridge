@@ -9,6 +9,7 @@ import com.moneybridge.repository.member.MemberRepository;
 import com.moneybridge.repository.post.LoanPostRepository;
 import com.moneybridge.repository.post.PostCommentRepository;
 import jakarta.persistence.EntityNotFoundException;
+import com.moneybridge.service.post.NotificationService; // 알림 서비스 추가
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,8 +25,10 @@ public class PostCommentServiceImpl implements PostCommentService {
     private final PostCommentRepository postCommentRepository;
     private final LoanPostRepository loanPostRepository;
     private final MemberRepository memberRepository;
+    private final NotificationService notificationService; // 알림 서비스 주입
 //    private final DebtService debtService;  // DebtService 사용
 //    private final AuthenticationService authenticationService;
+
 
     @Override
     public PostCommentDTO createComment(PostCommentDTO dto) {
@@ -59,9 +62,12 @@ public class PostCommentServiceImpl implements PostCommentService {
         PostComment savedComment = postCommentRepository.save(comment);
 
         log.info("Comment created successfully: {}", savedComment.getId());
+
+        // 알림 추가: 새로운 댓글에 대해 알림 전송
+        notificationService.createApprovalPendingNotification(post.getWriter(), post, dto.getCommentText());
+
         return mapToDTO(savedComment);
     }
-
 
     @Override
     public PostCommentDTO getCommentById(Long id) {
@@ -136,6 +142,8 @@ public class PostCommentServiceImpl implements PostCommentService {
         PostComment selectedComment = postCommentRepository.save(comment);
 
         log.info("Comment selected successfully: {}", selectedComment.getId());
+
+
 //
 //        // 부채 생성 로직 호출
 //        DebtRequestDTO debtRequestDTO = new DebtRequestDTO();
@@ -176,6 +184,9 @@ public class PostCommentServiceImpl implements PostCommentService {
 
         // 거래 성립 로직 추가 (예: 거래 상태 업데이트, 기록 저장 등)
         log.info("Transaction confirmed for comment ID: {}", commentId);
+
+        // 거래 성립 알림 전송
+        notificationService.createContractCompletedNotification(comment.getPost().getWriter(), comment.getPost());
 
         return mapToDTO(comment);
     }
