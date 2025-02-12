@@ -25,7 +25,7 @@ public class NotificationController {
     // 알림 생성
     @PostMapping
     public ResponseEntity<NotificationDTO> createNotification(@RequestBody NotificationDTO notificationDTO) {
-        return ResponseEntity.ok(notificationService.createNotification(notificationDTO));
+        return ResponseEntity.ok(notificationService.createNotification(notificationDTO, notificationDTO.getMemberId()));
     }
 
     // 특정 회원의 알림 목록 조회
@@ -96,14 +96,13 @@ public class NotificationController {
         return ResponseEntity.ok().build();
     }
 
-    // 채무자 -> 채권자 이체 알림 생성
+/*    // 채무자 -> 채권자 이체 알림 생성
     @PostMapping("/debtor-to-creditor/{postId}")
     public ResponseEntity<Void> createDebtorToCreditorNotification(@PathVariable Long postId, @RequestBody Double amount) {
         String currentUserId = SecurityContextHolder.getContext().getAuthentication().getName();
         Member member = memberService.findById(currentUserId);  // MemberService로 현재 사용자 조회
         LoanPostDTO postDTO = loanPostService.getLoanPostById(postId);  // LoanPostDTO로 게시글 조회
-        LoanPost post = convertToLoanPost(postDTO);  // LoanPostDTO를 LoanPost로 변환
-        notificationService.createDebtorToCreditorNotification(member, amount, post);
+        notificationService.createDebtorToCreditorNotification(member, amount);
         return ResponseEntity.ok().build();
     }
 
@@ -113,10 +112,9 @@ public class NotificationController {
         String currentUserId = SecurityContextHolder.getContext().getAuthentication().getName();
         Member member = memberService.findById(currentUserId);  // MemberService로 현재 사용자 조회
         LoanPostDTO postDTO = loanPostService.getLoanPostById(postId);  // LoanPostDTO로 게시글 조회
-        LoanPost post = convertToLoanPost(postDTO);  // LoanPostDTO를 LoanPost로 변환
-        notificationService.createCreditorToDebtorNotification(member, amount, post);
+        notificationService.createCreditorToDebtorNotification(member, amount);
         return ResponseEntity.ok().build();
-    }
+    }*/
 
     // 연체 알림 생성
     @PostMapping("/overdue/{postId}")

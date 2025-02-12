@@ -9,6 +9,7 @@ import com.moneybridge.repository.account.AccountRepository;
 import com.moneybridge.repository.member.MemberRepository;
 import com.moneybridge.repository.wallet.WalletRepository;
 import com.moneybridge.repository.wallet.WalletTransactionRepository;
+import com.moneybridge.service.post.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,7 @@ public class WalletServiceImpl implements WalletService {
     private final MemberRepository memberRepository;
     private final AccountRepository accountRepository;
     private final WalletTransactionRepository walletTransactionRepository;
+    private final NotificationService notificationService;  // NotificationService 주입
 
     @Override
     @Transactional
@@ -313,6 +315,19 @@ public void transferFromWalletToAccount(String memberId, Long amount) {
         walletTransactionRepository.save(walletTransaction);
         walletRepository.save(fromWallet);
         walletRepository.save(toWallet);
+
+        // 채무자 -> 채권자 알림 생성
+//        if (fromWallet.getMember().isLender()) { // 출발 지갑이 채권자
+//            log.info("Creating creditor-to-debtor notification for fromMember: {}", fromWallet.getMember());
+//            log.info("Creating debtor-to-creditor notification for toMember: {}", toWallet.getMember());
+//            notificationService.createCreditorToDebtorNotification(fromWallet.getMember(), Double.valueOf(amount));
+//            notificationService.createDebtorToCreditorNotification(toWallet.getMember(), Double.valueOf(amount));
+//        } else { // 출발 지갑이 채무자
+//            log.info("Creating debtor-to-creditor notification for fromMember: {}", fromWallet.getMember());
+//            log.info("Creating creditor-to-debtor notification for toMember: {}", toWallet.getMember());
+//            notificationService.createDebtorToCreditorNotification(fromWallet.getMember(), Double.valueOf(amount));
+//            notificationService.createCreditorToDebtorNotification(toWallet.getMember(), Double.valueOf(amount));
+//        }
     }
 
     private WalletDTO convertToDTO(Wallet wallet) {

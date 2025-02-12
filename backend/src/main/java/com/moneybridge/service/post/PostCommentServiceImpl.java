@@ -77,6 +77,7 @@ public class PostCommentServiceImpl implements PostCommentService {
                 .orElseThrow(() -> new EntityNotFoundException("Comment not found with ID: " + id));
 
         return mapToDTO(comment);
+
     }
 
     @Override

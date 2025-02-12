@@ -7,21 +7,24 @@ import com.moneybridge.dto.wallet.WalletTransactionDTO;
 import com.moneybridge.repository.member.MemberRepository;
 import com.moneybridge.repository.wallet.WalletRepository;
 import com.moneybridge.repository.wallet.WalletTransactionRepository;
+import com.moneybridge.service.post.NotificationService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Log4j2
 @Service
 @RequiredArgsConstructor
-public class
-WalletTransactionServiceImpl implements WalletTransactionService {
+public class WalletTransactionServiceImpl implements WalletTransactionService {
 
     private final WalletTransactionRepository walletTransactionRepository;
     private final WalletRepository walletRepository;
     private final MemberRepository memberRepository;
+    private final NotificationService notificationService;  // NotificationService 주입
 
     @Override
     @Transactional
@@ -32,9 +35,6 @@ WalletTransactionServiceImpl implements WalletTransactionService {
         Wallet toWallet = walletRepository.findById(walletTransactionDTO.getToWalletId())
                 .orElseThrow(() -> new RuntimeException("To Wallet not found"));
 
-        System.out.println("✅ Initial fromWallet balance: " + fromWallet.getBalance());
-        System.out.println("✅ Initial toWallet balance: " + toWallet.getBalance());
-
         // 잔액 확인
         if (fromWallet.getBalance() < walletTransactionDTO.getAmount()) {
             throw new IllegalArgumentException("Insufficient balance in the from wallet");
@@ -42,7 +42,6 @@ WalletTransactionServiceImpl implements WalletTransactionService {
 
         Member fromMember = fromWallet.getMember();
         Member toMember = toWallet.getMember();
-
 
         // DTO에서 Entity로 변환
         WalletTransaction walletTransaction = WalletTransaction.builder()
@@ -58,28 +57,34 @@ WalletTransactionServiceImpl implements WalletTransactionService {
         // 잔액 업데이트 로직
         if (fromWallet.getAccount() != null) {
             // 계좌 → 지갑
-            System.out.println("🟢 계좌에서 지갑으로 송금");
             fromWallet.updateBalance(-walletTransactionDTO.getAmount());
             toWallet.updateBalance(walletTransactionDTO.getAmount());
         } else if (toWallet.getAccount() != null) {
             // 지갑 → 계좌
-            System.out.println("🟢 지갑에서 계좌로 송금");
             fromWallet.updateBalance(-walletTransactionDTO.getAmount());
             toWallet.updateBalance(walletTransactionDTO.getAmount());
         } else {
             // 지갑 간 송금
-            System.out.println("🟢 지갑 간 송금");
             fromWallet.updateBalance(-walletTransactionDTO.getAmount());
-            fromWallet.incrementTransactionCount();
             toWallet.updateBalance(walletTransactionDTO.getAmount());
-            toWallet.incrementTransactionCount();
+
+
+           
         }
+
+
+        log.info("Attempting to create notifications for wallet transfer");
+        log.info("fromMember isLender: {}", fromMember.isLender());
+        log.info("fromMember: {}, toMember: {}", fromMember.getId(), toMember.getId());
+
+        log.info("NotificationService injected: {}", notificationService != null);
 
         // 지갑 저장
         walletRepository.save(fromWallet);
         walletRepository.save(toWallet);
         memberRepository.save(fromMember);
         memberRepository.save(toMember);
+
 
         return convertToDTO(walletTransaction);
     }
@@ -124,8 +129,6 @@ WalletTransactionServiceImpl implements WalletTransactionService {
     private WalletTransactionDTO convertToDTO(WalletTransaction walletTransaction) {
         return WalletTransactionDTO.builder()
                 .transactionId(walletTransaction.getTransactionId())
-//                .fromWalletId(walletTransaction.getFromWallet().getWalletId())
-//                .toWalletId(walletTransaction.getToWallet().getWalletId())
                 .fromWalletId(walletTransaction.getFromWallet() != null ? walletTransaction.getFromWallet().getWalletId() : "N/A")
                 .toWalletId(walletTransaction.getToWallet() != null ? walletTransaction.getToWallet().getWalletId() : "N/A")
                 .amount(walletTransaction.getAmount())

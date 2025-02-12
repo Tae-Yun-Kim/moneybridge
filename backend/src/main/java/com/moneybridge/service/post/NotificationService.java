@@ -6,8 +6,8 @@ import com.moneybridge.dto.post.NotificationDTO;
 import java.util.List;
 
 public interface NotificationService {
-    NotificationDTO createNotification(NotificationDTO notificationDTO);
-    List<NotificationDTO> getMemberNotifications(String memberId);
+    NotificationDTO createNotification(NotificationDTO notificationDTO, String memberId);
+    List<NotificationDTO> getMemberNotifications(String userId);
     void deleteNotification(Long notificationId);
 
     void createContractPendingNotification(Member member, LoanPost post);
@@ -18,8 +18,8 @@ public interface NotificationService {
     void createContractCancelledNotification(Member member, LoanPost post);
 
     // 채권자 -> 채무자, 채무자 -> 채권자
-    void createDebtorToCreditorNotification(Member member, Double amount, LoanPost post);
-    void createCreditorToDebtorNotification(Member member, Double amount, LoanPost post);
+//    void createDebtorToCreditorNotification(Member member, Double amount);
+//    void createCreditorToDebtorNotification(Member member, Double amount);
 
     // 지갑 -> 계좌, 계좌-> 지갑
 //  void createTransferToWalletNotification(Member member, Double amount, LoanPost post);

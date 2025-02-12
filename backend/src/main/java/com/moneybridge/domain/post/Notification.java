@@ -22,11 +22,11 @@ public class Notification extends BaseEntity {
     private Member member; // 사용자 참조 (채권자/채무자 구분은 isLender로 판단)
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id")
+    @JoinColumn(name = "post_id", nullable = true)
     private LoanPost postId; // 게시글 참조
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = true)
     private NotificationType type; // 알림 유형
 
     @Column(nullable = true)

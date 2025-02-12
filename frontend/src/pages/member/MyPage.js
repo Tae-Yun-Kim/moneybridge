@@ -134,6 +134,7 @@ import {
   getTransactionsToWallet,
   getWalletByMemberId,
 } from "../../api/walletApi";
+import { createNotification } from "../../api/notificationApi";  
 import BasicLayout from "../../layouts/BasicLayout";
 
 const MyPage = () => {
@@ -146,6 +147,9 @@ const MyPage = () => {
   );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  //
+  const [prevTransactionsTo, setPrevTransactionsTo] = useState([]); // 이전 거래 내역 저장
 
   useEffect(() => {
     console.log("🚀 [MyPage] 로컬 스토리지에서 userInfo 가져오기");
@@ -208,6 +212,7 @@ const MyPage = () => {
         setWalletToWalletTransactions(
           sortByDateDesc([...walletToWalletFrom, ...walletToWalletTo])
         );
+        
       } catch (error) {
         console.error("지갑 데이터 가져오는 중 에러 발생:", error.message);
         setError(error.message);
