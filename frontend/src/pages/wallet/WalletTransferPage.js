@@ -3,10 +3,13 @@ import { getCookie } from "../../util/cookieUtil";
 import { transferBetweenWallets } from "../../api/walletApi";
 import WalletTransferComponent from "../../components/wallet/WalletTransferComponent";
 import BasicMenu from "../../components/menus/BasicMenu";
+import "../../components/wallet/WalletTransferComponent.css";
+import { useNavigate } from "react-router-dom";
 
 const WalletTransferPage = () => {
   const [fromWalletId, setFromWalletId] = useState("");
   const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     // 로그인된 사용자 정보에서 출발 지갑 ID 설정
@@ -28,17 +31,26 @@ const WalletTransferPage = () => {
     }
   };
 
+  const handleinfo = () => {
+    navigate("/member/mypage");
+  };
+
   return (
     <div className="fixed top-0 left-0 z-[1055] flex flex-col h-full w-full">
       <BasicMenu />
-      <div className="w-full flex flex-wrap  h-full justify-center items-center border-2">
+      <div>
         <WalletTransferComponent
           fromWalletId={fromWalletId}
           onTransfer={handleTransfer}
         />
         {message && (
-          <div className="mt-4 text-purple-600 font-bold">
-            <p>{message}</p>
+          <div className="info-box">
+            <p className="info-message">{message}</p>
+
+            {/* ✅ message가 있을 때만 버튼이 나타남 */}
+            <button className="info-button" onClick={handleinfo}>
+              확인
+            </button>
           </div>
         )}
       </div>

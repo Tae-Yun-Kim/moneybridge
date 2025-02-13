@@ -1,6 +1,5 @@
 package com.moneybridge.dto.post;
 
-import com.moneybridge.domain.post.LoanPost;
 import com.moneybridge.domain.post.Notification.NotificationType;
 import lombok.*;
 

@@ -5,16 +5,15 @@ import { createBrowserRouter } from "react-router-dom";
 import memberRouter from "./memberRouter";
 import walletRouter from "./walletRouter";
 import debtRouter from "./debtRouter";
-import loanPostRouter from "./postRouter"
+import loanPostRouter from "./postRouter";
 
 const Loading = <div>Loading....</div>;
 const Main = lazy(() => import("../pages/MainPage"));
-const ContractPage = lazy(() => import("../pages/post/ContractPage")); // ✅ ContractPage 추가
 // const About = lazy(() => import("../pages/AboutPage"));
 // const TodoIndex = lazy(() => import("../pages/todo/IndexPage"));
 // const TodoList = lazy(() => import("../pages/todo/ListPage"));
 // const ProductsRouter = lazy(() => import("../pages/products/IndexPage"));
-
+const ContractPage = lazy(() => import("../pages/post/ContractPage"));
 const root = createBrowserRouter([
   {
     path: "/",
@@ -55,10 +54,6 @@ const root = createBrowserRouter([
     children: memberRouter(),
   },
   {
-    path: "post", // loanPostRouter의 경로 설정
-    children: loanPostRouter(),
-  },
-  {
     path: "wallet",
     children: walletRouter(),
   },
@@ -67,7 +62,11 @@ const root = createBrowserRouter([
     children: debtRouter(),
   },
   {
-    path: "contract/:contractId",
+    path: "post", // loanPostRouter의 경로 설정
+    children: loanPostRouter(),
+  },
+  {
+    path: "contract/:contractId", // ✅ 계약서 페이지 라우트 추가
     element: (
       <Suspense fallback={Loading}>
         <ContractPage />

@@ -1,10 +1,14 @@
 package com.moneybridge.domain.member;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.moneybridge.domain.account.Account;
 import com.moneybridge.domain.wallet.Wallet;
 import com.moneybridge.dto.member.MemberDTO;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
@@ -51,15 +55,13 @@ public class Member {
 
     private boolean isLender;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @Column(nullable = false)
+    @ElementCollection(fetch = FetchType.EAGER) // 🔥 즉시 로딩
     @Enumerated(EnumType.STRING)
-    @Builder.Default
-    private List<LenderStatus> lenderStatus = new ArrayList<>(); // 신청 상태
+    private List<LenderStatus> lenderStatus = new ArrayList<>();
 
     private boolean accountLocked;
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "account_number", referencedColumnName = "accountNumber", unique = true)
     private Account account;
 
@@ -67,10 +69,14 @@ public class Member {
     private Wallet wallet;
 
     @ElementCollection(fetch = FetchType.LAZY)
+    @Enumerated(EnumType.STRING)  // ✅ 반드시 STRING으로 저장하도록 변경
+    @BatchSize(size = 10)
+    @Fetch(FetchMode.SUBSELECT)
     @Builder.Default
     private List<MemberRole> memberRoleList = new ArrayList<>();
 
     @ElementCollection(fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)  // ✅ 문자열로 저장
     @Builder.Default
     private List<MemberGrade> memberGradeList = new ArrayList<>();
 

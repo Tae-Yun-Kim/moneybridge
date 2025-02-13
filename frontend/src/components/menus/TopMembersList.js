@@ -10,8 +10,10 @@ const TopMembersList = () => {
     axios
       .get("http://localhost:8080/api/member/top-members")
       .then((response) => {
-        const topMembers = response.data.slice(0, 10);
-        setMembers(topMembers);
+        const filteredMembers = response.data
+          .filter((member) => member.name.toLowerCase() !== "admin")
+          .slice(0, 10);
+        setMembers(filteredMembers);
       })
       .catch((error) => {
         console.error("Error fetching top members:", error);
@@ -24,7 +26,7 @@ const TopMembersList = () => {
         {members.map((member, index) => (
           <li key={member.id} className="member-item">
             <span className="rank">{index + 1}.</span>
-            <span className="name">{member.name}</span>
+            <span className="name">{member.id}</span>
             <span className="transaction-count">
               ({member.transactionCount}건)
             </span>

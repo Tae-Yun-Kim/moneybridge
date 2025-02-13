@@ -72,10 +72,23 @@ export const findMember = async (id) => {
 };
 
 // 회원 삭제 요청
+// export const deleteMember = async (id, password) => {
+//   const res = await jwtAxios.delete(`${host}/${id}`, {
+//     params: { password },
+//   }); // id로 회원 삭제
+//   return res.data;
+// };
 export const deleteMember = async (id, password) => {
-  const res = await jwtAxios.delete(`${host}/${id}`, {
-    params: { password },
-  }); // id로 회원 삭제
+  console.log(`🚀 DELETE 요청: ${host}/delete/${id}, password: ${password}`);
+
+  const res = await jwtAxios.delete(`${host}/delete/${id}`, {
+    data: { password }, // ✅ `@RequestBody`와 맞춰 JSON Body로 전송
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("accessToken")}`, // ✅ JWT 인증 추가
+      "Content-Type": "application/json", // ✅ JSON 형식으로 전송
+    },
+  });
+
   return res.data;
 };
 

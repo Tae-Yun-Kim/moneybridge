@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { deleteLoanPost, updateLoanPost } from "../../api/postApi";
+import "./ModifyComponent.css";
 
 const ModifyComponent = ({ initialLoanPost }) => {
   const [loanPost, setLoanPost] = useState({
@@ -71,14 +72,6 @@ const ModifyComponent = ({ initialLoanPost }) => {
     <div>
       <div className="post-modify-body">
         <div>
-          <div>게시글 ID : {loanPost.id || "ID 없음"}</div>
-        </div>
-
-        <div>
-          <div>작성자 ID : {loanPost.writerId || "작성자 ID 없음"}</div>
-        </div>
-
-        <div>
           <div>대출 금액</div>
           <input
             name="loanAmount"
@@ -88,7 +81,7 @@ const ModifyComponent = ({ initialLoanPost }) => {
           />
         </div>
         <div>
-          <div>상환 기간</div>
+          <div>상환 기간 (일 기준)</div>
           <input
             name="repaymentPeriod"
             type="number"
@@ -107,10 +100,18 @@ const ModifyComponent = ({ initialLoanPost }) => {
         </div>
 
         <div className="post-modify-button-container">
-          <button type="button" onClick={handleClickDelete} className="post-modify-button">
+          <button
+            type="button"
+            onClick={handleClickDelete}
+            className="post-modify-button"
+          >
             삭제
           </button>
-          <button type="button" onClick={handleClickModify} className="post-modify-button">
+          <button
+            type="button"
+            onClick={handleClickModify}
+            className="post-modify-button"
+          >
             수정
           </button>
         </div>

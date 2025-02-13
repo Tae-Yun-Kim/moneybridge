@@ -1,78 +1,135 @@
-#pip install mariadb
-import mariadb #마리아DB 컨트롤
-import pandas as pd #행과 열로 된 데이터 정렬
-import datetime #날짜 저장된 데이터를 컨트롤
+import mariadb
+import pandas as pd
+import datetime
 
-#데이터 연결 정보
+# 데이터베이스 연결 정보
 DB_CONFIG = {
     "host": "localhost",
     "port": 3306,
     "user": "moneybridge",
     "password": "moneybridge",
     "database": "moneybridge",
-    "local_infile": True
+    "local_infile": True  # 반드시 추가해야 함
 }
 
-def DBSETTING(database):
-    return  {
-            "host": "localhost",
-            "port": 3306,
-            "user": "moneybridge",
-            "password": "moneybridge",
-            "database": "moneybridge",
-            "local_infile": True
-            }
+def load_csv_with_infile(csv_file, table, data):
+    conn = mariadb.connect(**DB_CONFIG)
+    cur = conn.cursor()\
+    
+    # CSV 파일 읽기
+    # skiprows=1, 
+    df = pd.read_csv(csv_file, encoding='cp949', delimiter='\t')  # 첫 번째 행은 헤더이므로 건너뜀
+    column_name = [str(x) for x in df.columns]
+    print(df)
 
-#테이블 이름을 전달하면 -> 테이블에 있는 모든 데이터 보여주기
+    try:
+        # 데이터 삽입
+        cur.execute(f"""CREATE TABLE {table} (
+        {data}
+        """)
+
+        for _, row in df.iterrows():
+            cur.execute(f"""
+                INSERT INTO {table} (
+                    {column_name}
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, tuple(row))
+
+        conn.commit()
+        cur.close()
+        conn.close()
+        print("✅ 데이터 삽입 완료!")
+    except mariadb.Error as e:
+        print(f"❌ 삽입 실패: {e}")
+
+    cur.close()
+    conn.close()
+
+
 def show_data(table):
     conn = None
-
-    #테이블에 접근해서 데이터를 보여주는
     try:
         conn = mariadb.connect(**DB_CONFIG)
-        cur = conn.cursor() #실질적으로 sql 명령어를 입력
+        cur = conn.cursor()
 
-        #내가 지정한 테이블의 데이터를 조회한 후,
-        #데이터를 가져와서 데이터프레임으로 만드는 역할
+        # 데이터 조회
         cur.execute(f"SELECT * FROM {table}")
-        rows = cur.fetchall()
-
-        #열이름
         columns = [x[0] for x in cur.description]
+        #print(columns)
+        #print(len(columns))
 
-        #데이터
+        rows = cur.fetchall()
+        #print(str(rows[0]))
         result = []
-        #데이터중에 datatime 형식으로 불러와지는 값이 있다면, datetime이 있는 순서가 몇번쨰인지 기억하기
-        datetime_index = [i for i, value in enumerate(rows[0]) if isinstance(value, (datetime.date, datetime.datetime))]
+
+        datetime_indexes = []
+        if len(rows) > 0:
+            datetime_indexes = [i for i, value in enumerate(rows[0]) if isinstance(value, (datetime.date, datetime.datetime))]
+
+        if datetime_indexes:
+            datetime_columns = [(columns[i], i) for i in datetime_indexes]
 
         if rows != None:
             for r in rows:
                 new_row = []
-
                 for j, v in enumerate(r):
-                    if j  in datetime_index:
-                        #2025-02-06
-                        val = v.strftime("%Y-%M-%d")
+                    if j == 9:
+                        val = v.strftime("%Y:%m:%d")
+                        #print(val)
                     else:
                         val = v
-
+                
                     new_row.append(val)
                 result.append(new_row)
-
+        
         result = pd.DataFrame(result, columns=columns)
-
         return result
 
-
-    #에러가 발생하면 알려주는
     except mariadb.Error as e:
-        print(f"데이터 로드 실패")
+        print(f"❌ 데이터 조회 실패: {e}")
 
-    #DB와의 연결을 끊기(conn을 없애주는 역할)
     finally:
         if conn:
             cur.close()
             conn.close()
 
+
+def get_all_data_in_tables():
+    conn = None
+    try:
+        conn = mariadb.connect(**DB_CONFIG)
+        cur = conn.cursor()
+
+        # 데이터 조회
+        cur.execute(f"SHOW Tables")
+        rows = cur.fetchall()
+        
+        table_names = [x[0] for x in rows]
+        #print(table_names)
+
+        DB = pd.DataFrame()
+        for i in range(len(table_names)):
+            df = show_data(table_names[i])
+            DB = pd.concat([DB, df])
+
+        # print(DB)
+        # DB.to_csv('./temp.csv')
+        return DB
+
+    
+    except mariadb.Error as e:
+        print(f"❌ 데이터 조회 실패: {e}")
+
+    finally:
+        if conn:
+            cur.close()
+            conn.close()
+
+
 # if __name__ == '__main__':
-#     show_data('')
+#     get_all_data_in_tables()
+#     # csv = 'C:/Users/EZEN/Downloads/save_c.csv'
+#     # load_csv_with_infile(csv, 'stock')
+#     show_data('stock')
+
+

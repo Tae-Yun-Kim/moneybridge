@@ -3,6 +3,7 @@ import { deleteMember } from "../../api/memberApi"; // deleteMember를 import
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../slices/loginSlice";
+import "./DeleteComponent.css";
 
 const DeleteComponent = () => {
   const [credentials, setCredentials] = useState({
@@ -23,6 +24,9 @@ const DeleteComponent = () => {
 
   const handleDelete = async () => {
     const { id, password } = credentials;
+
+    console.log("🚀 삭제 요청 ID:", credentials.id);
+    console.log("🔍 삭제 요청 비밀번호:", credentials.password);
 
     if (!id || !password) {
       alert("회원 ID와 비밀번호를 모두 입력해주세요.");
@@ -62,16 +66,15 @@ const DeleteComponent = () => {
   };
 
   return (
-    <div className="border-2 border-red-500 mt-10 m-2 p-4">
-      <h2 className="text-center text-xl font-bold text-red-500">회원 삭제</h2>
-      <div className="flex flex-col items-center">
+    <div className="container-delete">
+      <h2>회원 삭제</h2>
+      <div className="input-group-delete">
         <input
           type="text"
           name="id"
           placeholder="회원 ID 입력"
           value={credentials.id}
           onChange={handleChange}
-          className="mb-4 p-2 border border-gray-400 rounded"
         />
         <input
           type="password"
@@ -79,14 +82,8 @@ const DeleteComponent = () => {
           placeholder="비밀번호 입력"
           value={credentials.password}
           onChange={handleChange}
-          className="mb-4 p-2 border border-gray-400 rounded"
         />
-        <button
-          onClick={handleDelete}
-          className="bg-red-500 text-white font-bold py-2 px-4 rounded"
-        >
-          회원 삭제
-        </button>
+        <button onClick={handleDelete}>회원 삭제</button>
       </div>
     </div>
   );

@@ -27,6 +27,14 @@ public class PostComment extends BaseEntity {
     @JoinColumn(name = "member_id", nullable = false) // Member와 연관 관계
     private Member member; // 댓글 작성자 (Member 엔터티와 매핑)
 
+    //임시 양방향 매핑
+    @OneToOne(mappedBy = "selectedComment", fetch = FetchType.LAZY)
+    private Contract contract;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "lender_id") // 출자자 (선택한 사람)
+    private Member lender; // 출자자 정보 추가
+
     @Column(nullable = false)
     private Double interestRate; // 제시 이자율
 
@@ -34,7 +42,7 @@ public class PostComment extends BaseEntity {
     private String commentText; // 댓글 내용
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = true, length = 20) // 길이 제한 설정 (예: "BRONZE", "SILVER", "GOLD")
+    @Column(length = 20) // 길이 제한 설정 (예: "BRONZE", "SILVER", "GOLD")
     private MemberGrade memberGrade; // 댓글 작성자의 회원 등급 (열거형 매핑)
 
     @Column(nullable = false)

@@ -1,0 +1,29 @@
+/* 슬라이더 컨테이너 */
+.post-slider-container {
+  margin: 20px auto;
+  max-width: 1200px;
+  padding: 20px;
+  background-color: #f9fafb;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* 개별 카드 */
+.post-card {
+  background: white;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.post-card h3 {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.post-card p {
+  margin: 10px 0;
+  font-size: 14px;
+}

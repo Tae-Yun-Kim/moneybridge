@@ -6,6 +6,7 @@ import com.moneybridge.repository.wallet.WalletRepository;
 import com.moneybridge.service.wallet.WalletService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/wallets")
 @RequiredArgsConstructor
+@Log4j2
 public class WalletController {
 
     private final WalletService walletService;
@@ -31,14 +33,26 @@ public class WalletController {
     }
 
     @GetMapping("/member/{memberId}")
-    public ResponseEntity<WalletDTO> getWalletByMemberId(Authentication authentication) {
-        // 인증된 사용자 ID 가져오기
-        String loggedInUserId = authentication.getName(); // 보통 username (ID)
+//    public ResponseEntity<WalletDTO> getWalletByMemberId(Authentication authentication) {
+//        // 인증된 사용자 ID 가져오기
+//        String loggedInUserId = authentication.getName(); // 보통 username (ID)
+//
+//        // 로그인한 사용자의 지갑 정보만 반환
+//        WalletDTO walletDTO = walletService.getWalletByMemberId(loggedInUserId);
+//        if (walletDTO == null) {
+//            throw new RuntimeException("Wallet not found for the logged-in user");
+//        }
+//
+//        return ResponseEntity.ok(walletDTO);
+//    }
+    public ResponseEntity<?> getWalletByMemberId(Authentication authentication) {
+        String loggedInUserId = authentication.getName();
 
-        // 로그인한 사용자의 지갑 정보만 반환
         WalletDTO walletDTO = walletService.getWalletByMemberId(loggedInUserId);
+
         if (walletDTO == null) {
-            throw new RuntimeException("Wallet not found for the logged-in user");
+            log.info("⚠️ 해당 회원의 지갑이 없습니다. ID: {}", loggedInUserId);
+            return ResponseEntity.ok().body(null); // 예외 대신 null 반환
         }
 
         return ResponseEntity.ok(walletDTO);

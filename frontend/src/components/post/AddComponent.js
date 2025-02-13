@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { createLoanPost } from "../../api/postApi";
+import "./AddComponent.css";
 
 const AddComponent = () => {
   const [loanPost, setLoanPost] = useState({
@@ -12,8 +13,8 @@ const AddComponent = () => {
   const navigate = useNavigate();
 
   // 아래는 "userid"로 작성자 나오게 로컬에서 가져온것
-  
-  // useEffect(() => { 
+
+  // useEffect(() => {
   //   const userId = localStorage.getItem("userId");
   //   if (userId) {
   //     setLoanPost((prev) => ({ ...prev, writerId: userId }));
@@ -27,15 +28,15 @@ const AddComponent = () => {
   useEffect(() => {
     const userData = localStorage.getItem("member");
     if (userData) {
-      const parsedUser = JSON.parse(userData);  // JSON 파싱 추가
-      const userId = parsedUser.id;  // userId만 추출
+      const parsedUser = JSON.parse(userData); // JSON 파싱 추가
+      const userId = parsedUser.id; // userId만 추출
       setLoanPost((prev) => ({ ...prev, writerId: userId }));
     } else {
       alert("로그인 정보가 없습니다. 다시 로그인해주세요.");
       navigate("/member/login");
     }
   }, [navigate]);
-  
+
   const handleChangeLoanPost = (e) => {
     const { name, value } = e.target;
     setLoanPost((prev) => ({ ...prev, [name]: value }));
@@ -64,7 +65,7 @@ const AddComponent = () => {
   };
 
   return (
-    <div className="post-add-body">
+    <div className="post-add-body-a">
       <div>
         <div>
           <div>대출 금액</div>
@@ -112,7 +113,7 @@ const AddComponent = () => {
         </div>
       </div>
 
-      <div className="post-add">
+      <div className="post-add-a">
         <button type="button" onClick={handleClickAdd}>
           추가
         </button>

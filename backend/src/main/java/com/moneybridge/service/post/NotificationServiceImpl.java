@@ -1,6 +1,7 @@
 package com.moneybridge.service.post;
 
 import com.moneybridge.domain.member.Member;
+import com.moneybridge.domain.post.Contract;
 import com.moneybridge.domain.post.LoanPost;
 import com.moneybridge.domain.post.Notification;
 import com.moneybridge.dto.post.NotificationDTO;
@@ -28,6 +29,30 @@ public class NotificationServiceImpl implements NotificationService {
 
     // 알림 생성
     @Override
+//    public NotificationDTO createNotification(NotificationDTO notificationDTO, String memberId) {
+//        String finalMemberId = memberId != null ? memberId :
+//                SecurityContextHolder.getContext().getAuthentication().getName();
+//
+//        Member member = memberRepository.findById(finalMemberId)
+//                .orElseThrow(() -> new RuntimeException("Member not found"));
+//
+//        LoanPost post = null;
+//        if (notificationDTO.getPostId() != null) {
+//            post = loanpostRepository.findById(notificationDTO.getPostId())
+//                    .orElseThrow(() -> new RuntimeException("Post not found"));
+//        }
+//
+//        Notification notification = Notification.builder()
+//                .member(member)
+//                .postId(post)  // null 허용
+//                .type(notificationDTO.getType())
+//                .message(notificationDTO.getMessage())
+//                .build();
+//
+//
+//        notification = notificationRepository.save(notification);
+//        return convertToDTO(notification);
+//    }
     public NotificationDTO createNotification(NotificationDTO notificationDTO, String memberId) {
         // 원래 내거
         String finalMemberId = memberId != null ? memberId :
@@ -84,17 +109,6 @@ public class NotificationServiceImpl implements NotificationService {
                 .build();
     }
 
-    // 계약 대기 알림 생성 -> 이건 굳이 안 넣어도 될 듯
-    public void createContractPendingNotification(Member member, LoanPost post) {
-        NotificationDTO notificationDTO = NotificationDTO.builder()
-                .memberId(member.getId())
-                .postId(post.getId())
-                .type(Notification.NotificationType.PENDING)  // 계약 대기 상태
-                .message("게시글에 대출금액이 올려졌습니다.")  // 알림 메시지
-                .build();
-
-        createNotification(notificationDTO, member.getId());
-    }
 
     // 대출자의 승인 대기 알림 생성 -> 완료
     public void createApprovalPendingNotification(Member member, LoanPost post, String comment) {
@@ -112,37 +126,78 @@ public class NotificationServiceImpl implements NotificationService {
         createNotification(notificationDTO, member.getId());
     }
 
-    // 계약 진행 알림 생성 -> 이건 계약 끝나면
-    public void createContractActiveNotification(Member member, LoanPost post) {
+    // 계약 대기 알림 생성(채무자가 대출희망자의 댓글을 선택하면 대출희망자에게 알림) -> 사용 X
+    public void createContractPendingNotification(Member member, LoanPost post) {
+        log.info("Creating Contract pending notification for member ID: {}, post ID: {}",
+                member != null ? member.getId() : "NULL",
+                post != null ? post.getId() : "NULL");
+
         NotificationDTO notificationDTO = NotificationDTO.builder()
                 .memberId(member.getId())
                 .postId(post.getId())
-                .type(Notification.NotificationType.ACTIVE)  // 계약 진행 상태
-                .message("출자자가 댓글을 선택하여 계약이 진행되었습니다.")  // 알림 메시지
+                .type(Notification.NotificationType.PENDING)  // 계약 대기 상태
+                .message("출자자가 댓글을 선택하여 계약 대기 상태입니다.")  // 알림 메시지
                 .build();
 
         createNotification(notificationDTO, member.getId());
     }
 
-    // 계약 완료 알림 생성 (상환 완료) -> 이것도 계약 끝나면
+    // 계약 진행 알림 생성 (채무자에게 전송) -> 완료
+    @Override
+    public void createContractActiveNotification(Member borrower, Contract contract) {
+        NotificationDTO notificationDTO = NotificationDTO.builder()
+                .memberId(borrower.getId())  // 📌 채무자에게 알림 전송
+                .postId(contract.getLoanPost().getId())  // 대출 게시글 ID
+                .type(Notification.NotificationType.ACTIVE)  // 계약 활성화 상태
+                .message("출자자가 계약을 승인하여 계약이 활성화되었습니다.")  // 알림 메시지
+                .build();
+
+        createNotification(notificationDTO, borrower.getId());
+    }
+
+
+    // 계약 완료 알림 생성 (상환 완료)
     public void createContractCompletedNotification(Member member, LoanPost post) {
         NotificationDTO notificationDTO = NotificationDTO.builder()
                 .memberId(member.getId())
                 .postId(post.getId())
                 .type(Notification.NotificationType.COMPLETED)  // 계약 완료 상태
-                .message("계약이 완료되었습니다. 상환이 완료되었습니다.")  // 상환 완료 메시지
+                .message("상환이 완료되어 계약이 완료되었습니다.")  // 상환 완료 메시지
                 .build();
 
         createNotification(notificationDTO, member.getId());
     }
 
-    // 계약 취소 알림 생성 (계약 삭제됨) -> 이것도 계약 끝나면
-    public void createContractCancelledNotification(Member member, LoanPost post) {
+    // 계약 취소 알림 생성 -> 완료
+    public void createContractCancelledNotification(Member borrower, Member lender, Contract contract) {
+        // 📌 채무자에게 알림 전송
+        NotificationDTO borrowerNotification = NotificationDTO.builder()
+                .memberId(borrower.getId())
+                .postId(contract.getLoanPost().getId())
+                .type(Notification.NotificationType.CANCELLED)
+                .message("계약이 취소되었습니다.")
+                .build();
+
+        createNotification(borrowerNotification, borrower.getId());
+
+        // 📌 출자자에게 알림 전송
+        NotificationDTO lenderNotification = NotificationDTO.builder()
+                .memberId(lender.getId())
+                .postId(contract.getLoanPost().getId())
+                .type(Notification.NotificationType.CANCELLED)
+                .message("계약이 취소되었습니다.")
+                .build();
+
+        createNotification(lenderNotification, lender.getId());
+    }
+
+    // 연체 알림 생성
+    public void createOverdueNotification(Member member, LoanPost post) {
         NotificationDTO notificationDTO = NotificationDTO.builder()
                 .memberId(member.getId())
                 .postId(post.getId())
-                .type(Notification.NotificationType.CANCELLED)  // 계약 취소 상태
-                .message("계약이 취소되었습니다.")  // 계약 취소 메시지
+                .type(Notification.NotificationType.OVERDUE)  // 연체 상태
+                .message("계약이 연체되었습니다. 빨리 해결해 주세요.")  // 연체 메시지
                 .build();
 
         createNotification(notificationDTO, member.getId());
@@ -179,15 +234,4 @@ public class NotificationServiceImpl implements NotificationService {
 //    }
 
 
-    // 연체 알림 생성
-    public void createOverdueNotification(Member member, LoanPost post) {
-        NotificationDTO notificationDTO = NotificationDTO.builder()
-                .memberId(member.getId())
-                .postId(post.getId())
-                .type(Notification.NotificationType.OVERDUE)  // 연체 상태
-                .message("계약이 연체되었습니다. 빨리 해결해 주세요.")  // 연체 메시지
-                .build();
-
-        createNotification(notificationDTO, member.getId());
-    }
 }

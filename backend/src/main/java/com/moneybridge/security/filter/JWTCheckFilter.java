@@ -32,7 +32,7 @@ public class JWTCheckFilter extends OncePerRequestFilter {
 
         log.info("check uri......................." + path);
         //api/member/ 경로의 호출은 체크하지 않음
-        if (path.startsWith("/api/member/")) {
+        if (path.startsWith("/api/member/") && !path.startsWith("/api/member/delete/")) {
             return true;
         }
 
@@ -82,6 +82,7 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             log.info("JWT claims: " + claims);
 
             String id = (String) claims.get("id");
+            log.info("🚀 JWT claims에서 추출한 ID: " + id);
             String username = (String) claims.get("username");
             String email = (String) claims.get("email");
             String residentNumber = (String) claims.get("residentNumber");
@@ -108,6 +109,8 @@ public class JWTCheckFilter extends OncePerRequestFilter {
                     = new UsernamePasswordAuthenticationToken(memberDTO, password, memberDTO.getAuthorities());
 
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+
+            log.info("🚀 SecurityContext에 저장된 ID: " + SecurityContextHolder.getContext().getAuthentication()); // ✅ 여기서 "login"이 아닌지 확인
 
             filterChain.doFilter(request, response);
 

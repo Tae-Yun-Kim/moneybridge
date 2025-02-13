@@ -2,14 +2,17 @@ package com.moneybridge.service.post;
 
 import com.moneybridge.domain.member.Member;
 import com.moneybridge.domain.member.MemberGrade;
+import com.moneybridge.domain.post.ContractStatus;
 import com.moneybridge.domain.post.LoanPost;
 import com.moneybridge.domain.post.PostComment;
+import com.moneybridge.dto.post.CommentSelectionResponseDTO;
+import com.moneybridge.dto.post.ContractDTO;
 import com.moneybridge.dto.post.PostCommentDTO;
 import com.moneybridge.repository.member.MemberRepository;
 import com.moneybridge.repository.post.LoanPostRepository;
 import com.moneybridge.repository.post.PostCommentRepository;
 import jakarta.persistence.EntityNotFoundException;
-import com.moneybridge.service.post.NotificationService; // 알림 서비스 추가
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,9 +29,9 @@ public class PostCommentServiceImpl implements PostCommentService {
     private final LoanPostRepository loanPostRepository;
     private final MemberRepository memberRepository;
     private final NotificationService notificationService; // 알림 서비스 주입
+    private final ContractService contractService;
 //    private final DebtService debtService;  // DebtService 사용
 //    private final AuthenticationService authenticationService;
-
 
     @Override
     public PostCommentDTO createComment(PostCommentDTO dto) {
@@ -62,12 +65,11 @@ public class PostCommentServiceImpl implements PostCommentService {
         PostComment savedComment = postCommentRepository.save(comment);
 
         log.info("Comment created successfully: {}", savedComment.getId());
-
         // 알림 추가: 새로운 댓글에 대해 알림 전송
         notificationService.createApprovalPendingNotification(post.getWriter(), post, dto.getCommentText());
-
         return mapToDTO(savedComment);
     }
+
 
     @Override
     public PostCommentDTO getCommentById(Long id) {
@@ -77,7 +79,6 @@ public class PostCommentServiceImpl implements PostCommentService {
                 .orElseThrow(() -> new EntityNotFoundException("Comment not found with ID: " + id));
 
         return mapToDTO(comment);
-
     }
 
     @Override
@@ -119,56 +120,84 @@ public class PostCommentServiceImpl implements PostCommentService {
         log.info("Comment deleted successfully.");
     }
 
-    @Override
-    public PostCommentDTO selectComment(Long postId, Long commentId) {
-        log.info("Selecting comment ID: {} for post ID: {}", commentId, postId);
-
-        // 게시글 확인
-        loanPostRepository.findById(postId)
-                .orElseThrow(() -> new EntityNotFoundException("LoanPost not found with ID: " + postId));
-
-        // 기존 선택된 댓글 초기화
-        postCommentRepository.findByPostIdAndIsSelectedTrue(postId)
-                .ifPresent(selectedComment -> {
-                    selectedComment.setIsSelected(false);
-                    postCommentRepository.save(selectedComment);
-                    log.info("Previously selected comment reset.");
-                });
-
-        // 새로운 댓글 선택
-        PostComment comment = postCommentRepository.findById(commentId)
-                .orElseThrow(() -> new EntityNotFoundException("Comment not found with ID: " + commentId));
-
-        comment.setIsSelected(true);
-        PostComment selectedComment = postCommentRepository.save(comment);
-
-        log.info("Comment selected successfully: {}", selectedComment.getId());
-
-
+//    @Override
+//    public PostCommentDTO selectComment(Long postId, Long commentId) {
+//        log.info("Selecting comment ID: {} for post ID: {}", commentId, postId);
 //
-//        // 부채 생성 로직 호출
-//        DebtRequestDTO debtRequestDTO = new DebtRequestDTO();
+//        // 게시글 확인
+//        loanPostRepository.findById(postId)
+//                .orElseThrow(() -> new EntityNotFoundException("LoanPost not found with ID: " + postId));
 //
-//        // 인증된 사용자 ID 가져오기
-//        String userId = authenticationService.getAuthenticatedMemberId();  // AuthenticationService 사용
+//        // 기존 선택된 댓글 초기화
+//        postCommentRepository.findByPostIdAndIsSelectedTrue(postId)
+//                .ifPresent(selectedComment -> {
+//                    selectedComment.setIsSelected(false);
+//                    postCommentRepository.save(selectedComment);
+//                    log.info("Previously selected comment reset.");
+//                });
 //
-//        // 인증된 사용자로부터 Member 정보 조회
-//        Member member = memberRepository.findById(userId)
-//                .orElseThrow(() -> new EntityNotFoundException("Member not found with ID: " + userId));
+//        // 새로운 댓글 선택
+//        PostComment comment = postCommentRepository.findById(commentId)
+//                .orElseThrow(() -> new EntityNotFoundException("Comment not found with ID: " + commentId));
 //
-//        // DebtRequestDTO에 member 설정
-//        debtRequestDTO.setMember(member);
-//        debtRequestDTO.setPostId(comment.getPost());
-//        debtRequestDTO.setLoanAmount(comment.getLoanAmount());
-//        debtRequestDTO.setInterestRate(comment.getInterestRate());
-//        debtRequestDTO.setRepaymentPeriod(comment.getRepaymentPeriod());
-//        debtRequestDTO.setFee(comment.getFee());
+//        comment.setIsSelected(true);
+//        PostComment selectedComment = postCommentRepository.save(comment);
 //
-//        debtService.createDebt(debtRequestDTO);  // debtService의 createDebt 메서드 호출
+//        log.info("Comment selected successfully: {}", selectedComment.getId());
+//
+//        return mapToDTO(selectedComment);
+//    }
+@Override
+@Transactional
+public CommentSelectionResponseDTO selectComment(Long postId, Long commentId, String lenderId) { // ✅ 새로운 DTO 반환
+    log.info("Selecting comment ID: {} for post ID: {} by lender ID: {}", commentId, postId, lenderId);
 
-        // 선택된 댓글 DTO 반환
-        return mapToDTO(selectedComment);
+    LoanPost loanPost = loanPostRepository.findById(postId)
+            .orElseThrow(() -> new EntityNotFoundException("LoanPost not found with ID: " + postId));
+
+    PostComment comment = postCommentRepository.findById(commentId)
+            .orElseThrow(() -> new EntityNotFoundException("Comment not found with ID: " + commentId));
+
+    Member lender = memberRepository.findById(lenderId)
+            .orElseThrow(() -> new EntityNotFoundException("Lender not found with ID: " + lenderId));
+
+    // 이미 선택된 댓글인지 확인
+    if (comment.getLender() != null) {
+        throw new IllegalStateException("This comment has already been selected by another lender.");
     }
+
+    // ✅ 출자자를 댓글에 저장하고 선택 상태 변경
+    comment.setLender(lender);
+    comment.setIsSelected(true);
+    postCommentRepository.save(comment); // 🔥 댓글 테이블에 반영됨!
+
+    log.info("✅ Comment ID: {} selected by lender ID: {}", commentId, lenderId);
+
+    // ✅ 선택된 댓글을 기반으로 계약 자동 생성
+    ContractDTO contractDTO = ContractDTO.builder()
+            .lenderId(lender.getId())  // ✅ 출자자 ID (정상)
+            .borrowerId(comment.getMember().getId()) // ✅ 대출자는 댓글 작성자!
+            .postId(postId)
+            .selectedCommentId(commentId)
+            .loanAmount(comment.getPost().getLoanAmount())
+            .repaymentPeriod(comment.getPost().getRepaymentPeriod())
+            .interestRate(comment.getInterestRate())
+            .totalRepaymentAmount(comment.getPost().getLoanAmount() +
+                    (long) (comment.getPost().getLoanAmount() * (comment.getInterestRate() / 100.0)))
+            .status(ContractStatus.PENDING)
+            .build();
+
+
+    ContractDTO createdContract = contractService.createContract(contractDTO); // ✅ 계약 생성
+
+    log.info("✅ Contract created automatically: Contract ID={}, Status={}", createdContract.getId(), createdContract.getStatus());
+
+    // ✅ 댓글 정보 + 계약 정보를 함께 반환
+    return CommentSelectionResponseDTO.builder()
+            .postComment(PostCommentDTO.toDTO(comment)) // 변경된 댓글 정보
+            .contract(createdContract) // 생성된 계약 정보
+            .build();
+}
 
 
     @Override
@@ -185,9 +214,6 @@ public class PostCommentServiceImpl implements PostCommentService {
 
         // 거래 성립 로직 추가 (예: 거래 상태 업데이트, 기록 저장 등)
         log.info("Transaction confirmed for comment ID: {}", commentId);
-
-        // 거래 성립 알림 전송
-        notificationService.createContractCompletedNotification(comment.getPost().getWriter(), comment.getPost());
 
         return mapToDTO(comment);
     }

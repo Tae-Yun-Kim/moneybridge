@@ -2,7 +2,16 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { format } from "date-fns"; // 날짜 포맷팅 라이브러리 추가
-import { getCommentsByPostId, createComment, deleteComment, selectComment } from "../../api/commentApi";
+import {
+  getCommentsByPostId,
+  createComment,
+  deleteComment,
+  selectComment,
+} from "../../api/commentApi";
+import "./CommentComponent.css";
+
+
+import { createContractPendingNotification } from "../../api/notificationApi";
 
 const CommentComponent = ({ postId, loanAmount, repaymentPeriod }) => {
   const navigate = useNavigate();
@@ -52,7 +61,7 @@ const CommentComponent = ({ postId, loanAmount, repaymentPeriod }) => {
     const fee = Math.floor(numericLoanAmount / 1000000) * 1000;
 
     // 이자율 % 변환 후 일일 이자율 계산
-    const dailyRate = (rate / 100) / 365;
+    const dailyRate = rate / 100 / 365;
     const totalInterest = numericLoanAmount * dailyRate * repaymentPeriod;
     const totalAmount = numericLoanAmount + totalInterest + fee;
 
@@ -66,22 +75,22 @@ const CommentComponent = ({ postId, loanAmount, repaymentPeriod }) => {
     const rate = parseFloat(e.target.value);
 
     if (isNaN(rate) || rate <= 0) {
-      setNewComment(prev => ({
+      setNewComment((prev) => ({
         ...prev,
         interestRate: "",
         fee: 0,
-        totalAmount: 0
+        totalAmount: 0,
       }));
       return;
     }
 
     const { fee, totalAmount } = calculateFeeAndTotalAmount(rate);
 
-    setNewComment(prev => ({
+    setNewComment((prev) => ({
       ...prev,
       interestRate: rate,
       fee,
-      totalAmount
+      totalAmount,
     }));
   };
 
@@ -93,19 +102,21 @@ const CommentComponent = ({ postId, loanAmount, repaymentPeriod }) => {
 
     if (!userInfo.userId) {
       alert("로그인 후 댓글을 작성할 수 있습니다.");
-      navigate("/member/login"); 
+      navigate("/member/login");
       return;
     }
 
     try {
-      const { fee, totalAmount } = calculateFeeAndTotalAmount(newComment.interestRate);
+      const { fee, totalAmount } = calculateFeeAndTotalAmount(
+        newComment.interestRate
+      );
 
       const commentData = {
         ...newComment,
         memberId: userInfo.userId,
         memberGrade: userInfo.memberGrade,
         fee,
-        totalAmount
+        totalAmount,
       };
 
       await createComment(postId, commentData);
@@ -113,11 +124,10 @@ const CommentComponent = ({ postId, loanAmount, repaymentPeriod }) => {
         interestRate: "",
         commentText: "",
         fee: 0,
-        totalAmount: 0
+        totalAmount: 0,
       });
       fetchComments();
       console.log("commentData", commentData);
-
     } catch (error) {
       handleTokenError(error);
     }
@@ -126,14 +136,14 @@ const CommentComponent = ({ postId, loanAmount, repaymentPeriod }) => {
   const fetchComments = async () => {
     try {
       const data = await getCommentsByPostId(postId);
-      const updatedComments = data.map(comment => {
+      const updatedComments = data.map((comment) => {
         const numericRate = parseFloat(comment.interestRate);
         const { fee, totalAmount } = calculateFeeAndTotalAmount(numericRate);
 
         return {
           ...comment,
           fee,
-          totalAmount
+          totalAmount,
         };
       });
       setComments(updatedComments);
@@ -154,19 +164,57 @@ const CommentComponent = ({ postId, loanAmount, repaymentPeriod }) => {
     }
   };
 
+  // const handleSelectComment = async (commentId) => {
+  //   if (!userInfo.isLender) {
+  //     alert("출자자만 댓글을 선택할 수 있습니다.");
+  //     return;
+  //   }
+  //   try {
+  //     await selectComment(postId, commentId);
+  //     alert("댓글이 선택되었습니다.");
+  //     fetchComments();
+  //   } catch (error) {
+  //     handleTokenError(error);
+  //   }
+  // };
+  // ✅ 출자자가 댓글을 선택하는 함수 (계약 생성이 아니라 댓글 선택)
   const handleSelectComment = async (commentId) => {
     if (!userInfo.isLender) {
       alert("출자자만 댓글을 선택할 수 있습니다.");
       return;
     }
+
     try {
-      await selectComment(postId, commentId);
-      alert("댓글이 선택되었습니다.");
-      fetchComments();
+      await selectComment(postId, commentId); // ✅ 댓글 선택 API 호출
+      alert("댓글이 선택되었습니다. 대출자의 마이페이지에서 확인하세요.");
+
+      // ✅ 댓글 선택 후 대출자의 마이페이지 데이터 새로고침 이벤트 발생
+      window.dispatchEvent(new Event("contractCreated"));
+
+      // ✅ 선택된 댓글 객체 찾기
+      const selectedComment = comments.find(comment => comment.id === commentId);
+      if (!selectedComment) {
+        console.error("선택된 댓글을 찾을 수 없습니다.");
+      return;
+    }
+
+       // ✅ 계약 진행 알림 생성 API 호출
+       const receiverId = selectedComment.memberId; // ✅ 댓글 작성자의 ID
+
+       // ✅ 계약 진행 알림 생성 API 호출
+       await createContractPendingNotification(receiverId, postId);
+   
+      fetchComments(); // ✅ 선택된 댓글 즉시 반영
     } catch (error) {
       handleTokenError(error);
     }
   };
+
+  // ✅ useEffect에서 데이터 가져오기
+  useEffect(() => {
+    fetchUserInfo(); // 사용자 정보 가져오기
+    fetchComments(); // 댓글 목록 가져오기
+  }, [postId]);
 
   const handleTokenError = (error) => {
     if (error.response?.status === 401) {
@@ -177,37 +225,46 @@ const CommentComponent = ({ postId, loanAmount, repaymentPeriod }) => {
   };
 
   return (
-    <div>
-      <div className="comment-list">
+    <div className="comment-container-c">
+      <div className="comment-list-c">
         {/* 댓글 개수 표시 */}
-        <div className="comment-count">
-          댓글 개수: {comments.length}
-        </div>
+        <div className="comment-count-c">댓글 개수: {comments.length}</div>
 
         {comments.map((comment) => (
-          <div key={comment.id}>
-            <div className="comment-header">
-              <div>대출 희망자 이름: {comment.memberName} {comment.memberId}</div>
-              <div className="comment-created-at">
-                작성 시간: {comment.createdAt ? format(new Date(comment.createdAt), "yyyy-MM-dd HH:mm") : "시간 정보 없음"}
+          <div key={comment.id} className="comment-item-c">
+            <div className="comment-header-c">
+              <div>
+                대출 희망자 이름: {comment.memberName} {comment.memberId}
+              </div>
+              <div className="comment-created-at-c">
+                작성 시간:{" "}
+                {comment.createdAt
+                  ? format(new Date(comment.createdAt), "yyyy-MM-dd HH:mm")
+                  : "시간 정보 없음"}
               </div>
             </div>
-            <div className="comment-body">
+            <div className="comment-body-c">
               이자율: {comment.interestRate}%<br />
               수수료: {comment.fee.toLocaleString()} 원<br />
               총상환액: {comment.totalAmount.toLocaleString()} 원<br />
               댓글: {comment.commentText}
             </div>
-            
-            <div className="button-container">
+
+            <div className="button-container-c">
               {userInfo.userId === comment.memberId && (
-                <button className="select-button" onClick={() => handleDeleteComment(comment.id)}>
+                <button
+                  className="select-button-c"
+                  onClick={() => handleDeleteComment(comment.id)}
+                >
                   삭제
                 </button>
               )}
 
               {userInfo.isLender && (
-                <button className="select-button" onClick={() => handleSelectComment(comment.id)}>
+                <button
+                  className="select-button-c"
+                  onClick={() => handleSelectComment(comment.id)}
+                >
                   선택
                 </button>
               )}
@@ -216,7 +273,7 @@ const CommentComponent = ({ postId, loanAmount, repaymentPeriod }) => {
         ))}
       </div>
 
-      <div className="comment-form">
+      <div className="comment-form-c">
         <h3>댓글 쓰기</h3>
         <input
           type="number"
@@ -228,11 +285,15 @@ const CommentComponent = ({ postId, loanAmount, repaymentPeriod }) => {
 
         <textarea
           value={newComment.commentText}
-          onChange={(e) => setNewComment(prev => ({ ...prev, commentText: e.target.value }))}
+          onChange={(e) =>
+            setNewComment((prev) => ({ ...prev, commentText: e.target.value }))
+          }
           rows="3"
           placeholder="댓글 내용"
         />
-        <button onClick={handleCreateComment}>댓글 작성</button>
+        <div className="coment-form-c-write">
+          <button onClick={handleCreateComment}>댓글 작성</button>
+        </div>
       </div>
     </div>
   );

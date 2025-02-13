@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;700&family=Anton&family=Bebas+Neue&display=swap");
+
 /* 전체 컨테이너 */
 .mypage-component {
   display: flex;
@@ -10,23 +12,23 @@
   /* border-radius: 15px; 모서리 둥글게 */
   /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 부드러운 그림자 */
   text-align: left;
-  font-family: Arial, sans-serif;
+  font-family: "Noto Sans KR", "Roboto", sans-serif;
 }
 
 .mypage-component .transfer {
   margin-top: 20px; /* 개별 섹션 간격 추가 */
-  border: 1px solid black;
+  /* border: 1px solid black; */
   padding: 0 10px;
 }
 
 .mypage-component .deposit {
   margin-top: 20px; /* 개별 섹션 간격 추가 */
-  border: 1px solid black;
+  /* border: 1px solid black; */
   padding: 0 10px;
 }
 
 .mypage-component .withdraw {
-  border: 1px solid black;
+  /* border: 1px solid black; */
   padding: 0 10px;
 }
 
@@ -66,19 +68,19 @@ a {
 }
 
 a.bg-green {
-  background-color: #10b981; /* 초록색 */
+  background-color: black;
 }
 
 a.bg-green:hover {
-  background-color: #059669; /* 진한 초록색 */
+  background-color: rgb(87, 86, 86);
 }
 
 a.bg-blue {
-  background-color: #2563eb; /* 파란색 */
+  background-color: gray;
 }
 
 a.bg-blue:hover {
-  background-color: #1e40af; /* 진한 파란색 */
+  background-color: rgb(37, 37, 37);
 }
 
 /* 버튼 스타일 */
@@ -147,7 +149,7 @@ a.bg-blue:hover {
   flex: 1; /* 각 박스가 동일한 너비를 차지 */
   background-color: #ffffff; /* 흰색 배경 */
   padding: 20px;
-  /* border-radius: 10px; 모서리 둥글게 */
+  border-radius: 5px; /*모서리 둥글게*/
   /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 그림자 */
   border: 1px solid black;
   display: flex;
@@ -156,15 +158,45 @@ a.bg-blue:hover {
   min-height: 200px; /* 최소 높이 지정 */
 }
 
+.user-info-box p {
+  font-size: 1rem;
+}
+
+.wallet-info-box p {
+  font-size: 1rem;
+}
+
 .infoi {
   display: flex;
+  font-size: 1rem;
 }
 
 .infon {
   padding-left: 5%;
+  font-size: 1rem;
 }
 
 .deposit {
+}
+
+.no-wallet {
+  color: red;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.btn-create-wallet {
+  background-color: black;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.btn-create-wallet:hover {
+  background-color: gray;
 }
 
 /* 반응형 설정 */

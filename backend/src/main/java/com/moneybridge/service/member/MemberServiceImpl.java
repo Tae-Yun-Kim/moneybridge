@@ -6,11 +6,14 @@ import com.moneybridge.domain.member.Member;
 import com.moneybridge.domain.member.MemberGrade;
 import com.moneybridge.domain.member.MemberRole;
 import com.moneybridge.dto.member.MemberDTO;
+import com.moneybridge.dto.wallet.WalletDTO;
 import com.moneybridge.repository.account.AccountRepository;
 import com.moneybridge.repository.member.MemberRepository;
+import com.moneybridge.repository.wallet.WalletRepository;
 import com.moneybridge.service.wallet.WalletService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.hibernate.Hibernate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -36,7 +39,7 @@ public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder; // PasswordEncoder 주입
     private final AccountRepository accountRepository;
-    private final WalletService walletService;
+    private final WalletRepository walletRepository;
 
     @Override
     public Member register(MemberDTO memberDTO) {
@@ -108,18 +111,36 @@ public class MemberServiceImpl implements MemberService {
                 memberRepository.existsByResidentNumber(memberDTO.getResidentNumber())) {
             throw new IllegalArgumentException("Duplicate resident number: " + memberDTO.getResidentNumber());
         }
-        //전화번호
-        if (!member.getPhoneNumber().equals(memberDTO.getPhoneNumber()) &&
+        // ✅ 전화번호 중복 검사 (변경할 경우에만 실행)
+        if (memberDTO.getPhoneNumber() != null &&
+                !member.getPhoneNumber().equals(memberDTO.getPhoneNumber()) &&
                 memberRepository.existsByPhoneNumber(memberDTO.getPhoneNumber())) {
             throw new IllegalArgumentException("Duplicate phone number: " + memberDTO.getPhoneNumber());
         }
         //이메일
-        if (!member.getEmail().equals(memberDTO.getEmail()) &&
+        if (memberDTO.getEmail() != null &&
+                !memberDTO.getEmail().equals(member.getEmail()) &&
                 memberRepository.existsByEmail(memberDTO.getEmail())) {
             throw new IllegalArgumentException("Duplicate email: " + memberDTO.getEmail());
         }
         // 계좌번호 변경 및 검증
-        if (memberDTO.getAccountNumber() != null && !memberDTO.getAccountNumber().isEmpty()) {
+//        if (memberDTO.getAccountNumber() != null &&
+//                !member.getAccount().getAccountNumber().equals(memberDTO.getAccountNumber())) { // 기존 계좌와 다를 때만 검사
+//
+//            Account account = accountRepository.findByAccountNumber(memberDTO.getAccountNumber())
+//                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 계좌입니다: " + memberDTO.getAccountNumber()));
+//
+//            if (account.isLinkedToMember() && !account.getMember().getId().equals(member.getId())) {
+//                throw new IllegalArgumentException("이미 다른 회원과 연결된 계좌입니다: " + memberDTO.getAccountNumber());
+//            }
+//
+//            // 계좌를 회원과 연결
+//            member.setAccount(account);
+//        }
+        String currentAccountNumber = (member.getAccount() != null) ? member.getAccount().getAccountNumber() : null;
+        if (memberDTO.getAccountNumber() != null &&
+                !memberDTO.getAccountNumber().equals(currentAccountNumber)) {
+
             Account account = accountRepository.findByAccountNumber(memberDTO.getAccountNumber())
                     .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 계좌입니다: " + memberDTO.getAccountNumber()));
 
@@ -174,16 +195,34 @@ public class MemberServiceImpl implements MemberService {
         return entityToDTO(member);
     }
 
-    @Override
-    public Member findById(String memberId) {
-        System.out.println("🔍 findById() 호출: " + memberId);
+//    @Override
+//    public Member findById(String memberId) {
+//        System.out.println("🔍 findById() 호출: " + memberId);
+//
+//        if (memberId == null || memberId.equals("login")) {
+//            throw new IllegalArgumentException("❌ 잘못된 회원 ID입니다: " + memberId);
+//        }
+//
+//        return memberRepository.findById(memberId)
+//                .orElseThrow(() -> new IllegalArgumentException("❌ 회원을 찾을 수 없습니다: " + memberId));
+//    }
+@Override
+@Transactional
+public Member findById(String memberId) {
+    System.out.println("🔍 findById() 호출: " + memberId);
 
-        if (memberId == null || memberId.equals("login")) {
-            throw new IllegalArgumentException("❌ 잘못된 회원 ID입니다: " + memberId);
-        }
+    if (memberId == null || memberId.equals("login")) {
+        throw new IllegalArgumentException("❌ 잘못된 회원 ID입니다: " + memberId);
+    }
 
-        return memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("❌ 회원을 찾을 수 없습니다: " + memberId));
+    Member member = memberRepository.findByIdWithDetails(memberId)
+            .orElseThrow(() -> new IllegalArgumentException("❌ 회원을 찾을 수 없습니다: " + memberId));
+
+    // ✅ Lazy 로딩된 컬렉션 강제 초기화
+    Hibernate.initialize(member.getMemberRoleList());
+    Hibernate.initialize(member.getMemberGradeList());
+
+    return member;
     }
 
 
@@ -198,32 +237,6 @@ public class MemberServiceImpl implements MemberService {
     // 사용자가 신청 또는 포기를 요청
     @Transactional
     @Override
-//    public String requestLenderToggle(String userId) {
-//        Member member = memberRepository.findById(userId)
-//                .orElseThrow(() -> new RuntimeException("회원이 존재하지 않습니다."));
-//
-//        log.info("변경 전 LenderStatus: {}", member.getLenderStatus());
-//
-//        if (member.getLenderStatus().contains(LenderStatus.PENDING)) {
-//            return "이미 신청 대기 중입니다. 관리자의 승인을 기다려주세요.";
-//        }
-//
-//        if (member.isLender()) {
-//            member.getLenderStatus().clear();
-//            member.getLenderStatus().add(LenderStatus.PENDING); // 채권자 포기 신청
-//            member.setLender(false); // isLender 필드 false로 설정
-//            memberRepository.save(member); // 명시적으로 저장
-//            log.info("채권자 포기 신청: {}, isLender: {}", member.getLenderStatus(), member.isLender());
-//            return "채권자 포기 신청이 접수되었습니다. 관리자의 승인을 기다려주세요.";
-//        } else {
-//            member.getLenderStatus().clear(); // 채권자 신청
-//            member.getLenderStatus().add(LenderStatus.PENDING);
-//            member.setLender(false); // 신청 상태에서 false 유지
-//            memberRepository.save(member); // 명시적으로 저장
-//            log.info("채권자 신청: {}, isLender: {}", member.getLenderStatus(), member.isLender());
-//            return "채권자 신청이 접수되었습니다. 관리자의 승인을 기다려주세요.";
-//        }
-//    }
     public String requestLenderToggle(String userId) {
         Member member = memberRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("회원이 존재하지 않습니다."));
@@ -254,27 +267,6 @@ public class MemberServiceImpl implements MemberService {
     // 관리자가 승인 또는 거절
     @Transactional
     @Override
-//    public String approveLenderRequest(String memberId, boolean approve) {
-//        Member member = memberRepository.findById(memberId)
-//                .orElseThrow(() -> new RuntimeException("회원이 존재하지 않습니다."));
-//
-//        if (!member.getLenderStatus().contains(LenderStatus.PENDING)) {
-//            return "승인 대기 중인 신청이 없습니다.";
-//        }
-//
-//        member.getLenderStatus().clear();
-//        if (approve) {
-//            member.getLenderStatus().add(LenderStatus.APPROVED);
-//            member.setLender(true); // isLender 필드 true로 설정
-//        } else {
-//            member.getLenderStatus().add(LenderStatus.REJECTED);
-//            member.setLender(false); // isLender 필드 false로 설정
-//        }
-//
-//        memberRepository.save(member);
-//
-//        return approve ? "승인이 완료되었습니다." : "거절이 완료되었습니다.";
-//    }
     public String approveLenderRequest(String memberId, boolean approve) {
         // 회원 조회
         Member member = memberRepository.findById(memberId)
@@ -340,16 +332,6 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public List<Member> getPendingLenderRequests() {
-//        List<Member> pendingMembers = memberRepository.findMembersByLenderStatus(LenderStatus.PENDING);
-//
-//        pendingMembers.forEach(member -> {
-//            log.info("대기 중인 멤버: ID={}, Name={}, LenderStatus={}",
-//                    member.getId(),
-//                    member.getName(),
-//                    member.getLenderStatus());
-//        });
-//        return pendingMembers;
-//    }
         List<Member> pendingMembers = memberRepository.findAll()
                 .stream()
                 .filter(member -> member.getLenderStatus().contains(LenderStatus.PENDING)
@@ -544,8 +526,8 @@ public class MemberServiceImpl implements MemberService {
                 member.isLender(),
                 member.isAccountLocked(),
                 member.getLenderStatus().stream()
-                        .map(lenderStatus -> lenderStatus.name())
-                        .collect(Collectors.toList()),
+                                .map(lenderStatus -> lenderStatus.name())
+                                        .collect(Collectors.toList()),
                 member.getMemberRoleList().stream()
                         .map(role -> role.name()) // 역할 리스트를 문자열로 변환
                         .collect(Collectors.toList()),
@@ -554,6 +536,15 @@ public class MemberServiceImpl implements MemberService {
                         .collect(Collectors.toList())
         );
     }
+
+//    @Override
+//    public String getPhoneNumberByWalletId(String walletId) {
+//        return walletRepository.findById(walletId)
+//                .map(wallet -> memberRepository.findById(wallet.getMember().getId())
+//                        .map(Member::getPhoneNumber)
+//                        .orElse(null))
+//                .orElse(null);
+//    }
 
 
 }

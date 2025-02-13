@@ -29,6 +29,7 @@ const useCustomLogin = () => {
       localStorage.removeItem("userId");
       localStorage.removeItem("isLender");
       localStorage.removeItem("memberGrade");
+      localStorage.removeItem("grade");
 
       // Redux 상태 초기화
       dispatch(logout());

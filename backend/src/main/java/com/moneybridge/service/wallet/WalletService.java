@@ -1,6 +1,7 @@
 package com.moneybridge.service.wallet;
 
 import com.moneybridge.dto.wallet.WalletDTO;
+import java.math.BigDecimal;
 
 public interface WalletService {
     WalletDTO createWallet(WalletDTO walletDTO);

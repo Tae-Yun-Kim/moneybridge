@@ -1,7 +1,6 @@
 package com.moneybridge.service.wallet;
 
 import com.moneybridge.dto.wallet.WalletTransactionDTO;
-
 import java.util.List;
 
 public interface WalletTransactionService {

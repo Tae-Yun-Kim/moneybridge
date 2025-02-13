@@ -15,15 +15,14 @@ const getAuthToken = () => {
   return `Bearer ${token}`;
 };
 
-// 지갑 간 거래 알림 생성
+
 export const createNotification = async (receiverId, amount) => {
   try {
     await jwtAxios.post(
       `${host}`,
-      { 
-       // receiverId, message: `${receiverId} 지갑으로 ${amount}원이 입금되었습니다.`,
-        memberId: receiverId.replace('w_', ''), // 지갑 ID에서 실제 유저 ID 추출
-        message: `${receiverId} 지갑으로 ${amount}원이 입금되었습니다.`
+      {
+        memberId: receiverId.replace("w_", ""), // 지갑 ID에서 실제 유저 ID 추출
+        message: `${receiverId} 지갑으로 ${amount}원이 입금되었습니다.`,
       },
       { headers: { Authorization: getAuthToken() } }
     );
@@ -33,6 +32,21 @@ export const createNotification = async (receiverId, amount) => {
   }
 };
 
+export const createContractPendingNotification = async (receiverId, postId) => {
+  try {
+    await jwtAxios.post(
+      `${host}`,
+      {
+        memberId: receiverId,
+        message: `출자자가 댓글을 선택하여 계약 대기 상태입니다.`,
+      },
+      { headers: { Authorization: getAuthToken() } }
+    );
+  } catch (error) {
+    console.error("지갑 이체 알림 생성 오류:", error);
+    throw error;
+  }
+};
 
 // 알림 목록 조회
 export const getMemberNotifications = async () => {
@@ -43,7 +57,7 @@ export const getMemberNotifications = async () => {
     }
 
     const response = await jwtAxios.get(`${host}/member/${memberId}`, {
-      headers: { Authorization: getAuthToken() }
+      headers: { Authorization: getAuthToken() },
     });
     console.log("Fetched Notifications: ", response);
     return response.data;
@@ -57,7 +71,7 @@ export const getMemberNotifications = async () => {
 export const deleteNotification = async (notificationId) => {
   try {
     await jwtAxios.delete(`${host}/${notificationId}`, {
-      headers: { Authorization: getAuthToken() }
+      headers: { Authorization: getAuthToken() },
     });
     console.log("알림 삭제 완료");
   } catch (error) {
@@ -66,23 +80,11 @@ export const deleteNotification = async (notificationId) => {
   }
 };
 
-// 계약 대기 알림 생성
-export const createContractPendingNotification = async (postId) => {
-  try {
-    await jwtAxios.post(`${host}/contract-pending/${postId}`, null, {
-      headers: { Authorization: getAuthToken() }
-    });
-  } catch (error) {
-    console.error("계약 대기 알림 생성 오류:", error);
-    throw error;
-  }
-};
-
-// 승인 대기 알림 생성
+// 승인 대기 알림 생성(출자자의 글에 댓글 달림)
 export const createApprovalPendingNotification = async (postId, comment) => {
   try {
     await jwtAxios.post(`${host}/approval-pending/${postId}`, comment, {
-      headers: { Authorization: getAuthToken() }
+      headers: { Authorization: getAuthToken() },
     });
   } catch (error) {
     console.error("승인 대기 알림 생성 오류:", error);
@@ -90,11 +92,23 @@ export const createApprovalPendingNotification = async (postId, comment) => {
   }
 };
 
+// 계약 대기 알림 생성(출자자가 대출희망자의 댓글 선택)
+// export const createContractPendingNotification = async (postId) => {
+//   try {
+//     await jwtAxios.post(`${host}/contract-pending/${postId}`, null, {
+//       headers: { Authorization: getAuthToken() },
+//     });
+//   } catch (error) {
+//     console.error("계약 대기 알림 생성 오류:", error);
+//     throw error;
+//   }
+// };
+
 // 계약 진행 알림 생성
-export const createContractActiveNotification = async (postId) => {
+export const createContractActiveNotification = async (contractId) => {
   try {
-    await jwtAxios.post(`${host}/contract-active/${postId}`, null, {
-      headers: { Authorization: getAuthToken() }
+    await jwtAxios.post(`${host}/contract-active/${contractId}`, {
+      headers: { Authorization: getAuthToken() },
     });
   } catch (error) {
     console.error("계약 진행 알림 생성 오류:", error);
@@ -106,7 +120,7 @@ export const createContractActiveNotification = async (postId) => {
 export const createContractCompletedNotification = async (postId) => {
   try {
     await jwtAxios.post(`${host}/contract-completed/${postId}`, null, {
-      headers: { Authorization: getAuthToken() }
+      headers: { Authorization: getAuthToken() },
     });
   } catch (error) {
     console.error("계약 완료 알림 생성 오류:", error);
@@ -115,10 +129,10 @@ export const createContractCompletedNotification = async (postId) => {
 };
 
 // 계약 취소 알림 생성
-export const createContractCancelledNotification = async (postId) => {
+export const createContractCancelledNotification = async (contractIdId) => {
   try {
-    await jwtAxios.post(`${host}/contract-cancelled/${postId}`, null, {
-      headers: { Authorization: getAuthToken() }
+    await jwtAxios.post(`${host}/contract-cancelled/${contractIdId}`, {
+      headers: { Authorization: getAuthToken() },
     });
   } catch (error) {
     console.error("계약 취소 알림 생성 오류:", error);
@@ -130,7 +144,7 @@ export const createContractCancelledNotification = async (postId) => {
 export const createDebtorToCreditorNotification = async (postId, amount) => {
   try {
     await jwtAxios.post(`${host}/debtor-to-creditor/${postId}`, amount, {
-      headers: { Authorization: getAuthToken() }
+      headers: { Authorization: getAuthToken() },
     });
   } catch (error) {
     console.error("이체 알림 생성 오류:", error);
@@ -142,7 +156,7 @@ export const createDebtorToCreditorNotification = async (postId, amount) => {
 export const createCreditorToDebtorNotification = async (postId, amount) => {
   try {
     await jwtAxios.post(`${host}/creditor-to-debtor/${postId}`, amount, {
-      headers: { Authorization: getAuthToken() }
+      headers: { Authorization: getAuthToken() },
     });
   } catch (error) {
     console.error("이체 알림 생성 오류:", error);
@@ -154,7 +168,7 @@ export const createCreditorToDebtorNotification = async (postId, amount) => {
 export const createOverdueNotification = async (postId) => {
   try {
     await jwtAxios.post(`${host}/overdue/${postId}`, null, {
-      headers: { Authorization: getAuthToken() }
+      headers: { Authorization: getAuthToken() },
     });
   } catch (error) {
     console.error("연체 알림 생성 오류:", error);

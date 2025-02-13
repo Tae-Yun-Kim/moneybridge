@@ -1,5 +1,6 @@
 package com.moneybridge.controller.post;
 
+import com.moneybridge.dto.post.CommentSelectionResponseDTO;
 import com.moneybridge.dto.post.PostCommentDTO;
 import com.moneybridge.service.post.PostCommentService;
 import lombok.RequiredArgsConstructor;
@@ -88,17 +89,29 @@ public class PostCommentController {
     }
 
     // 댓글 선택
-    @PostMapping("/{postId}/comments/{commentId}/select")
-    public ResponseEntity<PostCommentDTO> selectComment(@PathVariable Long postId,
-                                                        @PathVariable Long commentId) {
-        // 요청으로 받은 postId와 commentId를 로그로 출력
-        log.info("Received request to select comment ID: {} for post ID: {}", commentId, postId);
+//    @PostMapping("/{postId}/comments/{commentId}/select")
+//    public ResponseEntity<PostCommentDTO> selectComment(@PathVariable Long postId,
+//                                                        @PathVariable Long commentId) {
+//        // 요청으로 받은 postId와 commentId를 로그로 출력
+//        log.info("Received request to select comment ID: {} for post ID: {}", commentId, postId);
+//
+//        // PostCommentService를 호출하여 댓글 선택
+//        PostCommentDTO selectedComment = postCommentService.selectComment(postId, commentId);
+//
+//        // 선택된 댓글 정보를 반환
+//        return ResponseEntity.ok(selectedComment);
+//    }
+    // ✅ 출자자가 댓글을 선택하면 계약까지 자동 생성됨
+    @PostMapping("/{postId}/comments/{commentId}/select-comment/{lenderId}")
+    public ResponseEntity<CommentSelectionResponseDTO> selectComment(@PathVariable Long postId,
+                                                                     @PathVariable Long commentId,
+                                                                     @PathVariable String lenderId) {
+        log.info("Received request to select comment ID: {} for post ID: {} by lender ID: {}", commentId, postId, lenderId);
 
-        // PostCommentService를 호출하여 댓글 선택
-        PostCommentDTO selectedComment = postCommentService.selectComment(postId, commentId);
+        // ✅ 댓글 선택과 동시에 계약이 생성되므로, 이를 하나의 DTO로 반환
+        CommentSelectionResponseDTO response = postCommentService.selectComment(postId, commentId, lenderId);
 
-        // 선택된 댓글 정보를 반환
-        return ResponseEntity.ok(selectedComment);
+        return ResponseEntity.ok(response);
     }
 
     // 거래 성립

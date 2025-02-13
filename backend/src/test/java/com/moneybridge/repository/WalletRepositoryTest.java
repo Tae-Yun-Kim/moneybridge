@@ -26,8 +26,8 @@ class WalletRepositoryTest {
     @Rollback(false)
     void testCreateWalletWithRandomMoney() {
         // given
-        Member member = memberRepository.findById("user2")
-                .orElseThrow(() -> new RuntimeException("Member not found: user2"));
+        Member member = memberRepository.findById("user1")
+                .orElseThrow(() -> new RuntimeException("Member not found: user1"));
 
         assertThat(member.getAccount()).isNotNull();
 
@@ -50,7 +50,7 @@ class WalletRepositoryTest {
         // when
         wallet = walletRepository.save(wallet);
 
-        Long depositAmount = 1100L; // 고정된 금액
+        Long depositAmount = 50000L; // 고정된 금액
 
         Long initialBalance = wallet.getAccount().getBalance();
 
@@ -64,7 +64,7 @@ class WalletRepositoryTest {
         assertThat(foundWallet).isNotNull();
         assertThat(foundWallet.getWalletId()).isEqualTo(customWalletId);
         assertThat(foundWallet.getBalance()).isEqualTo(depositAmount);
-        assertThat(foundWallet.getMember().getId()).isEqualTo("user2");
+        assertThat(foundWallet.getMember().getId()).isEqualTo("user1");
 
         Long updatedAccountBalance = member.getAccount().getBalance();
         assertThat(updatedAccountBalance).isEqualTo(initialBalance - depositAmount);
@@ -82,7 +82,7 @@ class WalletRepositoryTest {
     @Rollback(false)
     void testTransferFromAccountToWallet() {
         // given
-        String memberId = "user2";
+        String memberId = "user1";
         Long transferAmount = 100000000L;
 
         Member member = memberRepository.findById(memberId)
@@ -116,8 +116,8 @@ class WalletRepositoryTest {
     @Rollback(false)
     void testTransferFromWalletToAccount() {
         // given
-        Member member = memberRepository.findById("user2")
-                .orElseThrow(() -> new RuntimeException("Member not found: user2"));
+        Member member = memberRepository.findById("user1")
+                .orElseThrow(() -> new RuntimeException("Member not found: user1"));
 
         Wallet wallet = walletRepository.findByMember(member)
                 .orElseThrow(() -> new RuntimeException("Wallet not found"));

@@ -1,16 +1,7 @@
 import "./BasicMenu.css"; // 일반 CSS import
-import run from "../../images/따봉도로롱.gif";
 import LoanProductList from "./LoanProductList";
-import Chatbot from "../../Chatbot";
-import { useState } from "react";
 
 const Rightsidemenu = () => {
-  const [isChatbotOpen, setIsChatbotOpen] = useState(false); // 챗봇 열림 상태 관리
-
-  const toggleChatbot = () => {
-    setIsChatbotOpen((prev) => !prev); // 열고 닫기 토글
-  };
-
   return (
     <div className="flex flex-col">
       {/* 두 번째 박스 */}
@@ -23,8 +14,8 @@ const Rightsidemenu = () => {
           </div>
         </div>
       </div>
-      {/* 챗봇 기능 */}
-      <div className="menu-box chatbot-section">
+      {/* 챗봇 기능
+      <div className="menu-box-chatbot-section">
         <button className="chatbot-toggle" onClick={toggleChatbot}>
           <img
             src={require("../../images/chatbot.png")} // 이미지 경로 확인
@@ -37,21 +28,6 @@ const Rightsidemenu = () => {
             <Chatbot />
           </div>
         )}
-      </div>
-
-      {/* 첫 번째 박스
-      <div className="menu-box">
-        <h3>챗봇기능칸</h3>
-        <div className="textarea-box">
-          <textarea rows="4" placeholder="아직 미구현..."></textarea>
-        </div>
-      </div> */}
-      {/* 두 번째 박스
-      <div className="menu-box green">
-        <h3>월간기부현황</h3>
-        <div className="image-container">
-          <img src={run} alt="Logo" />
-        </div>
       </div> */}
     </div>
   );

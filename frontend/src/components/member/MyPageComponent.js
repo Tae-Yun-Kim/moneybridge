@@ -121,7 +121,7 @@
 // export default MyPageComponent;
 
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../../pages/member/MyPage.css";
 
 const MyPageComponent = ({
@@ -130,7 +130,10 @@ const MyPageComponent = ({
   transactionsFrom,
   transactionsTo,
   walletToWalletTransactions,
+  walletError,
 }) => {
+  const navigate = useNavigate();
+
   if (!userInfo) {
     return (
       <div className="error-message">회원 정보가 없습니다. 로그인하세요.</div>
@@ -153,9 +156,12 @@ const MyPageComponent = ({
           </div>
           <p>이메일: {userInfo.email}</p>
           <p>등급: {userInfo.grade}</p>
-          <div style={{ marginTop: "10px" }}>
+          <div className="button-group" style={{ marginTop: "10px" }}>
             <Link to="/member/update" className="bg-green button">
               회원 수정
+            </Link>
+            <Link to="/member/delete" className="bg-green button">
+              회원 탈퇴
             </Link>
           </div>
         </div>
@@ -163,15 +169,29 @@ const MyPageComponent = ({
         {/* 지갑 정보 */}
         <div className="wallet-info-box">
           <h2 className="section-title">지갑 정보</h2>
-          <p>잔액: {walletBalance.toLocaleString()} 원</p>
-          <div className="button-group">
-            <Link to="/wallet/transfer" className="bg-green button">
-              입금/출금
-            </Link>
-            <Link to="/wallet/wallet-transfer" className="bg-blue button">
-              송금
-            </Link>
-          </div>
+          {walletBalance !== null ? (
+            <>
+              <p>잔액: {walletBalance.toLocaleString()} 원</p>
+              <div className="button-group">
+                <Link to="/wallet/transfer" className="bg-green button">
+                  입금/출금
+                </Link>
+                <Link to="/wallet/wallet-transfer" className="bg-blue button">
+                  송금
+                </Link>
+              </div>
+            </>
+          ) : (
+            <>
+              <p className="no-wallet">🚨 {walletError} </p>
+              <button
+                className="btn-create-wallet"
+                onClick={() => navigate("/wallet/create")}
+              >
+                지갑 생성
+              </button>
+            </>
+          )}
         </div>
       </div>
 

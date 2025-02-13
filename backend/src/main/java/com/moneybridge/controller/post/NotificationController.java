@@ -1,16 +1,20 @@
 package com.moneybridge.controller.post;
 
-import com.moneybridge.dto.post.NotificationDTO;
-import com.moneybridge.dto.post.LoanPostDTO;
-import com.moneybridge.service.member.MemberService;
-import com.moneybridge.service.post.NotificationService;
-import com.moneybridge.service.post.LoanPostService;
 import com.moneybridge.domain.member.Member;
-import com.moneybridge.domain.post.LoanPost;  // LoanPost import
+import com.moneybridge.domain.post.Contract;
+import com.moneybridge.domain.post.LoanPost;
+import com.moneybridge.dto.post.ContractDTO;
+import com.moneybridge.dto.post.LoanPostDTO;
+import com.moneybridge.dto.post.NotificationDTO;
+import com.moneybridge.repository.post.ContractRepository;
+import com.moneybridge.service.member.MemberService;
+import com.moneybridge.service.post.ContractService;
+import com.moneybridge.service.post.LoanPostService;
+import com.moneybridge.service.post.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,6 +25,8 @@ public class NotificationController {
     private final NotificationService notificationService;
     private final LoanPostService loanPostService;
     private final MemberService memberService;
+    private final ContractService contractService;
+    private final ContractRepository contractRepository;
 
     // 알림 생성
     @PostMapping
@@ -41,18 +47,7 @@ public class NotificationController {
         return ResponseEntity.ok().build();
     }
 
-    // 계약 대기 알림 생성
-    @PostMapping("/contract-pending/{postId}")
-    public ResponseEntity<Void> createContractPendingNotification(@PathVariable Long postId) {
-        String currentUserId = SecurityContextHolder.getContext().getAuthentication().getName();
-        Member member = memberService.findById(currentUserId);  // MemberService로 현재 사용자 조회
-        LoanPostDTO postDTO = loanPostService.getLoanPostById(postId);  // LoanPostDTO로 게시글 조회
-        LoanPost post = convertToLoanPost(postDTO);  // LoanPostDTO를 LoanPost로 변환
-        notificationService.createContractPendingNotification(member, post);
-        return ResponseEntity.ok().build();
-    }
-
-    // 대출자의 승인 대기 알림 생성
+    // 출자자의 승인 대기 알림 생성(대출희망자가 댓글 달 때)
     @PostMapping("/approval-pending/{postId}")
     public ResponseEntity<Void> createApprovalPendingNotification(@PathVariable Long postId, @RequestBody String comment) {
         String currentUserId = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -63,16 +58,38 @@ public class NotificationController {
         return ResponseEntity.ok().build();
     }
 
-    // 계약 진행 알림 생성
-    @PostMapping("/contract-active/{postId}")
-    public ResponseEntity<Void> createContractActiveNotification(@PathVariable Long postId) {
+    // 대출희망자의 승인 대기 알림 생성(출자자가 댓글 선택할 때)
+    @PostMapping("/contract-pending/{postId}")
+    public ResponseEntity<Void> createContractPendingNotification(@PathVariable Long postId) {
         String currentUserId = SecurityContextHolder.getContext().getAuthentication().getName();
         Member member = memberService.findById(currentUserId);  // MemberService로 현재 사용자 조회
         LoanPostDTO postDTO = loanPostService.getLoanPostById(postId);  // LoanPostDTO로 게시글 조회
         LoanPost post = convertToLoanPost(postDTO);  // LoanPostDTO를 LoanPost로 변환
-        notificationService.createContractActiveNotification(member, post);
+        notificationService.createContractPendingNotification(member, post);
         return ResponseEntity.ok().build();
     }
+
+
+    @PostMapping("/contract-active/{contractId}")
+    public ResponseEntity<Void> createContractActiveNotification(@PathVariable Long contractId) {
+        String currentUserId = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        Member lender = memberService.findById(currentUserId);  // 현재 로그인한 출자자
+
+        // 계약 ID를 사용해 계약 정보 가져오기
+        Contract contract = contractRepository.findById(contractId)
+                .orElseThrow(() -> new IllegalArgumentException("계약을 찾을 수 없습니다."));
+
+        if (!contract.getLender().getId().equals(lender.getId())) {
+            throw new IllegalArgumentException("출자자만 계약 진행 알림을 보낼 수 있습니다.");
+        }
+
+        // ✅ 계약 최종 승인 시 채무자(Borrower)에게 알림 전송
+        notificationService.createContractActiveNotification(contract.getBorrower(), contract);
+
+        return ResponseEntity.ok().build();
+    }
+
 
     // 계약 완료 알림 생성 (상환 완료)
     @PostMapping("/contract-completed/{postId}")
@@ -86,15 +103,23 @@ public class NotificationController {
     }
 
     // 계약 취소 알림 생성 (계약 삭제됨)
-    @PostMapping("/contract-cancelled/{postId}")
-    public ResponseEntity<Void> createContractCancelledNotification(@PathVariable Long postId) {
+    @PostMapping("/contract-cancelled/{contractId}")
+    public ResponseEntity<Void> createContractCancelledNotification(@PathVariable Long contractId) {
         String currentUserId = SecurityContextHolder.getContext().getAuthentication().getName();
-        Member member = memberService.findById(currentUserId);  // MemberService로 현재 사용자 조회
-        LoanPostDTO postDTO = loanPostService.getLoanPostById(postId);  // LoanPostDTO로 게시글 조회
-        LoanPost post = convertToLoanPost(postDTO);  // LoanPostDTO를 LoanPost로 변환
-        notificationService.createContractCancelledNotification(member, post);
+
+        // 현재 로그인한 사용자 정보 조회
+        Member member = memberService.findById(currentUserId);
+
+        // 계약 ID를 사용해 계약 정보 가져오기
+        Contract contract = contractRepository.findById(contractId)
+                .orElseThrow(() -> new IllegalArgumentException("계약을 찾을 수 없습니다."));
+
+        // ✅ 계약 취소 시 채무자(Borrower)와 출자자(Lender) 모두에게 알림 전송
+        notificationService.createContractCancelledNotification(contract.getBorrower(), contract.getLender(), contract);
+
         return ResponseEntity.ok().build();
     }
+
 
 /*    // 채무자 -> 채권자 이체 알림 생성
     @PostMapping("/debtor-to-creditor/{postId}")

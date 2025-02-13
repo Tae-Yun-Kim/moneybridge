@@ -1,5 +1,6 @@
 package com.moneybridge.service.post;
 
+import com.moneybridge.dto.post.CommentSelectionResponseDTO;
 import com.moneybridge.dto.post.PostCommentDTO;
 
 import java.util.List;
@@ -21,7 +22,8 @@ public interface PostCommentService {
     void deleteComment(Long id);
 
    //출자자가특정 댓글 선택
-    PostCommentDTO selectComment(Long postId, Long commentId);
+//    PostCommentDTO selectComment(Long postId, Long commentId);
+   CommentSelectionResponseDTO selectComment(Long postId, Long commentId, String lenderId);
 
     //거래 성립 후 거래 페이지로 이동
     PostCommentDTO confirmTransaction(Long commentId);

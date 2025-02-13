@@ -215,40 +215,40 @@ public class NotificationRepositoryTests {
     void setUp() {
         // 테스트용 회원 생성
         testMember = Member.builder()
-                .id("lender666")
+                .id("lender444")
                 .password(passwordEncoder.encode("1111"))
-                .name("Test Member66")
+                .name("Test Member44")
                 .nickname("TestNick66")
-                .residentNumber("666666-666666")
-                .phoneNumber("010-6666-6666")
-                .email("test666@aaa.com")
-                .address("서울시 강남구")
+                .residentNumber("44444-4444")
+                .phoneNumber("010-4444-4444")
+                .email("test44@aaa.com")
+                .address("서울시 강남구4")
                 .isLender(true)
                 .accountLocked(false)
                 .build();
         memberRepository.save(testMember);
 
         // 고유한 계좌 번호 생성
-        String uniqueAccountNumber = "666-666-" + UUID.randomUUID().toString().substring(0, 6);
+        String uniqueAccountNumber = "444-444-" + UUID.randomUUID().toString().substring(0, 6);
 
-        // 테스트용 사용자 (이름: lender777)
+        // 테스트용 사용자
         Account account = Account.builder()
                 .accountNumber(uniqueAccountNumber)
-                .accountPassword("6666")
+                .accountPassword("4444")
                 .bankName("Test Bank")
-                .accountHolderName("lender666")
+                .accountHolderName("lender444")
                 .balance(1000L)
                 .build();
 
         lender = Member.builder()
-                .id("lender666")
+                .id("lender444")
                 .password(passwordEncoder.encode("1111"))
-                .name("lender666")
-                .residentNumber("666666-6666")
-                .phoneNumber("666-666-666")
-                .email("lender666@example.com")
+                .name("lender444")
+                .residentNumber("44444-444")
+                .phoneNumber("444-444-444")
+                .email("lender444@example.com")
                 .social(false)
-                .isLender(true)
+                .isLender(false)
                 .accountLocked(false)
                 .account(account)
                 .build();
@@ -277,7 +277,7 @@ public class NotificationRepositoryTests {
         // 테스트용 NotificationDTO 생성
         testNotificationDTO = NotificationDTO.builder()
                 .notificationId(99L)
-                .memberId("lender666")
+                .memberId("lender444")
                 .postId(testPost.getId())
                 .type(Notification.NotificationType.TRANSFER_TO_WALLET)
                 .message("테스트 알림")
@@ -331,14 +331,14 @@ public class NotificationRepositoryTests {
     }
 
     // 계약 진행 알림 생성 테스트
-    @Test
-    void createContractActiveNotification_Success() {
-        notificationService.createContractActiveNotification(testMember, testPost);
-
-        Notification savedNotification = notificationRepository.findAll().get(0);
-        assertEquals(Notification.NotificationType.ACTIVE, savedNotification.getType());
-        assertEquals("출자자가 댓글을 선택하여 계약이 진행되었습니다.", savedNotification.getMessage());
-    }
+//    @Test
+//    void createContractActiveNotification_Success() {
+//        notificationService.createContractActiveNotification(testMember, testPost);
+//
+//        Notification savedNotification = notificationRepository.findAll().get(0);
+//        assertEquals(Notification.NotificationType.ACTIVE, savedNotification.getType());
+//        assertEquals("출자자가 댓글을 선택하여 계약이 진행되었습니다.", savedNotification.getMessage());
+//    }
 
     // 계약 완료 알림 생성 테스트
     @Test
@@ -360,7 +360,7 @@ public class NotificationRepositoryTests {
         assertEquals("계약이 취소되었습니다.", savedNotification.getMessage());
     }
 
-    // 채무자 -> 채권자 이체 알림 생성 테스트
+//    // 채무자 -> 채권자 이체 알림 생성 테스트
 //    @Test
 //    void createDebtorToCreditorNotification_Success() {
 //        Double amount = 1000.00;

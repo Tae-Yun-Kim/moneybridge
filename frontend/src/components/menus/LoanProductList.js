@@ -97,7 +97,7 @@ const LoanProductList = () => {
           </div>
         ))}
       </div>
-      <div className="pagination">
+      <div className="pagination-l">
         {Array.from({ length: totalPages }, (_, i) => i + 1).map((number) => (
           <button
             key={number}

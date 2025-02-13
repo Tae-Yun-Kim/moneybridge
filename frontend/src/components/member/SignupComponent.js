@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { checkDuplicate, registerMember } from "../../api/memberApi";
 import { authenticateUser } from "../../api/firebaseApi";
+import "./SignupComponent.css";
 
 const initState = {
   id: "",
@@ -162,79 +163,77 @@ const SignupComponent = () => {
   };
 
   return (
-    <div className="border-2 border-green-200 mt-10 m-2 p-4">
-      <div className="flex justify-center">
-        <div className="text-4xl m-4 p-4 font-extrabold text-green-500">
-          Register Component
-        </div>
-      </div>
-      {[
-        { label: "ID", name: "id", type: "text" },
-        { label: "비밀번호", name: "password", type: "password" },
-        { label: "이름", name: "name", type: "text" },
-        { label: "주민번호", name: "residentNumber", type: "text" },
-        { label: "휴대전화", name: "phoneNumber", type: "text" },
-        { label: "Email", name: "email", type: "email" },
-        { label: "계좌번호", name: "accountNumber", type: "text" },
-        { label: "신용점수", name: "creditScore", type: "text" },
-        { label: "닉네임", name: "nickname", type: "text" },
-        { label: "주소", name: "address", type: "text" },
-      ].map((input) => (
-        <div className="flex justify-center" key={input.name}>
-          <div className="relative mb-4 flex w-full flex-wrap items-stretch">
-            <div className="w-full p-3 text-left font-bold">{input.label}</div>
+    <div className="page-container">
+      <h1 className="page-title">회원가입</h1>
+
+      <form>
+        {[
+          { label: "ID", name: "id", type: "text" },
+          { label: "비밀번호", name: "password", type: "password" },
+          { label: "이름", name: "name", type: "text" },
+          { label: "주민번호", name: "residentNumber", type: "text" },
+          { label: "휴대전화", name: "phoneNumber", type: "text" },
+          { label: "Email", name: "email", type: "email" },
+          { label: "계좌번호", name: "accountNumber", type: "text" },
+          { label: "신용점수", name: "creditScore", type: "text" },
+          { label: "닉네임", name: "nickname", type: "text" },
+          { label: "주소", name: "address", type: "text" },
+        ].map((field) => (
+          <div key={field.name} className="form-group">
+            <label>{field.label}</label>
             <input
-              className="w-4/5 p-3 rounded-l border border-solid border-neutral-500 shadow-md"
-              name={input.name}
-              type={input.type}
-              value={registerParam[input.name]}
-              placeholder={
-                input.name === "password" ? "6자리 이상 입력해주세요" : ""
-              }
+              type={field.type}
+              name={field.name}
+              value={registerParam[field.name]}
               onChange={handleChange}
-              required
             />
-            {duplicateChecks.hasOwnProperty(input.name) && (
-              <>
+            <div className="button-container">
+              {/* 중복 체크 버튼 */}
+              {duplicateChecks.hasOwnProperty(field.name) && (
                 <button
-                  className="w-1/5 p-3 bg-blue-500 text-white rounded-r"
-                  onClick={() => handleDuplicateCheck(input.name)}
+                  type="button"
+                  onClick={() => handleDuplicateCheck(field.name)}
+                  className="duplicate-check-btn"
                 >
                   중복 체크
                 </button>
-                {input.name === "email" && ( // 이메일 필드인 경우에만 인증 버튼 추가
-                  <button
-                    className="w-1/5 p-3 bg-green-500 text-white rounded-r ml-2"
-                    onClick={handleEmailAuthentication}
-                  >
-                    이메일 인증
-                  </button>
-                )}
-              </>
-            )}
-            {input.name === "creditScore" && ( // 신용점수 필드에만 신용점수 검증 버튼 추가
-              <button
-                className="w-1/5 p-3 bg-yellow-500 text-white rounded-r ml-2"
-                onClick={handleCreditScoreCheck}
-              >
-                신용점수 검증
-              </button>
-            )}
+              )}
+
+              {/* 이메일 인증 버튼 */}
+              {field.name === "email" && (
+                <button
+                  type="button"
+                  onClick={handleEmailAuthentication}
+                  disabled={authenticatedEmail}
+                  className={`email-auth-btn ${
+                    authenticatedEmail ? "disabled" : ""
+                  }`}
+                >
+                  {authenticatedEmail ? "인증 완료" : "이메일 인증"}
+                </button>
+              )}
+              {/* 신용점수 확인 버튼 */}
+              {field.name === "creditScore" && (
+                <button
+                  type="button"
+                  onClick={handleCreditScoreCheck}
+                  className="credit-score-btn"
+                >
+                  신용점수 확인
+                </button>
+              )}
+            </div>
           </div>
-        </div>
-      ))}
-      <div className="flex justify-center">
-        <div className="relative mb-4 flex w-full justify-center">
-          <div className="w-2/5 p-6 flex justify-center font-bold">
-            <button
-              className="rounded p-4 w-36 bg-green-500 text-xl text-white"
-              onClick={handleClickRegister}
-            >
-              회원가입
-            </button>
-          </div>
-        </div>
-      </div>
+        ))}
+
+        <button
+          type="button"
+          className="submit-btn"
+          onClick={handleClickRegister}
+        >
+          회원가입
+        </button>
+      </form>
     </div>
   );
 };

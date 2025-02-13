@@ -20,7 +20,7 @@ public class Wallet extends BaseEntity {
     @Id
     private String walletId;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", referencedColumnName = "id", unique = true)
     @JsonIgnore
     private Member member;

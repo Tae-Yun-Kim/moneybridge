@@ -8,13 +8,16 @@ import com.moneybridge.dto.wallet.WalletDTO;
 import com.moneybridge.repository.account.AccountRepository;
 import com.moneybridge.repository.member.MemberRepository;
 import com.moneybridge.repository.wallet.WalletRepository;
+
+
 import com.moneybridge.repository.wallet.WalletTransactionRepository;
-import com.moneybridge.service.post.NotificationService;
+//import com.moneybridge.service.sms.SmsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -27,7 +30,7 @@ public class WalletServiceImpl implements WalletService {
     private final MemberRepository memberRepository;
     private final AccountRepository accountRepository;
     private final WalletTransactionRepository walletTransactionRepository;
-    private final NotificationService notificationService;  // NotificationService 주입
+//    private final SmsService smsService;
 
     @Override
     @Transactional
@@ -76,9 +79,20 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
+//    public WalletDTO getWalletByMemberId(String memberId) {
+//        Wallet wallet = walletRepository.findByMember_Id(memberId)
+//                .orElseThrow(() -> new RuntimeException("Wallet not found"));
+//        return convertToDTO(wallet);
+//    }
     public WalletDTO getWalletByMemberId(String memberId) {
-        Wallet wallet = walletRepository.findByMember_Id(memberId)
-                .orElseThrow(() -> new RuntimeException("Wallet not found"));
+        Optional<Wallet> walletOpt = walletRepository.findByMember_Id(memberId);
+
+        if (walletOpt.isEmpty()) {
+            log.warn("⚠️ 해당 회원의 지갑이 없습니다. memberId: {}", memberId);
+            return null; // 예외 대신 null 반환
+        }
+
+        Wallet wallet = walletOpt.get();
         return convertToDTO(wallet);
     }
 
@@ -316,18 +330,22 @@ public void transferFromWalletToAccount(String memberId, Long amount) {
         walletRepository.save(fromWallet);
         walletRepository.save(toWallet);
 
-        // 채무자 -> 채권자 알림 생성
-//        if (fromWallet.getMember().isLender()) { // 출발 지갑이 채권자
-//            log.info("Creating creditor-to-debtor notification for fromMember: {}", fromWallet.getMember());
-//            log.info("Creating debtor-to-creditor notification for toMember: {}", toWallet.getMember());
-//            notificationService.createCreditorToDebtorNotification(fromWallet.getMember(), Double.valueOf(amount));
-//            notificationService.createDebtorToCreditorNotification(toWallet.getMember(), Double.valueOf(amount));
-//        } else { // 출발 지갑이 채무자
-//            log.info("Creating debtor-to-creditor notification for fromMember: {}", fromWallet.getMember());
-//            log.info("Creating creditor-to-debtor notification for toMember: {}", toWallet.getMember());
-//            notificationService.createDebtorToCreditorNotification(fromWallet.getMember(), Double.valueOf(amount));
-//            notificationService.createCreditorToDebtorNotification(toWallet.getMember(), Double.valueOf(amount));
-//        }
+
+        // ✅ 수신 지갑 회원 정보 조회 후 전화번호 가져오기
+//        Member receiver = memberRepository.findById(toWallet.getMember().getId())
+//                .orElseThrow(() -> new RuntimeException("수신자 회원을 찾을 수 없음"));
+//
+//        String receiverPhone = receiver.getPhoneNumber(); // 수신자의 전화번호 가져오기
+//        String senderPhone = fromWallet.getMember().getPhoneNumber(); // 발신자의 전화번호 가져오기
+//
+//        // ✅ 문자 메시지 전송
+//        String message = "지갑 간 송금 완료: " + amount + "원이 송금되었습니다.";
+//        smsService.sendSms(receiverPhone, senderPhone, message);
+
+        // 2. 문자 전송 (받는 사람에게)
+//        smsService.sendSms(toWallet.getMember().getPhoneNumber(), fromWallet.getMember().getPhoneNumber(), amount);
+
+//        System.out.println("송금 완료: " + fromWallet.getMember().getId() + " -> " + toWallet.getMember().getId() + ", 금액: " + amount);
     }
 
     private WalletDTO convertToDTO(Wallet wallet) {

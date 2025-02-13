@@ -33,7 +33,7 @@ public class MemberDTO extends User {
     private String memberGrade; // Enum이 아니라 문자열로 유지(혜수)
 
 
-    public MemberDTO(String id, String password, String name, String residentNumber, String phoneNumber, String email, String accountNumber, String nickname, boolean social, String address, boolean isLender, boolean accountLocked, List<String> lenderStatus, List<String> roleNames, List<String> memberGradeList) {
+    public MemberDTO(String id, String password, String name, String residentNumber, String phoneNumber, String email, String accountNumber, String nickname, Boolean social, String address, boolean isLender, boolean accountLocked, List<String> lenderStatus, List<String> roleNames, List<String> memberGradeList) {
         super(
                 id,
                 password,

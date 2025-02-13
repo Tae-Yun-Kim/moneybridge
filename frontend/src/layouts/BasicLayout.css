@@ -1,7 +1,8 @@
 /* BasicLayout.css */
+@import url("https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;700&family=Anton&family=Bebas+Neue&display=swap");
 
 /* 레이아웃 컨테이너 */
-.layout-container {
+.layout-container-l {
   display: flex;
   flex-direction: row; /* 기본 가로 배치 */
   justify-content: space-between; /* 양옆 사이드바와 메인 콘텐츠 간격 유지 */
@@ -11,6 +12,7 @@
   width: 100%; /* 전체 너비 */
   box-sizing: border-box; /* 패딩 포함 크기 계산 */
   border-bottom: 1px solid black;
+  font-family: "Noto Sans KR", "Roboto", sans-serif;
 }
 
 /* 사이드바 스타일 */
@@ -32,7 +34,7 @@
 
 .left-sidebar {
   position: sticky;
-  top: 10%;
+  top: 15%;
   border-right: 1px solid black;
   height: fit-content; /* 내용에 맞게 높이 조정 */
   width: 200px; /* 고정된 너비 */
@@ -44,7 +46,7 @@
 
 .right-sidebar {
   position: sticky; /* 스크롤 시 고정 */
-  top: 10%; /* 상단에서의 고정 위치 */
+  top: 15%; /* 상단에서의 고정 위치 */
   height: fit-content; /* 내용에 맞게 높이 조정 */
   margin-left: auto; /* 오른쪽으로 정렬 */
   width: 200px; /* 고정된 너비 */
@@ -84,10 +86,10 @@
 
 @media (max-width: 480px) {
   .sidebar {
-    min-width: 100%; /* 작은 화면에서는 사이드바도 100% */
+    min-width: 50%; /* 작은 화면에서는 사이드바도 100% */
   }
 
   .main-content {
-    min-width: 100%; /* 메인 콘텐츠도 100% */
+    min-width: 50%; /* 메인 콘텐츠도 100% */
   }
 }

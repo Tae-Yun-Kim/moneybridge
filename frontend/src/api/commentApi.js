@@ -75,7 +75,7 @@ export const getCommentsByPostId = async (postId) => {
     const response = await axios.get(`${host}/${postId}/comments`, {
       // headers: { Authorization: authHeader },
     });
-    console.log(response.data)
+    console.log(response.data);
     // 반환된 데이터를 가공
     return response.data.map((comment) => ({
       id: comment.id,
@@ -149,18 +149,48 @@ export const deleteComment = async (commentId) => {
 };
 
 // 댓글 선택
+// export const selectComment = async (postId, commentId) => {
+//   try {
+//     const authHeader = getAuthHeader();
+//     if (!authHeader) throw new Error("Authorization header is missing");
+
+//     const response = await jwtAxios.post(
+//       `${host}/${postId}/comments/${commentId}/select`,
+//       {},
+//       {
+//         headers: { Authorization: authHeader },
+//       }
+//     );
+//     return response.data;
+//   } catch (error) {
+//     console.error("Error in selectComment:", error.response || error.message);
+//     if (error.response?.status === 401) {
+//       alert("인증 정보가 만료되었습니다. 다시 로그인해주세요.");
+//     } else {
+//       alert("댓글 선택 중 문제가 발생했습니다.");
+//     }
+//     throw error;
+//   }
+// };
+
 export const selectComment = async (postId, commentId) => {
   try {
     const authHeader = getAuthHeader();
     if (!authHeader) throw new Error("Authorization header is missing");
 
+    // 사용자 정보 가져오기
+    const { userId } = getUserInfo(); // ✅ lenderId로 사용될 userId 추가
+
     const response = await jwtAxios.post(
-      `${host}/${postId}/comments/${commentId}/select`,
+      `${host}/${postId}/comments/${commentId}/select-comment/${userId}`, // ✅ lenderId 추가
       {},
       {
         headers: { Authorization: authHeader },
       }
     );
+
+    console.log("📌 selectComment response:", response.data); // ✅ 응답 데이터 확인
+
     return response.data;
   } catch (error) {
     console.error("Error in selectComment:", error.response || error.message);
@@ -172,7 +202,6 @@ export const selectComment = async (postId, commentId) => {
     throw error;
   }
 };
-
 // // 거래 성립
 // export const confirmTransaction = async (commentId) => {
 //   try {

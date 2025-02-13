@@ -131,23 +131,21 @@ const LoginComponent = () => {
         alert("이메일과 패스워드를 다시 확인하세요");
       } else {
         alert("로그인 성공");
-      // 사용자 정보 로컬 스토리지에 저장
         const userInfo = {
-          id: data.id, // 서버에서 반환된 사용자 ID
-          name: data.name, // 서버에서 반환된 사용자 이름
-          email: data.email, // 서버에서 반환된 사용자 이메일
+          id: data.id,
+          name: data.name,
+          email: data.email,
           role: data.role,
           isLender: data.isLender,
-          grade:data.grade,
+          grade: data.grade,
+          accountNumber: data.accountNumber,
         };
-        localStorage.setItem("member", JSON.stringify(userInfo)); // JSON으로 저장
-        
-        const userId = data.id;
-        localStorage.setItem("userId", data.id);  // JSON.stringify 없이 저장
 
-        localStorage.setItem("memberGrade", data.grade);  // JSON.stringify 없이 저장
-        
-        localStorage.setItem("isLender", JSON.stringify(data.isLender)); 
+        localStorage.setItem("member", JSON.stringify(userInfo));
+        localStorage.setItem("userId", data.id); // JSON.stringify 없이 저장
+        localStorage.setItem("isLender", JSON.stringify(data.isLender));
+        localStorage.setItem("memberGrade", data.grade);
+
         moveToPath("/");
       }
     });

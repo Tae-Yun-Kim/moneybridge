@@ -134,8 +134,9 @@ import {
   getTransactionsToWallet,
   getWalletByMemberId,
 } from "../../api/walletApi";
-import { createNotification } from "../../api/notificationApi";  
 import BasicLayout from "../../layouts/BasicLayout";
+import { useNavigate } from "react-router-dom";
+import ContractProgressComponent from "../../components/post/ContractProgressComponent";
 
 const MyPage = () => {
   const [userInfo, setUserInfo] = useState(null);
@@ -147,9 +148,11 @@ const MyPage = () => {
   );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [walletError, setWalletError] = useState(null);
+  const navigate = useNavigate(); // 리다이렉트에 사용
 
-  //
-  const [prevTransactionsTo, setPrevTransactionsTo] = useState([]); // 이전 거래 내역 저장
+  const userId = localStorage.getItem("userId");
+  const isLender = localStorage.getItem("isLender") === "true";
 
   useEffect(() => {
     console.log("🚀 [MyPage] 로컬 스토리지에서 userInfo 가져오기");
@@ -160,6 +163,9 @@ const MyPage = () => {
         console.log("userInfo 설정:", user);
         setUserInfo(user);
       }
+    } else {
+      alert("로그인 상태가 아닙니다.");
+      navigate("/member/login");
     }
   }, []);
 
@@ -176,8 +182,12 @@ const MyPage = () => {
         console.log("지갑 데이터 가져옴:", walletData);
 
         if (!walletData || !walletData.walletId) {
-          throw new Error("지갑 데이터가 올바르지 않습니다.");
+          console.warn("⚠️ 해당 회원의 지갑이 없습니다.");
+          setWalletBalance(null); // 지갑이 없으면 null 설정
+          setWalletError("지갑이 없습니다");
+          return;
         }
+
         setWalletBalance(walletData.balance);
 
         const fromTransactions = await getTransactionsFromWallet(
@@ -212,7 +222,6 @@ const MyPage = () => {
         setWalletToWalletTransactions(
           sortByDateDesc([...walletToWalletFrom, ...walletToWalletTo])
         );
-        
       } catch (error) {
         console.error("지갑 데이터 가져오는 중 에러 발생:", error.message);
         setError(error.message);
@@ -238,12 +247,14 @@ const MyPage = () => {
       {/* <BasicLayout /> */}
       <div className="mypage-content">
         <BasicLayout>
+          <ContractProgressComponent userId={userId} isLender={isLender} />
           <MyPageComponent
             userInfo={userInfo}
             walletBalance={walletBalance}
             transactionsFrom={transactionsFrom}
             transactionsTo={transactionsTo}
             walletToWalletTransactions={walletToWalletTransactions}
+            walletError={walletError} // 지갑 오류 상태 전달
           />
         </BasicLayout>
       </div>
