@@ -1,4 +1,4 @@
-//ContractProgressComponent
+// ContractProgressComponent
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -11,8 +11,13 @@ import {
   getContractContent, // ✅ 계약서 내용 조회 API 추가
 } from "../../api/contractApi";
 
-import { createContractActiveNotification } from "../../api/notificationApi";
-import { createContractCancelledNotification } from "../../api/notificationApi";
+import {
+  createContractActiveNotification,
+  createContractCancelledNotification,
+  createContractApprovalNotification, 
+  createOverdueNotification, // ✅ 연체 알림 추가
+  createContractCompletedNotification, // ✅ 계약 완료 알림 추가
+} from "../../api/notificationApi";
 
 const ContractProgressComponent = ({ userId, isLender }) => {
   const [contracts, setContracts] = useState([]);
@@ -60,37 +65,7 @@ const ContractProgressComponent = ({ userId, isLender }) => {
     }
   };
 
-  // ✅ 대출자가 계약 승인 (WAITING_FOR_APPROVAL 상태로 변경)
-
-  // const handleApproveContract = async (
-  //   contractId,
-  //   loanPostId,
-  //   navigateImmediately = false
-  // ) => {
-  //   try {
-  //     const hasActiveContract = contracts.some(
-  //       (c) =>
-  //         c.loanPostId === loanPostId &&
-  //         ["ACTIVE", "WAITING_FOR_APPROVAL", "COMPLETED"].includes(c.status)
-  //     );
-
-  //     if (hasActiveContract) {
-  //       alert("이미 진행 중인 계약이 있어 승인할 수 없습니다.");
-  //       return;
-  //     }
-
-  //     await approveContract(contractId, userId);
-  //     alert("계약이 승인되었습니다.");
-
-  //     if (navigateImmediately) {
-  //       navigate(`/contract/${contractId}`);
-  //     } else {
-  //       fetchContracts();
-  //     }
-  //   } catch (error) {
-  //     console.error("계약 승인 오류:", error);
-  //   }
-  // };
+  // ✅ 대출자가 계약 승인
   const handleApproveContract = async (
     contractId,
     loanPostId,
@@ -100,7 +75,7 @@ const ContractProgressComponent = ({ userId, isLender }) => {
       const hasActiveContract = contracts.some(
         (c) =>
           c.loanPostId === loanPostId &&
-          ["ACTIVE", "WAITING_FOR_APPROVAL", "OVERDUE"].includes(c.status) // ✅ COMPLETED, CANCELED 상태는 허용
+          ["ACTIVE", "OVERDUE"].includes(c.status) // ✅ COMPLETED, CANCELED 상태는 허용
       );
 
       if (hasActiveContract) {
@@ -111,8 +86,17 @@ const ContractProgressComponent = ({ userId, isLender }) => {
       await approveContract(contractId, userId);
       alert("계약이 승인되었습니다.");
 
+      // 계약 객체에서 lenderId 가져오기
+      const contract = contracts.find(c => c.id === contractId);
+
+      const lenderId = contract.lenderId;
+      
+     // ✅ 대출자가 계약서 작성 시 출자자에게 알림 생성 API 호출  
+     await createContractApprovalNotification(lenderId); 
+
       if (navigateImmediately) {
         navigate(`/contract/${contractId}`);
+
       } else {
         fetchContracts();
       }
@@ -127,35 +111,35 @@ const ContractProgressComponent = ({ userId, isLender }) => {
       await approveContractByLender(contractId, userId);
       alert("출자자가 최종 승인을 완료하였습니다! (상태: ACTIVE)");
 
-      // ✅ 계약 진행 알림 생성 API 호출
-      await createContractActiveNotification(contractId);
-
-      navigate(`/contract/${contractId}`); // ✅ 출자자의 계약서 작성 페이지로 이동
+      navigate(`/contract/${contractId}`);
+    
     } catch (error) {
       console.error("최종 계약 승인 오류:", error);
       alert("최종 계약 승인 중 문제가 발생했습니다.");
     }
   };
 
-  // ✅ 계약 작성 페이지로 이동 (대출자만 가능)
-  // const handleGoToContractPage = (contractId, loanPostId) => {
-  //   const hasActiveContract = contracts.some(
-  //     (c) =>
-  //       c.loanPostId === loanPostId &&
-  //       ["ACTIVE", "WAITING_FOR_APPROVAL", "COMPLETED"].includes(c.status)
-  //   );
-  //   if (hasActiveContract) {
-  //     alert("이미 진행 중인 계약이 있어 계약서를 작성할 수 없습니다.");
-  //     return;
-  //   }
-  //   navigate(`/contract/${contractId}`);
-  // };
-
   // ✅ 계약 상태 업데이트 (예: COMPLETED, OVERDUE)
   const handleUpdateStatus = async (contractId, newStatus) => {
     try {
+      // 계약 객체에서 borrowerId 가져오기
+      const contract = contracts.find(c => c.id === contractId);
+
+      const borrowerId = contract.borrowerId;
+
       await updateContractStatus(contractId, newStatus);
       alert(`계약 상태가 ${newStatus}로 변경되었습니다.`);
+
+      // ✅ 연체 상태로 변경 시 대출자에게 알림 전송
+      if (newStatus === "OVERDUE") {
+        await createOverdueNotification(borrowerId, contractId);
+      }
+
+      // ✅ 계약 완료 상태로 변경 시 대출자에게 알림 전송
+      if (newStatus === "COMPLETED") {
+        await createContractCompletedNotification(borrowerId);
+      }
+
       fetchContracts();
     } catch (error) {
       console.error("계약 상태 변경 오류:", error);
@@ -183,21 +167,20 @@ const ContractProgressComponent = ({ userId, isLender }) => {
       <h2 className="text-xl font-bold mb-4">📜 계약 진행 현황</h2>
 
       {contracts.length === 0 ? (
-        <p>계약이 없습니다.</p>
-      ) : (
-        <ul>
-          {contracts.map((contract) => (
-            <li key={contract.id} className="p-4 border-b border-gray-200">
-              <strong>📌 계약 ID:</strong> {contract.id} <br />
-              <strong>💰 대출 금액:</strong> {contract.loanAmount}원 <br />
-              <strong>📈 이자율:</strong> {contract.interestRate}% <br />
-              <strong>🕒 상환 기간:</strong> {contract.repaymentPeriod}개월{" "}
-              <br />
-              <strong>🚦 현재 상태:</strong>{" "}
-              <span className="font-bold text-blue-500">{contract.status}</span>
-              <br />
-              {/* ✅ 계약서 보기 버튼 (계약이 WAITING_FOR_APPROVAL, ACTIVE, COMPLETED, OVERDUE 상태일 때만 표시) */}
-              {[
+  <p>계약이 없습니다.</p>
+) : (
+  <ul>
+    {contracts.map((contract) => (
+      <li key={contract.id} className="p-4 border-b border-gray-200">
+        <strong>📌 계약 ID:</strong> {contract.id} <br />
+        <strong>💰 대출 금액:</strong> {contract.loanAmount}원 <br />
+        <strong>📈 이자율:</strong> {contract.interestRate}% <br />
+        <strong>🕒 상환 기간:</strong> {contract.repaymentPeriod}개월 <br />
+        <strong>🚦 현재 상태:</strong>{" "}
+        <span className="font-bold text-blue-500">{contract.status}</span>
+        <br />
+           {/* ✅ 계약서 보기 버튼 (계약이 WAITING_FOR_APPROVAL, ACTIVE, COMPLETED, OVERDUE 상태일 때만 표시) */}
+           {[
                 "WAITING_FOR_APPROVAL",
                 "ACTIVE",
                 "COMPLETED",
@@ -210,8 +193,8 @@ const ContractProgressComponent = ({ userId, isLender }) => {
                   계약서 보기
                 </button>
               )}
-              {/* ✅ 출자자가 대출자가 작성한 계약서 보기 버튼 */}
-              {contract.status === "WAITING_FOR_APPROVAL" && isLender && (
+            {/* ✅ 출자자가 대출자가 작성한 계약서 보기 버튼 */}
+            {contract.status === "WAITING_FOR_APPROVAL" && isLender && (
                 <button
                   onClick={() =>
                     fetchBorrowerContractContent(
@@ -224,8 +207,8 @@ const ContractProgressComponent = ({ userId, isLender }) => {
                   대출자가 작성한 계약서 보기
                 </button>
               )}
-              {/* ✅ 계약서 내용 표시 및 닫기 버튼 추가 */}
-              {contractContents[contract.id] && (
+          {/* ✅ 계약서 내용 표시 및 닫기 버튼 추가 */}
+          {contractContents[contract.id] && (
                 <div className="mt-4 p-4 bg-gray-100 rounded-md">
                   <h3 className="text-lg font-semibold">📜 계약서 내용</h3>
                   <pre className="whitespace-pre-wrap">
@@ -245,8 +228,8 @@ const ContractProgressComponent = ({ userId, isLender }) => {
                   </button>
                 </div>
               )}
-              {/* ✅ 계약 승인 후 즉시 계약 페이지로 이동 */}
-              {contract.status === "PENDING" && !isLender && (
+          {/* ✅ 계약 승인 후 즉시 계약 페이지로 이동 */}
+          {contract.status === "PENDING" && !isLender && (
                 <button
                   onClick={() =>
                     handleApproveContract(
@@ -275,8 +258,8 @@ const ContractProgressComponent = ({ userId, isLender }) => {
                   계약서 작성
                 </button>
               )}
-              {/* ✅ 최종 승인 (출자자만 가능) */}
-              {contract.status === "WAITING_FOR_APPROVAL" && isLender && (
+       {/* ✅ 최종 승인 (출자자만 가능) */}
+       {contract.status === "WAITING_FOR_APPROVAL" && isLender && (
                 <button
                   onClick={() => handleLenderApproveContract(contract.id)}
                   className="px-4 py-1 bg-blue-500 text-white rounded-md mt-2"
@@ -284,28 +267,38 @@ const ContractProgressComponent = ({ userId, isLender }) => {
                   최종 승인
                 </button>
               )}
-              {/* ✅ 계약 완료 처리 (출자자만 가능) */}
-              {contract.status === "ACTIVE" && isLender && (
-                <button
-                  onClick={() => handleUpdateStatus(contract.id, "COMPLETED")}
-                  className="px-4 py-1 bg-green-500 text-white rounded-md mt-2"
-                >
-                  계약 완료 처리
-                </button>
-              )}
-              {/* ✅ 계약 취소 (PENDING 상태일 때만 가능) */}
-              {contract.status === "PENDING" && (
+        {contract.status === "ACTIVE" && isLender && (
+          <>
+            <button
+              onClick={() => handleUpdateStatus(contract.id, "COMPLETED")}
+              className="px-4 py-1 bg-green-500 text-white rounded-md mt-2"
+            >
+              계약 완료 처리
+            </button>
+            <button
+              onClick={() =>
+                handleUpdateStatus(contract.id, "OVERDUE", contract.borrowerId)
+              }
+              className="px-4 py-1 bg-red-500 text-white rounded-md mt-2 ml-2"
+            >
+              연체 처리
+            </button>
+          </>
+        )}
+        {/* ✅ 계약 취소 (PENDING 상태일 때만 가능) */}
+        {contract.status === "PENDING" && (
                 <button
                   onClick={() => handleCancelContract(contract.id)}
                   className="px-4 py-1 bg-gray-500 text-white rounded-md mt-2"
                 >
                   계약 취소
                 </button>
-              )}
-            </li>
-          ))}
-        </ul>
-      )}
+        )}
+      </li>
+    ))}
+  </ul>
+)}
+
     </div>
   );
 };

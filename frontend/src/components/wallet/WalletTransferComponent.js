@@ -9,47 +9,41 @@ const WalletTransferComponent = ({ fromWalletId, onTransfer }) => {
   const [amount, setAmount] = useState("");
   const [error, setError] = useState("");
 
-  // const handleTransfer = () => {
-  //   if (!toWalletId || !amount || parseInt(amount) <= 0) {
-  //     alert("올바른 수신 지갑 ID와 금액을 입력하세요.");
-  //     return;
-  //   }
-
-  //   onTransfer(toWalletId, parseInt(amount));
-  //   setToWalletId(""); // 입력 초기화
-  //   setAmount("");
-  // };
-
-  // 알림 생성 함수
-  const handleCreateNotification = async (transactionId, amount) => {
-    try {
-      // 여기서는 실제 알림을 생성하는 API 호출
-      await createNotification(toWalletId, amount); // toWalletId는 거래 받는 지갑 ID, amount는 거래 금액
-      console.log(
-        `알림 생성 성공: 거래 ID ${transactionId}, 입금자 ID ${toWalletId}, 금액 ${amount}`
-      );
-    } catch (error) {
-      console.error("알림 생성 중 오류 발생:", error);
-    }
-  };
-
-  const handleTransfer = () => {
+  const handleTransfer = async () => {
     if (!toWalletId || !amount || parseInt(amount) <= 0) {
       alert("올바른 수신 지갑 ID와 금액을 입력하세요.");
       return;
     }
 
-    // 송금 로직
-    const transactionId = `${Date.now()}`; // 예시로 transactionId 생성 (실제 구현에 맞게 수정 필요)
+    const transactionId = `${Date.now()}`;
+    
+    try {
+      // 송금 시도하고 결과를 받음
+      const isTransferSuccessful = await onTransfer(toWalletId, parseInt(amount));
+      
+      // 송금이 성공한 경우에만 알림 생성
+      if (isTransferSuccessful) {
+        try {
+          await createNotification(toWalletId, amount);
+          console.log(
+            `알림 생성 성공: 거래 ID ${transactionId}, 입금자 ID ${toWalletId}, 금액 ${amount}`
+          );
+        } catch (notificationError) {
+          console.error("알림 생성에 실패했습니다:", notificationError);
+        }
+      }
 
-    onTransfer(toWalletId, parseInt(amount));
-
-    // 알림 생성 호출
-    handleCreateNotification(transactionId, amount);
-    console.log("transactionId, amount", transactionId, amount);
-
-    setToWalletId(""); // 입력 초기화
-    setAmount("");
+      // 송금 성공시에만 입력 필드 초기화
+      if (isTransferSuccessful) {
+        setToWalletId("");
+        setAmount("");
+        setError("");
+      }
+      
+    } catch (error) {
+      console.error("송금 처리 중 오류가 발생했습니다:", error);
+      setError("송금 처리 중 오류가 발생했습니다.");
+    }
   };
 
   return (
@@ -80,6 +74,8 @@ const WalletTransferComponent = ({ fromWalletId, onTransfer }) => {
           onChange={(e) => setAmount(e.target.value)}
         />
       </div>
+
+      {error && <div className="error-message">{error}</div>}
 
       <button className="button-w" onClick={handleTransfer}>
         송금

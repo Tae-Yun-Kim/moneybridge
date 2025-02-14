@@ -25,9 +25,11 @@ const WalletTransferPage = () => {
       setMessage(
         `지갑 ${fromWalletId}에서 ${toWalletId}로 ${amount}원이 송금되었습니다.`
       );
+      return true; // 송금 성공 시 true 반환
     } catch (error) {
       console.error("송금 실패:", error.message);
       alert("송금에 실패했습니다. 다시 시도하세요.");
+      return false; // 송금 실패 시 false 반환
     }
   };
 

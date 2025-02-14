@@ -120,7 +120,7 @@ public class NotificationServiceImpl implements NotificationService {
                 .memberId(member.getId())
                 .postId(post.getId())
                 .type(Notification.NotificationType.WAITING_FOR_APPROVAL)
-                .message("대출희망자가 댓글을 달았습니다: " + comment)
+                .message("대출희망자가 댓글을 달았습니다 : " + comment)
                 .build();
 
         createNotification(notificationDTO, member.getId());
@@ -175,7 +175,7 @@ public class NotificationServiceImpl implements NotificationService {
                 .memberId(borrower.getId())
                 .postId(contract.getLoanPost().getId())
                 .type(Notification.NotificationType.CANCELLED)
-                .message("계약이 취소되었습니다.")
+                .message("계약을 거부하여 계약이 취소되었습니다.")
                 .build();
 
         createNotification(borrowerNotification, borrower.getId());
@@ -185,7 +185,7 @@ public class NotificationServiceImpl implements NotificationService {
                 .memberId(lender.getId())
                 .postId(contract.getLoanPost().getId())
                 .type(Notification.NotificationType.CANCELLED)
-                .message("계약이 취소되었습니다.")
+                .message("계약을 거부하여 계약이 취소되었습니다.")
                 .build();
 
         createNotification(lenderNotification, lender.getId());

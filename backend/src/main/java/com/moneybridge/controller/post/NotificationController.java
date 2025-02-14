@@ -107,9 +107,6 @@ public class NotificationController {
     public ResponseEntity<Void> createContractCancelledNotification(@PathVariable Long contractId) {
         String currentUserId = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        // 현재 로그인한 사용자 정보 조회
-        Member member = memberService.findById(currentUserId);
-
         // 계약 ID를 사용해 계약 정보 가져오기
         Contract contract = contractRepository.findById(contractId)
                 .orElseThrow(() -> new IllegalArgumentException("계약을 찾을 수 없습니다."));
