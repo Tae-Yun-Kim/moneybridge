@@ -2,8 +2,8 @@
 
 // const smsApi = async () => {
 //   // CoolSMS API 키 및 시크릿 키
-//   const apiKey = "NCSHG892WXJEHTRA"; // ⚠️ 테스트용 키
-//   const apiSecret = "1TF4D9NZLD9CPGQEJB5YLOK61CEW2JNG"; // ⚠️ 테스트용 키
+//   const apiKey = ""; // ⚠️ 테스트용 키
+//   const apiSecret = ""; // ⚠️ 테스트용 키
 
 //   const url = "https://api.coolsms.co.kr/messages/v4/send";
 
