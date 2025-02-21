@@ -8,6 +8,7 @@ import com.moneybridge.security.handler.APILoginSuccessHandler;
 import com.moneybridge.security.handler.CustomAccessDeniedHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -53,9 +54,17 @@ public class CustomSecurityConfig {
         // ✅ 특정 API는 JWT 없이 접근 가능하도록 설정
         http.authorizeHttpRequests(auth ->
                 auth.requestMatchers("/api/loan-products/**").permitAll() // ✅ 대출 상품 조회 API 인증 없이 접근 가능
+                        .requestMatchers("/ws/**").permitAll() // WebSocket 엔드포인트 허용
                         .requestMatchers("/api/member/top-members/**").permitAll()  // ✅ TOP 회원 조회 API 추가
                         .requestMatchers("/api/member/check-duplicate").permitAll() // 중복 체크 API 허용
-                        .requestMatchers("/api/member/login","/api/member/register").permitAll() // 로그인 API도 허용
+                        .requestMatchers("/api/member/login","/api/member/register", "/api/member/update").permitAll() // 로그인 API도 허용
+                        .requestMatchers("/api/donations/**").permitAll()
+//                        .requestMatchers("/api/member/delete/**").permitAll() // 삭제 API 인증 필요
+                        .requestMatchers(HttpMethod.DELETE, "/api/member/delete/**").authenticated() // ✅ DELETE 요청은 로그인한 사용자만 가능
+                        .requestMatchers("/api/post/list").permitAll() // 게시글 리스트 조회 API도 허용
+                        .requestMatchers("/api/post/view/{id}").permitAll() // 게시글 상세 페이지 API도 허용
+                        .requestMatchers("/api/post/{postId}/comments").permitAll() // 댓글 조회 API도 허용
+                        .requestMatchers("/api/chat/messages").permitAll()
                         .anyRequest().authenticated() // ✅ 그 외 모든 API는 인증 필요
         );
 

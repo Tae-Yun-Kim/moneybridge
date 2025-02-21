@@ -121,7 +121,7 @@
 // export default MyPageComponent;
 
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../../pages/member/MyPage.css";
 
 const MyPageComponent = ({
@@ -130,7 +130,19 @@ const MyPageComponent = ({
   transactionsFrom,
   transactionsTo,
   walletToWalletTransactions,
+  walletError,
+  transactionCount,
 }) => {
+  const navigate = useNavigate();
+
+  const getTransactionLevel = (count) => {
+    return count >= 30 ? "30+" : count; // 100 이상이면 100+ 표시
+  };
+
+  const getGaugeWidth = (count) => {
+    return Math.min((count / 30) * 100, 100); // 최대 100%까지만 차도록 설정
+  };
+
   if (!userInfo) {
     return (
       <div className="error-message">회원 정보가 없습니다. 로그인하세요.</div>
@@ -153,24 +165,120 @@ const MyPageComponent = ({
           </div>
           <p>이메일: {userInfo.email}</p>
           <p>등급: {userInfo.grade}</p>
-          <div style={{ marginTop: "10px" }}>
+          <div className="button-group" style={{ marginTop: "10px" }}>
             <Link to="/member/update" className="bg-green button">
               회원 수정
+            </Link>
+            <Link to="/member/delete" className="bg-green button">
+              회원 탈퇴
             </Link>
           </div>
         </div>
 
-        {/* 지갑 정보 */}
+        {/* 지갑 정보
         <div className="wallet-info-box">
           <h2 className="section-title">지갑 정보</h2>
-          <p>잔액: {walletBalance.toLocaleString()} 원</p>
-          <div className="button-group">
-            <Link to="/wallet/transfer" className="bg-green button">
-              입금/출금
-            </Link>
-            <Link to="/wallet/wallet-transfer" className="bg-blue button">
-              송금
-            </Link>
+          {walletBalance !== null ? (
+            <>
+              <p>잔액: {walletBalance.toLocaleString()} 원</p>
+              <div className="button-group">
+                <Link to="/wallet/transfer" className="bg-green button">
+                  입금/출금
+                </Link>
+                <Link to="/wallet/wallet-transfer" className="bg-blue button">
+                  송금
+                </Link>
+              </div>
+            </>
+          ) : (
+            <>
+              <p className="no-wallet">🚨 {walletError} </p>
+              <button
+                className="btn-create-wallet"
+                onClick={() => navigate("/wallet/create")}
+              >
+                지갑 생성
+              </button>
+            </>
+          )}
+        </div> */}
+        <div className="wallet-wrapper">
+          {/* 지갑 정보 */}
+          <div className="wallet-info-box">
+            <h2 className="section-title">지갑 정보</h2>
+            {walletError ===
+            "❌ 현재 추심 진행 중입니다. 지갑 사용이 제한됩니다." ? (
+              <p className="wallet-locked-message">🚨 {walletError}</p>
+            ) : walletBalance !== null ? (
+              <>
+                <p>잔액: {walletBalance.toLocaleString()} 원</p>
+                <div className="button-group">
+                  <Link to="/wallet/transfer" className="bg-green button">
+                    입금/출금
+                  </Link>
+                  <Link to="/wallet/wallet-transfer" className="bg-blue button">
+                    송금
+                  </Link>
+                </div>
+              </>
+            ) : (
+              <>
+                <p className="no-wallet">🚨 지갑이 없습니다.</p>
+                <button
+                  className="btn-create-wallet"
+                  onClick={() => navigate("/wallet/create")}
+                >
+                  지갑 생성
+                </button>
+              </>
+            )}
+          </div>
+          {/* 거래 횟수 (아래쪽) */}
+          <div className="wallet-info-box-c">
+            <p className="transaction-count">
+              거래 횟수: {getTransactionLevel(transactionCount)} 회
+            </p>
+            <div className="transaction-gauge-container">
+              {/* 눈금 위에 숫자 표시 */}
+              <div className="gauge-labels">
+                <span className="gauge-label" style={{ left: "33%" }}>
+                  10
+                </span>
+                <span className="gauge-label" style={{ left: "66%" }}>
+                  20
+                </span>
+                <span
+                  className="gauge-label last-label"
+                  style={{ right: "0%" }}
+                >
+                  30+
+                </span>
+              </div>
+
+              {/* 게이지 바 */}
+              <div className="transaction-gauge">
+                {/* 눈금 추가 */}
+                <div className="gauge-ticks">
+                  <div className="tick" style={{ left: "33%" }}></div>
+                  <div className="tick" style={{ left: "66%" }}></div>
+                </div>
+
+                {/* 게이지 채우기 */}
+                <div
+                  className="transaction-gauge-fill"
+                  style={{
+                    width: `${(transactionCount / 30) * 100}%`,
+                    background: `linear-gradient(
+                                      to right,
+                                    #f44336 0%,   /* 빨강 (0 거래) */
+                                    #ff9800 30%,  /* 주황 (10 거래) */
+                                    #ffeb3b 60%,  /* 노랑 (20 거래) */
+                                    #4caf50 100%  /* 초록 (30+ 거래) */
+                                      )`,
+                  }}
+                ></div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

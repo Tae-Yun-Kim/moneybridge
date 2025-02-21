@@ -1,0 +1,162 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&display=swap");
+
+/* 전체 댓글 컨테이너 */
+.comment-container-c {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  /* background-color: #f9fafb; */
+  border-radius: 5px;
+  /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); */
+}
+
+/* 댓글 개수 표시 */
+.comment-count-c {
+  font-size: 15px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+/* 댓글 리스트 */
+.comment-list-c {
+  margin-bottom: 20px;
+}
+
+/* 개별 댓글 */
+.comment-item-c {
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* 댓글 헤더 */
+.comment-header-c {
+  display: flex;
+  justify-content: space-between;
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+/* 댓글 본문 */
+.comment-body-c {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* 버튼 컨테이너 */
+.button-container-c {
+  justify-content: flex-end;
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+/* 버튼 스타일 */
+.select-button-c {
+  padding: 8px 16px;
+  background-color: black;
+  color: white;
+  font-size: 14px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.select-button-c:hover {
+  display: flex;
+  background-color: gray;
+}
+
+/* 댓글 작성 폼 */
+.comment-form-c {
+  margin-top: 20px;
+}
+
+.comment-form-c h3 {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.omment-created-at-c {
+  font-size: 12px;
+}
+
+/* 입력 필드 */
+.comment-form-c input,
+.comment-form-c textarea {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.coment-form-c-write {
+  text-align: right;
+}
+
+.comment-form-c textarea {
+  resize: none;
+}
+
+/* 댓글 작성 버튼 */
+.comment-form-c button {
+  padding: 10px 15px;
+  background-color: black;
+  color: white;
+  font-size: 14px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.comment-form-c button:hover {
+  background-color: gray;
+}
+
+.traffic-light {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  width: 60px;
+  height: 20px;
+  background-color: rgb(32, 32, 32);
+  border-radius: 10px;
+  padding: 5px;
+}
+
+.light {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+}
+
+.red {
+  background-color: red;
+}
+
+.yellow {
+  background-color: yellow;
+}
+
+.green {
+  background-color: green;
+}
+
+.off {
+  background-color: gray;
+}
+
+.chicken {
+  font-size: 20px;
+}

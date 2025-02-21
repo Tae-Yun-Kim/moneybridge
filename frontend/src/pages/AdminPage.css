@@ -1,0 +1,32 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&display=swap");
+
+.admin-page {
+  /* margin: 40px auto; */
+  /* padding: 20px; */
+}
+
+.admin-content {
+  background: #ffffff;
+  /* max-width: 1000px; */
+  width: auto;
+  padding: 0 20px;
+  /* border-bottom: 1px solid black; */
+  /* border-radius: 12px; */
+  /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
+}
+
+.admin-title {
+  font-size: 28px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.donation-stats {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.donation-table {
+  width: 1000px;
+}

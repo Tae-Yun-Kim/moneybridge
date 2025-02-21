@@ -106,22 +106,32 @@
 
 // export default BasicMenu;
 
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "../../images/logo.png";
 import { FaSearch } from "react-icons/fa"; // 아이콘 추가
 import "./BasicMenu.css"; // 일반 CSS import
 import { useSelector } from "react-redux";
 import useCustomLogin from "../../hooks/useCustomLogin";
 import DonationProgress from "./DonationProgress";
+import NotificationComponent from "../notification/NotificationComponent"; // NotificationComponent 추가
+import { useState } from "react";
+import SearchBar from "../search/SearchBar";
 
 const BasicMenu = () => {
   const { doLogout, moveToPath } = useCustomLogin();
   const location = useLocation(); // 현재 경로 가져오기
+  const [query, setQuery] = useState("");
+  const navigate = useNavigate(); // 🔹 페이지 이동을 위한 훅
 
   const handleClickLogout = () => {
     doLogout();
     alert("로그아웃되었습니다.");
     moveToPath("/");
+  };
+
+  const handleSearch = (searchTerm) => {
+    if (searchTerm.trim() === "") return;
+    navigate(`/search?query=${encodeURIComponent(searchTerm)}`);
   };
 
   const loginState = useSelector((state) => state.loginSlice);
@@ -145,14 +155,7 @@ const BasicMenu = () => {
           </Link>
         </div> */}
         <div className="second">
-          <div className="search-bar">
-            <form>
-              <input type="text" placeholder="검색어를 입력해주세요" />
-              <button>
-                <FaSearch />
-              </button>
-            </form>
-          </div>
+          <SearchBar onSearch={handleSearch} />
 
           {/* 로그인/로그아웃
           <div className="nav-login">
@@ -186,30 +189,50 @@ const BasicMenu = () => {
               </li>
               <li>
                 <Link
-                  to={"/post/"}
-                  className={location.pathname === "/post/" ? "active" : ""}
+                  to={"/post/list"}
+                  className={location.pathname === "/post/list" ? "active" : ""}
                 >
                   빌려드려요
                 </Link>
               </li>
               <li>
                 <Link
-                  to={"/debtCollection"}
-                  className={
-                    location.pathname === "/debtCollection" ? "active" : ""
-                  }
+                  to={"/debt"}
+                  className={location.pathname === "/debt" ? "active" : ""}
                 >
                   대행서비스
                 </Link>
               </li>
               <li>
                 <Link
-                  to={"/qna/"}
-                  className={location.pathname === "/qna/" ? "active" : ""}
+                  to={"/chat/messages"}
+                  className={
+                    location.pathname === "/chat/messages" ? "active" : ""
+                  }
                 >
-                  QnA
+                  채팅
                 </Link>
               </li>
+              <li>
+                <Link
+                  to={"/qna/list"}
+                  className={
+                    location.pathname.startsWith("/qna/") ? "active" : ""
+                  }
+                >
+                  고객센터
+                </Link>
+              </li>
+              {/* <li>
+                <Link
+                  to={"/user-guide"}
+                  className={
+                    location.pathname === "/user-guide" ? "active" : ""
+                  }
+                >
+                  이용 안내
+                </Link>
+              </li> */}
             </ul>
           </div>
         </div>
@@ -266,6 +289,7 @@ const BasicMenu = () => {
       </div> */}
       {/* 로그인/로그아웃 */}
       <div className="nav-login">
+        <NotificationComponent /> {/* 여기서 알림 컴포넌트를 호출 */}
         {!loginState.id ? (
           <Link to={"/member/login"}>Login</Link>
         ) : (
@@ -281,6 +305,7 @@ const BasicMenu = () => {
             </Link>
           </>
         )}
+        {/* <NotificationComponent /> 여기서 알림 컴포넌트를 호출 */}
       </div>
     </nav>
   );

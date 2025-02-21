@@ -22,6 +22,8 @@ public class JWTUtil {
     //jwt 토큰을 생성하기 위한 메서드
     public static String generateToken(Map<String, Object> valueMap, int min){
 
+        log.info("🚀 JWT 생성: valueMap = " + valueMap); // ✅ JWT에 저장될 값 확인
+
         SecretKey key = null;
 
         try{
@@ -39,10 +41,14 @@ public class JWTUtil {
                 .signWith(key)
                 .compact();
 
+        log.info("🚀 생성된 JWT: " + jwtStr); // ✅ 생성된 토큰 확인
+
         return jwtStr;
     }
     //검증을 위한 메서드
     public static Map<String, Object> validateToken(String token) {
+
+        log.info("🔍 검증할 JWT: " + token); // ✅ JWT 내용 확인
 
         Map<String, Object> claim = null;
 
@@ -55,6 +61,10 @@ public class JWTUtil {
                     .build()
                     .parseClaimsJws(token) // 파싱 및 검증, 실패 시 에러
                     .getBody();
+
+            log.info("🚀 검증된 JWT claims: " + claim); // ✅ claims 내용 확인
+            log.info("🚀 JWT claims에서 추출한 ID: " + claim.get("id")); // ✅ 여기서 ID 값이 제대로 나오는지 확인
+
 
         }catch(MalformedJwtException malformedJwtException){
             throw new CustomJWTException("MalFormed");

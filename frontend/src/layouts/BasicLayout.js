@@ -10,7 +10,7 @@ const BasicLayout = ({ children }) => {
     <>
       <BasicMenu />
       <div>
-        <div className="layout-container">
+        <div className="layout-container-l">
           {/* Left Sidebar */}
           <div className="sidebar left-sidebar">
             <Leftsidemenu />

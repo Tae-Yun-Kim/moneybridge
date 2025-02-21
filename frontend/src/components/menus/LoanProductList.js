@@ -50,7 +50,7 @@ import "./LoanProductList.css"; // CSS 파일 연결
 const LoanProductList = () => {
   const [loanProducts, setLoanProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 4;
+  const itemsPerPage = 3;
 
   // 백엔드에서 데이터 가져오기
   useEffect(() => {
@@ -97,7 +97,7 @@ const LoanProductList = () => {
           </div>
         ))}
       </div>
-      <div className="pagination">
+      <div className="pagination-l">
         {Array.from({ length: totalPages }, (_, i) => i + 1).map((number) => (
           <button
             key={number}

@@ -16,4 +16,5 @@ public interface WalletService {
     void transferFromWalletToAccount(String memberId, Long amount);
     void transferFromAccountToWallet(String memberId, Long amount);
     void transferBetweenWallets(String fromWalletId, String toWalletId, Long amount);
+    void lockWalletByBorrowerId(String borrowerId);
 }

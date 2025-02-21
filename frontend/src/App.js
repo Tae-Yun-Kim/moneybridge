@@ -9,7 +9,7 @@ function App() {
     <>
       {/* <ImageAnalyzer /> */}
       <RouterProvider router={root} />
-      {/* <Chatbot /> */}
+      <Chatbot />
     </>
   );
 }

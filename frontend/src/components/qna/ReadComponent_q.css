@@ -1,0 +1,89 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&display=swap");
+
+/* 전체 컨테이너 */
+.read-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: "Noto Sans KR", "Roboto", sans-serif;
+}
+
+/* 제목 박스 */
+.titleBox {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+/* 작성자 & 작성일 */
+.authorText {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+}
+
+/* 내용 */
+.contentText {
+  font-size: 16px;
+  color: #333;
+  background-color: #f8f8f8;
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+/* 댓글 섹션 */
+.comment-section {
+  margin-top: 20px;
+  padding: 10px;
+}
+
+/* 댓글 리스트 */
+.comment-list {
+  list-style: none;
+  padding: 0;
+}
+
+.comment-item {
+  padding: 8px 10px;
+  border-bottom: 1px solid #ddd;
+  text-decoration: none;
+}
+
+/* 버튼 컨테이너 */
+.btn-container {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* 공통 버튼 */
+.btn-common {
+  padding: 8px 16px;
+  font-size: 14px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* 수정 버튼 */
+.btn-modify {
+  background-color: black;
+  color: white;
+}
+
+.btn-modify:hover {
+  background-color: gray;
+}
+
+/* 목록 버튼 */
+.btn-list {
+  background-color: black;
+  color: white;
+}
+
+.btn-list:hover {
+  background-color: gray;
+}

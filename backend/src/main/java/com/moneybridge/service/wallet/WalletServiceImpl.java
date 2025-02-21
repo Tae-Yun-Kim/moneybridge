@@ -11,6 +11,7 @@ import com.moneybridge.repository.wallet.WalletRepository;
 
 
 import com.moneybridge.repository.wallet.WalletTransactionRepository;
+//import com.moneybridge.service.sms.SmsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,7 @@ public class WalletServiceImpl implements WalletService {
     private final MemberRepository memberRepository;
     private final AccountRepository accountRepository;
     private final WalletTransactionRepository walletTransactionRepository;
+//    private final SmsService smsService;
 
     @Override
     @Transactional
@@ -77,9 +79,20 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
+//    public WalletDTO getWalletByMemberId(String memberId) {
+//        Wallet wallet = walletRepository.findByMember_Id(memberId)
+//                .orElseThrow(() -> new RuntimeException("Wallet not found"));
+//        return convertToDTO(wallet);
+//    }
     public WalletDTO getWalletByMemberId(String memberId) {
-        Wallet wallet = walletRepository.findByMember_Id(memberId)
-                .orElseThrow(() -> new RuntimeException("Wallet not found"));
+        Optional<Wallet> walletOpt = walletRepository.findByMember_Id(memberId);
+
+        if (walletOpt.isEmpty()) {
+            log.warn("⚠️ 해당 회원의 지갑이 없습니다. memberId: {}", memberId);
+            return null; // 예외 대신 null 반환
+        }
+
+        Wallet wallet = walletOpt.get();
         return convertToDTO(wallet);
     }
 
@@ -178,6 +191,11 @@ public void transferFromAccountToWallet(String memberId, Long amount) {
     Wallet wallet = walletRepository.findByMember(member)
             .orElseThrow(() -> new RuntimeException("Wallet not found"));
 
+    // ✅ 지갑이 잠겨있다면 출금 불가
+    if (wallet.isLocked()) {
+        throw new IllegalStateException("❌ 지갑이 잠겨 있어 출금할 수 없습니다.");
+    }
+
     // 2. 계좌 검증
     if (wallet.getAccount() == null) {
         throw new IllegalArgumentException("No linked account found for this wallet");
@@ -251,6 +269,11 @@ public void transferFromWalletToAccount(String memberId, Long amount) {
     Wallet wallet = walletRepository.findByMember(member)
             .orElseThrow(() -> new RuntimeException("Wallet not found"));
 
+    // ✅ 지갑이 잠겨있다면 출금 불가
+    if (wallet.isLocked()) {
+        throw new IllegalStateException("❌ 지갑이 잠겨 있어 출금할 수 없습니다.");
+    }
+
     // 2. 잔액 검증
     if (wallet.getBalance() < amount) {
         throw new IllegalArgumentException("Insufficient wallet balance");
@@ -291,6 +314,11 @@ public void transferFromWalletToAccount(String memberId, Long amount) {
         Wallet toWallet = walletRepository.findById(toWalletId)
                 .orElseThrow(() -> new RuntimeException("To Wallet not found"));
 
+        // ✅ 출발 지갑 또는 도착 지갑이 잠겨 있으면 송금 불가
+        if (fromWallet.isLocked() || toWallet.isLocked()) {
+            throw new IllegalStateException("❌ 송금할 수 없습니다. 한쪽 지갑이 잠겨 있습니다.");
+        }
+
         // 출발 지갑 잔액 확인
         if (fromWallet.getBalance() < amount) {
             throw new RuntimeException("Insufficient balance in the sender's wallet.");
@@ -316,6 +344,23 @@ public void transferFromWalletToAccount(String memberId, Long amount) {
         walletTransactionRepository.save(walletTransaction);
         walletRepository.save(fromWallet);
         walletRepository.save(toWallet);
+
+
+        // ✅ 수신 지갑 회원 정보 조회 후 전화번호 가져오기
+//        Member receiver = memberRepository.findById(toWallet.getMember().getId())
+//                .orElseThrow(() -> new RuntimeException("수신자 회원을 찾을 수 없음"));
+//
+//        String receiverPhone = receiver.getPhoneNumber(); // 수신자의 전화번호 가져오기
+//        String senderPhone = fromWallet.getMember().getPhoneNumber(); // 발신자의 전화번호 가져오기
+//
+//        // ✅ 문자 메시지 전송
+//        String message = "지갑 간 송금 완료: " + amount + "원이 송금되었습니다.";
+//        smsService.sendSms(receiverPhone, senderPhone, message);
+
+        // 2. 문자 전송 (받는 사람에게)
+//        smsService.sendSms(toWallet.getMember().getPhoneNumber(), fromWallet.getMember().getPhoneNumber(), amount);
+
+//        System.out.println("송금 완료: " + fromWallet.getMember().getId() + " -> " + toWallet.getMember().getId() + ", 금액: " + amount);
     }
 
     private WalletDTO convertToDTO(Wallet wallet) {
@@ -328,5 +373,19 @@ public void transferFromWalletToAccount(String memberId, Long amount) {
                 .transactionCount(wallet.getTransactionCount())
                 .isLocked(wallet.isLocked())
                 .build();
+    }
+
+    @Transactional
+    @Override
+    public void lockWalletByBorrowerId(String borrowerId) {
+        Wallet wallet = walletRepository.findByMember_Id(borrowerId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 대출자의 지갑을 찾을 수 없습니다."));
+
+        if (wallet.isLocked()) {
+            throw new IllegalStateException("이미 잠긴 지갑입니다.");
+        }
+
+        wallet.setLocked(true);
+        walletRepository.save(wallet);
     }
 }

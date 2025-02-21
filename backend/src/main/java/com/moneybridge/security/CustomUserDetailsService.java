@@ -25,12 +25,11 @@ public class CustomUserDetailsService implements UserDetailsService{
 
         log.info("----------------loadUserByUsername-----------------------------");
 
-        Member member = memberRepository.getWithRoles(username);
-        memberRepository.getWithGrades(username); // Grades를 Lazy Loading
+        Member member = memberRepository.findByIdWithRoles(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        member.setLenderStatus(memberRepository.findByIdWithLenderStatus(username).get().getLenderStatus());
+        member.setMemberGradeList(memberRepository.findByIdWithGrades(username).get().getMemberGradeList());
 
-        if(member == null){
-            throw new UsernameNotFoundException("Not Found");
-        }
 
         MemberDTO memberDTO = new MemberDTO(
                 member.getId(),
@@ -45,15 +44,25 @@ public class CustomUserDetailsService implements UserDetailsService{
                 member.getAddress(),
                 member.isLender(),
                 member.isAccountLocked(),
+//                member.getLenderStatus()
+//                                .stream()
+//                                        .map(lenderStatus -> lenderStatus.name()).collect(Collectors.toList()),
+//                member.getMemberRoleList()
+//                        .stream()
+//                        .map(memberRole -> memberRole.name()).collect(Collectors.toList()),
+//                member.getMemberGradeList()
+//                        .stream()
+//                        .map(memberGrade -> memberGrade.name()).collect(Collectors.toList()));
                 member.getLenderStatus()
-                                .stream()
-                                        .map(lenderStatus -> lenderStatus.name()).collect(Collectors.toList()),
+                        .stream()
+                        .map(Enum::name).collect(Collectors.toList()),
                 member.getMemberRoleList()
                         .stream()
-                        .map(memberRole -> memberRole.name()).collect(Collectors.toList()),
+                        .map(Enum::name).collect(Collectors.toList()),
                 member.getMemberGradeList()
                         .stream()
-                        .map(memberGrade -> memberGrade.name()).collect(Collectors.toList()));
+                        .map(Enum::name).collect(Collectors.toList()));
+
 
         log.info(memberDTO);
 

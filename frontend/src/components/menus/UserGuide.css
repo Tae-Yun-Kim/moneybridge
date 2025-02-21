@@ -1,0 +1,68 @@
+@import url("https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;700&family=Anton&family=Bebas+Neue&display=swap");
+
+.user-guide-container {
+  max-width: 800px;
+  margin: auto;
+  padding: 20px;
+  /* font-family: "Arial", sans-serif; */
+  text-align: center;
+}
+
+h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+p {
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+.tab-buttons {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.tab-buttons button {
+  background-color: #ddd;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+  border-radius: 5px;
+  margin: 0 5px;
+}
+
+.tab-buttons button.active {
+  background-color: black;
+  color: white;
+}
+
+.tab-buttons button:hover {
+  background-color: gray;
+  color: white;
+}
+
+.guide-section {
+  background: #f9f9f9;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+h3 {
+  color: #333;
+  font-size: 20px;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+strong {
+  color: red;
+}

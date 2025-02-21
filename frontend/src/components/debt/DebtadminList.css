@@ -1,0 +1,109 @@
+/* 추심 요청 관리 페이지 스타일 */
+.debt-container {
+  max-width: 1200px;
+  margin: 30px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 10px;
+  /* box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); */
+}
+
+.debt-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.debt-list {
+  display: flex;
+  justify-content: space-around;
+  /* background: #f9f9f9; */
+  padding: 15px;
+  /* border-radius: 8px; */
+  /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); */
+  /* margin-bottom: 15px; */
+  border-bottom: 1px solid black;
+  /* transition: transform 0.2s ease-in-out; */
+}
+
+.debt-list strong {
+  color: black;
+}
+
+/* .debt-list:hover {
+  transform: scale(1.02);
+} */
+
+.debt-status {
+  font-weight: bold;
+  /* padding: 5px 10px; */
+  border-radius: 5px;
+  display: inline-block;
+}
+
+/* 상태별 색상 */
+.debt-status.pending {
+  background: #ffcc80;
+  color: #333;
+}
+
+.debt-status.approved {
+  background: #81c784;
+  color: white;
+}
+
+.debt-status.collected {
+  background: #64b5f6;
+  color: white;
+}
+
+.debt-status.rejected {
+  background: #b0bec5;
+  color: white;
+}
+
+.debt-select {
+  /* margin-top: 10px; */
+  display: flex;
+  gap: 10px;
+}
+
+.debt-button-a,
+.debt-button-r,
+.debt-button-f {
+  padding: 8px 14px;
+  border: none;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+}
+
+.debt-button-a {
+  background: #4caf50;
+  color: white;
+}
+
+.debt-button-a:hover {
+  background: #388e3c;
+}
+
+.debt-button-r {
+  background: #e57373;
+  color: white;
+}
+
+.debt-button-r:hover {
+  background: #c62828;
+}
+
+.debt-button-f {
+  background: #2196f3;
+  color: white;
+}
+
+.debt-button-f:hover {
+  background: #1565c0;
+}

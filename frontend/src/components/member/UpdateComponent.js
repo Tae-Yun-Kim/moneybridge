@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { checkDuplicate, updateMember } from "../../api/memberApi";
 import useCustomLogin from "../../hooks/useCustomLogin";
 import ResultModal from "../common/ResultModal";
+import "./UpdateComponent.css";
 
 const initState = {
   id: "",
@@ -15,7 +16,7 @@ const initState = {
   accountNumber: "",
 };
 
-const ModifyComponent = () => {
+const UpdateComponent = () => {
   const [member, setMember] = useState(initState);
   const loginInfo = useSelector((state) => state.loginSlice);
 
@@ -97,131 +98,98 @@ const ModifyComponent = () => {
   };
 
   return (
-    <div className="mt-6">
-      {result && (
-        <ResultModal
-          title={"회원정보"}
-          content={"정보수정완료"}
-          callbackFn={closeModal}
-        />
-      )}
+    <div className="page-container">
+      <h1 className="page-title">회원수정 페이지</h1>
 
-      <div className="flex justify-center">
-        <div className="relative mb-4 flex w-full flex-wrap items-stretch">
-          <div className="w-1/5 p-6 text-right font-bold">ID</div>
-          <input
-            className="w-4/5 p-6 rounded-r border border-solid border-neutral-300 shadow-md"
-            name="id"
-            type="text"
-            value={member.id}
-            readOnly
-          />
+      <form>
+        {/* ID */}
+        <div className="form-group">
+          <label>ID</label>
+          <input type="text" name="id" value={member.id} readOnly />
         </div>
-      </div>
 
-      {/* 비밀번호 */}
-      <div className="flex justify-center">
-        <div className="relative mb-4 flex w-full flex-wrap items-stretch">
-          <div className="w-1/5 p-6 text-right font-bold">비밀번호</div>
+        {/* 비밀번호 */}
+        <div className="form-group">
+          <label>비밀번호</label>
           <input
-            className="w-4/5 p-6 rounded-r border border-solid border-neutral-300 shadow-md"
-            name="password"
             type="password"
+            name="password"
             value={member.password}
             onChange={handleChange}
           />
         </div>
-      </div>
 
-      {/* 닉네임 */}
-      <div className="flex justify-center">
-        <div className="relative mb-4 flex w-full flex-wrap items-stretch">
-          <div className="w-1/5 p-6 text-right font-bold">닉네임</div>
+        {/* 닉네임 */}
+        <div className="form-group">
+          <label>닉네임</label>
           <input
-            className="w-4/5 p-6 rounded-r border border-solid border-neutral-300 shadow-md"
-            name="nickname"
             type="text"
+            name="nickname"
             value={member.nickname}
             onChange={handleChange}
           />
         </div>
-      </div>
 
-      {/* 이메일 */}
-      <div className="flex justify-center">
-        <div className="relative mb-4 flex w-full flex-wrap items-stretch">
-          <div className="w-1/5 p-6 text-right font-bold">이메일</div>
+        {/* 이메일 */}
+        <div className="form-group">
+          <label>이메일</label>
           <input
-            className="w-3/5 p-6 rounded-r border border-solid border-neutral-300 shadow-md"
-            name="email"
             type="text"
+            name="email"
             value={member.email}
             onChange={handleChange}
-            readOnly={member.social} // 소셜 로그인 사용자는 readOnly
+            readOnly={member.social}
           />
-          <button
-            className="w-1/5 p-6 bg-blue-500 text-white rounded ml-2"
-            onClick={() => handleDuplicateCheck("email")}
-          >
+          <button type="button" onClick={() => handleDuplicateCheck("email")}>
             중복확인
           </button>
         </div>
-      </div>
 
-      {/* 전화번호 */}
-      <div className="flex justify-center">
-        <div className="relative mb-4 flex w-full flex-wrap items-stretch">
-          <div className="w-1/5 p-6 text-right font-bold">전화번호</div>
+        {/* 전화번호 */}
+        <div className="form-group">
+          <label>전화번호</label>
           <input
-            className="w-3/5 p-6 rounded-r border border-solid border-neutral-300 shadow-md"
-            name="phoneNumber"
             type="text"
+            name="phoneNumber"
             value={member.phoneNumber}
             onChange={handleChange}
           />
           <button
-            className="w-1/5 p-6 bg-blue-500 text-white rounded ml-2"
+            type="button"
             onClick={() => handleDuplicateCheck("phoneNumber")}
           >
             중복확인
           </button>
         </div>
-      </div>
 
-      {/* 계좌번호 */}
-      <div className="flex justify-center">
-        <div className="relative mb-4 flex w-full flex-wrap items-stretch">
-          <div className="w-1/5 p-6 text-right font-bold">계좌번호</div>
+        {/* 계좌번호 */}
+        <div className="form-group">
+          <label>계좌번호</label>
           <input
-            className="w-3/5 p-6 rounded-r border border-solid border-neutral-300 shadow-md"
-            name="accountNumber"
             type="text"
+            name="accountNumber"
             value={member.accountNumber}
             onChange={handleChange}
           />
           <button
-            className="w-1/5 p-6 bg-blue-500 text-white rounded ml-2"
+            type="button"
             onClick={() => handleDuplicateCheck("accountNumber")}
           >
             중복확인
           </button>
         </div>
-      </div>
 
-      {/* 수정 버튼 */}
-      <div className="flex justify-center">
-        <div className="relative mb-4 flex w-full flex-wrap justify-end">
-          <button
-            type="button"
-            className="rounded p-4 m-2 text-xl w-32 text-white bg-blue-500"
-            onClick={handleClickModify}
-          >
-            수정
-          </button>
-        </div>
-      </div>
+        {/* 수정 버튼 */}
+        <button
+          type="button"
+          className="submit-btn"
+          onClick={handleClickModify}
+        >
+          수정
+        </button>
+      </form>
     </div>
   );
 };
 
-export default ModifyComponent;
+export default UpdateComponent;

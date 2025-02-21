@@ -2,15 +2,18 @@ package com.moneybridge.controller.member;
 
 import com.moneybridge.domain.member.Member;
 import com.moneybridge.dto.member.MemberDTO;
+import com.moneybridge.dto.member.TopMemberDTO;
 import com.moneybridge.repository.member.MemberRepository;
 import com.moneybridge.service.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/member")
@@ -43,8 +46,10 @@ public class MemberJoinController {
     }
 
     // 회원 삭제
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> delete(@PathVariable String id, @RequestParam String password) {
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> delete(@PathVariable String id, @RequestBody Map<String, String> requestBody) {
+        String password = requestBody.get("password");
+        System.out.println("회원 삭제 요청 ID: " + id + ", 비밀번호: " + password); // 디버깅용 로그
         // 회원 정보를 가져옴
         Member member = memberService.findById(id);
 
@@ -61,9 +66,21 @@ public class MemberJoinController {
     }
 
     // API: 상위 10명 반환
+
     @GetMapping("/top-members")
-    public List<Member> getTopMembers() {
-        return memberService.getTop10MembersByTransactionCount();
+//    public List<Member> getTopMembers() {
+//        return memberService.getTop10MembersByTransactionCount();
+//    }
+    public List<TopMemberDTO> getTopMembers() {
+        List<Member> members = memberService.getTop10MembersByTransactionCount();
+
+        return members.stream()
+                .map(member -> new TopMemberDTO(
+                        member.getId(),
+                        member.getName(),
+                        member.getTransactionCount()
+                ))
+                .collect(Collectors.toList());
     }
 
     @PostMapping("/check-duplicate")

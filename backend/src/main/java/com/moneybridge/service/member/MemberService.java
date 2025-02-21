@@ -32,4 +32,6 @@ public interface MemberService {
     List<Member> getTop10MembersByTransactionCount();
 
     void validateDuplicateMember(MemberDTO memberDTO, String memberId);
+
+//    String getPhoneNumberByWalletId(String walletId);
 }

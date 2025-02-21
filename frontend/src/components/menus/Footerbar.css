@@ -1,0 +1,89 @@
+/* 두 번째 박스 스타일 */
+.sub {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.sub p {
+  margin: 5px;
+  font-size: 15px;
+}
+
+.sub-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px;
+  flex-wrap: wrap;
+}
+
+.sub-box-f {
+  flex: 1;
+  min-width: auto;
+  max-width: 200px;
+  /* background: #f9f9f9; */
+  padding: 15px;
+  /* border-radius: 8px; */
+  /* box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1); */
+}
+
+.sub-box-s {
+  flex: 1;
+  min-width: 300px;
+  max-width: auto;
+  /* background: #f9f9f9; */
+  padding: 15px;
+  border-left: 1px solid black;
+  border-right: 1px solid black;
+  /* border-bottom: 1px solid black; */
+  /* border-radius: 8px; */
+  /* box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1); */
+}
+
+.sub-box-t {
+  flex: 1;
+  min-width: 300px;
+  max-width: 700px;
+  /* background: #f9f9f9; */
+  padding: 15px;
+  /* border-left: 1px solid black; */
+  /* border-right: 1px solid black; */
+  /* border-bottom: 1px solid black; */
+  /* border-radius: 8px; */
+  /* box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1); */
+}
+
+.sub-title {
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.sub-content {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.sub-phone {
+  font-size: 20px;
+  font-weight: bold;
+  color: #ff6600;
+}
+
+.sub-highlight {
+  color: red;
+  font-weight: bold;
+}
+
+.sub-image {
+  width: 50px;
+  height: auto;
+  margin-right: 10px;
+}
+
+.sub-text {
+  display: flex;
+  flex-direction: column;
+}
