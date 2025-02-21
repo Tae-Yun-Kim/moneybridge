@@ -1,0 +1,70 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&display=swap");
+
+/* 전체 컨테이너 */
+.post-modify-body {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  /* background-color: #f9fafb; 연한 회색 배경 */
+  border-radius: 5px; /* 모서리 둥글게 */
+  /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); 그림자 */
+  font-family: "Noto Sans KR", "Roboto", sans-serif;
+}
+
+/* 제목 */
+.post-modify-body h1 {
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+/* 필드 레이블 */
+.post-modify-body div > div {
+  margin-bottom: 10px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+/* 입력 필드 */
+.post-modify-body input,
+.post-modify-body textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+/* 텍스트 영역 */
+.post-modify-body textarea {
+  height: 100px;
+  resize: none; /* 크기 조정 비활성화 */
+}
+
+/* 버튼 컨테이너 */
+.post-modify-button-container {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+}
+
+/* 버튼 */
+.post-modify-button {
+  width: 48%;
+  padding: 10px;
+  background-color: black;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.post-modify-button:hover {
+  background-color: gray; /* 호버 시 색상 */
+}

@@ -1,51 +1,64 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { createWallet } from "../../api/walletApi";
+import { useNavigate } from "react-router-dom";
+import "./CreateWalletComponent.css";
+import { findMember } from "../../api/memberApi";
 
 const CreateWalletComponent = () => {
   const [memberId, setMemberId] = useState("");
   const [pinNumber, setPinNumber] = useState("");
   const [accountNumber, setAccountNumber] = useState("");
+  const navigate = useNavigate();
+
+  // ✅ 로컬 스토리지에서 회원 정보 불러오기
+  useEffect(() => {
+    const storedMember = localStorage.getItem("member"); // 저장된 회원 정보 가져오기
+    if (storedMember) {
+      const memberData = JSON.parse(storedMember); // JSON 문자열 → 객체 변환
+      setMemberId(memberData.id);
+      setAccountNumber(memberData.accountNumber);
+    } else {
+      alert("회원 정보가 없습니다. 다시 로그인해주세요.");
+      navigate("/login"); // 로그인 페이지로 이동
+    }
+  }, [navigate]);
 
   const handleCreateWallet = async () => {
     try {
       const walletData = { memberId, accountNumber, pinNumber };
       const response = await createWallet(walletData);
       alert(`지갑 생성 성공! 지갑 ID: ${response.walletId}`);
+      navigate("/member/mypage");
     } catch (error) {
       alert(`지갑 생성 실패: ${error.message}`);
     }
   };
 
   return (
-    <div className="border-2 border-green-200 mt-10 m-2 p-4">
-      <h2 className="text-2xl font-bold mb-4">지갑 생성</h2>
-      <input
-        type="text"
-        placeholder="회원 ID"
-        value={memberId}
-        onChange={(e) => setMemberId(e.target.value)}
-        className="border p-2 mb-4 w-full"
-      />
-      <input
-        type="text"
-        placeholder="계좌 번호"
-        value={accountNumber}
-        onChange={(e) => setAccountNumber(e.target.value)}
-        className="border p-2 mb-4 w-full"
-      />
-      <input
-        type="password"
-        placeholder="PIN 번호"
-        value={pinNumber}
-        onChange={(e) => setPinNumber(e.target.value)}
-        className="border p-2 mb-4 w-full"
-      />
-      <button
-        className="bg-blue-500 text-white py-2 px-4 rounded"
-        onClick={handleCreateWallet}
-      >
-        지갑 생성
-      </button>
+    <div className="wallet-container">
+      <h1 className="wallet-title">지갑 생성</h1>
+      <div className="wallet-form">
+        <div className="input-group">
+          <label>회원 ID</label>
+          <input type="text" value={memberId} disabled />
+        </div>
+        <div className="input-group">
+          <label>계좌 번호</label>
+          <input type="text" value={accountNumber} disabled />
+        </div>
+        <div className="input-group">
+          <label>PIN 번호</label>
+          <input
+            type="password"
+            placeholder="PIN 번호 입력"
+            value={pinNumber}
+            onChange={(e) => setPinNumber(e.target.value)}
+          />
+        </div>
+        <button className="wallet-submit" onClick={handleCreateWallet}>
+          지갑 생성
+        </button>
+      </div>
     </div>
   );
 };

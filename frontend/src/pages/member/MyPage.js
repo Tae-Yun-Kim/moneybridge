@@ -135,6 +135,8 @@ import {
   getWalletByMemberId,
 } from "../../api/walletApi";
 import BasicLayout from "../../layouts/BasicLayout";
+import { useNavigate } from "react-router-dom";
+import ContractProgressComponent from "../../components/contract/ContractProgressComponent";
 
 const MyPage = () => {
   const [userInfo, setUserInfo] = useState(null);
@@ -144,8 +146,15 @@ const MyPage = () => {
   const [walletToWalletTransactions, setWalletToWalletTransactions] = useState(
     []
   );
+  const [transactionCount, setTransactionCount] = useState(0); // 거래 횟수 추가
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [walletError, setWalletError] = useState(null);
+  const [isWalletLocked, setIsWalletLocked] = useState(false); // 🔹 지갑 잠김 상태 추가
+  const navigate = useNavigate(); // 리다이렉트에 사용
+
+  const userId = localStorage.getItem("userId");
+  const isLender = localStorage.getItem("isLender") === "true";
 
   useEffect(() => {
     console.log("🚀 [MyPage] 로컬 스토리지에서 userInfo 가져오기");
@@ -156,6 +165,9 @@ const MyPage = () => {
         console.log("userInfo 설정:", user);
         setUserInfo(user);
       }
+    } else {
+      alert("로그인 상태가 아닙니다.");
+      navigate("/member/login");
     }
   }, []);
 
@@ -172,42 +184,69 @@ const MyPage = () => {
         console.log("지갑 데이터 가져옴:", walletData);
 
         if (!walletData || !walletData.walletId) {
-          throw new Error("지갑 데이터가 올바르지 않습니다.");
+          console.log("⚠️ 해당 회원의 지갑이 없습니다.");
+          setWalletBalance(null); // 지갑이 없으면 null 설정
+          setWalletError("지갑이 없습니다");
+          return;
         }
-        setWalletBalance(walletData.balance);
 
-        const fromTransactions = await getTransactionsFromWallet(
-          walletData.walletId
-        );
-        const toTransactions = await getTransactionsToWallet(
-          walletData.walletId
-        );
+        // // ✅ 지갑이 있지만 잠긴 경우 (추심 상태)
+        // if (walletData.locked) {
+        //   console.log("⚠️ 현재 추심 상태입니다.");
+        //   setWalletBalance(null); // 잔액도 null 처리
+        //   setWalletError(walletData.message); // "❌ 현재 추심 상태입니다. 지갑 사용이 제한됩니다."
+        //   return;
+        // }
+        // ✅ 지갑이 잠긴 경우
+        if (walletData.locked) {
+          console.log("⚠️ 현재 추심 상태입니다.");
+          setWalletBalance(null);
+          setIsWalletLocked(true); // 🔹 지갑 잠김 상태 설정
+          setWalletError("❌ 현재 추심 진행 중입니다. 지갑 사용이 제한됩니다.");
+        } else {
+          // ✅ 지갑이 다시 활성화된 경우
+          console.log("✅ 추심 해제됨! 정상 사용 가능");
+          setIsWalletLocked(false); // 🔄 다시 활성화
+          setWalletError(null); // 에러 메시지 초기화
+          setWalletBalance(walletData.balance);
+          setTransactionCount(walletData.transactionCount);
 
-        const filteredFromTransactions = fromTransactions.filter(
-          (transaction) => transaction.toWalletId === "N/A"
-        );
-        const filteredToTransactions = toTransactions.filter(
-          (transaction) => transaction.fromWalletId === "N/A"
-        );
+          setWalletBalance(walletData.balance);
+          setTransactionCount(walletData.transactionCount); // ✅ 거래 횟수 설정
 
-        const walletToWalletFrom = fromTransactions.filter(
-          (transaction) => transaction.toWalletId !== "N/A"
-        );
-        const walletToWalletTo = toTransactions.filter(
-          (transaction) => transaction.fromWalletId !== "N/A"
-        );
-
-        // 최신순 정렬 (날짜 기준)
-        const sortByDateDesc = (transactions) =>
-          transactions.sort(
-            (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+          const fromTransactions = await getTransactionsFromWallet(
+            walletData.walletId
+          );
+          const toTransactions = await getTransactionsToWallet(
+            walletData.walletId
           );
 
-        setTransactionsFrom(sortByDateDesc(filteredFromTransactions));
-        setTransactionsTo(sortByDateDesc(filteredToTransactions));
-        setWalletToWalletTransactions(
-          sortByDateDesc([...walletToWalletFrom, ...walletToWalletTo])
-        );
+          const filteredFromTransactions = fromTransactions.filter(
+            (transaction) => transaction.toWalletId === "N/A"
+          );
+          const filteredToTransactions = toTransactions.filter(
+            (transaction) => transaction.fromWalletId === "N/A"
+          );
+
+          const walletToWalletFrom = fromTransactions.filter(
+            (transaction) => transaction.toWalletId !== "N/A"
+          );
+          const walletToWalletTo = toTransactions.filter(
+            (transaction) => transaction.fromWalletId !== "N/A"
+          );
+
+          // 최신순 정렬 (날짜 기준)
+          const sortByDateDesc = (transactions) =>
+            transactions.sort(
+              (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+            );
+
+          setTransactionsFrom(sortByDateDesc(filteredFromTransactions));
+          setTransactionsTo(sortByDateDesc(filteredToTransactions));
+          setWalletToWalletTransactions(
+            sortByDateDesc([...walletToWalletFrom, ...walletToWalletTo])
+          );
+        }
       } catch (error) {
         console.error("지갑 데이터 가져오는 중 에러 발생:", error.message);
         setError(error.message);
@@ -233,12 +272,29 @@ const MyPage = () => {
       {/* <BasicLayout /> */}
       <div className="mypage-content">
         <BasicLayout>
+          <div className="mypage-contract">
+            {/* ✅ 계약 내역 보기 버튼 */}
+            <div className="mypage-contract-btn">
+              <button
+                onClick={() => navigate("/member/contract-history")}
+                className="mypage-contract-btn-btn"
+              >
+                계약 내역 보기
+              </button>
+            </div>
+            {/* ✅ 진행 중인 계약만 표시 */}
+            <div className="mypage-contract-ing">
+              <ContractProgressComponent userId={userId} isLender={isLender} />
+            </div>
+          </div>
           <MyPageComponent
             userInfo={userInfo}
             walletBalance={walletBalance}
+            transactionCount={transactionCount} // ✅ 거래 횟수 추가
             transactionsFrom={transactionsFrom}
             transactionsTo={transactionsTo}
             walletToWalletTransactions={walletToWalletTransactions}
+            walletError={walletError} // 지갑 오류 상태 전달
           />
         </BasicLayout>
       </div>

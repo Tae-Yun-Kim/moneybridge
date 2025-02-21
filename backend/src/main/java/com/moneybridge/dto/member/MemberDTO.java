@@ -30,9 +30,10 @@ public class MemberDTO extends User {
     private List<String> lenderStatus; // LenderStatus 필드 추가
     private List<String> roleNames = new ArrayList<>();
     private List<String> memberGradeList; // 등급 추가
+    private String memberGrade; // Enum이 아니라 문자열로 유지(혜수)
 
 
-    public MemberDTO(String id, String password, String name, String residentNumber, String phoneNumber, String email, String accountNumber, String nickname, boolean social, String address, boolean isLender, boolean accountLocked, List<String> lenderStatus, List<String> roleNames, List<String> memberGradeList) {
+    public MemberDTO(String id, String password, String name, String residentNumber, String phoneNumber, String email, String accountNumber, String nickname, Boolean social, String address, boolean isLender, boolean accountLocked, List<String> lenderStatus, List<String> roleNames, List<String> memberGradeList) {
         super(
                 id,
                 password,
@@ -55,8 +56,13 @@ public class MemberDTO extends User {
         this.address = address;
         this.isLender = isLender;
         this.accountLocked = accountLocked;
-        this.lenderStatus = lenderStatus;
-        this.roleNames = roleNames;
+//        this.lenderStatus = lenderStatus;
+//        this.roleNames = roleNames;
+        this.lenderStatus = lenderStatus != null ? lenderStatus : new ArrayList<>(); // ✅ null 방지
+        this.roleNames = roleNames != null ? roleNames : new ArrayList<>();
+        //혜수
+        this.memberGrade = roleNames != null && roleNames.contains("GOLD") ? "GOLD" :
+                roleNames != null && roleNames.contains("SILVER") ? "SILVER" : "BRONZE";
         this.memberGradeList = memberGradeList;
     }
 

@@ -1,0 +1,130 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&display=swap");
+
+/* 전체 컨테이너 스타일 */
+.main-container-q {
+  display: flex;
+  flex-direction: column; /* 🔹 세로 정렬 */
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* 사이드바 스타일 (상단 고정) */
+.sidebar-q {
+  width: 100%;
+  color: black;
+  height: auto;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 10px 20px;
+  position: relative;
+}
+
+/* 네비게이션 스타일 (가로 정렬) */
+.nav-q {
+  color: black;
+  width: 100%;
+  display: flex;
+  flex-direction: row; /* 🔹 가로 정렬 */
+  justify-content: center; /* 🔹 중앙 정렬 */
+  gap: 15px; /* 🔹 버튼 사이의 간격 */
+  flex-wrap: wrap; /* 🔹 줄바꿈 허용 */
+}
+
+/* 링크 스타일 */
+.nav-link-q {
+  display: flex;
+  align-items: center; /* 🔹 텍스트 세로 중앙 정렬 */
+  justify-content: center; /* 🔹 텍스트 가로 중앙 정렬 */
+  width: 100px; /* 🔹 가로 크기 */
+  height: 50px; /* 🔹 세로 크기 */
+  color: black;
+  text-decoration: none;
+  font-size: 14px;
+  text-align: center;
+  /* border: 1px solid #ddd; */
+  /* border-radius: 5px; */
+  padding: 5px;
+
+  transition: background 0.3s, color 0.3s;
+}
+
+/* 마우스 호버 효과 */
+.nav-link-q:hover {
+  /* background-color: #007bff; */
+  border-bottom: 1px solid black;
+  color: black;
+  transition: background 0.3s, color 0.3s;
+}
+
+/* 현재 선택된 링크 스타일 */
+.nav-link-q.active {
+  border-bottom: 1px solid black;
+  color: black;
+  font-size: 18px;
+}
+
+/* 🔹 메인 컨텐츠 스타일 (사이드바 아래에 배치) */
+.content {
+  flex: 1;
+  padding: 20px;
+  background: white;
+  width: 100%;
+  display: flex;
+  flex-direction: column; /* 🔹 가로 정렬 */
+}
+
+/* 1:1문의 css */
+
+.oneToOneInquiryPageContainer {
+  /* p-4 w-full bg-white */
+  padding: 16px;
+  width: 100%;
+  background-color: #fff;
+}
+
+.oneToOneInquiryPageTitle {
+  /* text-3xl font-extrabold mb-4 */
+  font-size: 24px;
+  font-weight: 810;
+  margin-bottom: 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.inquiryListContainer {
+  /* grid grid-cols-1 gap-4 */
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  box-sizing: border-box;
+}
+
+.inquiryItem {
+  /* p-4 border rounded shadow-md bg-gray-50 cursor-pointer */
+  padding: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f9fafb;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+}
+
+.inquiryItem h3 {
+  /* text-xl font-bold */
+  font-size: 20px;
+  font-weight: bold;
+  margin: 0 0 8px 0;
+}
+
+.inquiryItem p {
+  /* text-sm text-gray-500 */
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+}
+
+.noInquiriesText {
+  /* text-gray-500 */
+  color: #666;
+}

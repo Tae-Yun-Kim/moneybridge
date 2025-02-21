@@ -1,6 +1,7 @@
 package com.moneybridge.domain.wallet;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.moneybridge.domain.BaseEntity;
 import com.moneybridge.domain.account.Account;
 import com.moneybridge.domain.member.Member;
@@ -15,18 +16,20 @@ import lombok.*;
 @Getter
 @Setter
 @ToString(exclude = "member")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Wallet extends BaseEntity {
 
     @Id
     private String walletId;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", referencedColumnName = "id", unique = true)
     @JsonIgnore
     private Member member;
 
     @OneToOne(fetch = FetchType.LAZY) // 선택적 관계로 설정)
     @JoinColumn(name = "account_id", referencedColumnName = "aid", unique = true)
+    @JsonIgnore // 🔹 직렬화에서 제외
     private Account account;
 
     @Column(nullable = false)

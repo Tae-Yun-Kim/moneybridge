@@ -32,12 +32,28 @@ public class JWTCheckFilter extends OncePerRequestFilter {
 
         log.info("check uri......................." + path);
         //api/member/ 경로의 호출은 체크하지 않음
-        if (path.startsWith("/api/member/")) {
+        if (path.startsWith("/api/member/") && !path.startsWith("/api/member/delete/")) {
             return true;
         }
 
         // 이미지 조회 경로는 체크하지 않는다면
         if (path.startsWith("/api/products/view/")) {
+            return true;
+        }
+
+        // 게시글 리스트 조회 경로는 체크하지 않음 (JWT 인증 제외)
+        if (path.startsWith("/api/post/list")) {
+            return true;
+        }
+
+        // 게시글 상세 조회 경로는 체크하지 않음 (JWT 인증 제외)
+        if (path.startsWith("/api/post/view/")) {
+            return true;
+        }
+
+        // 댓글 조회 경로는 체크하지 않음 (JWT 인증 제외)
+        // /api/post/{postId}/comments 형식이므로, {postId} 부분을 동적으로 처리
+        if (path.matches("/api/post/\\d+/comments")) {
             return true;
         }
         return false;
@@ -66,6 +82,7 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             log.info("JWT claims: " + claims);
 
             String id = (String) claims.get("id");
+            log.info("🚀 JWT claims에서 추출한 ID: " + id);
             String username = (String) claims.get("username");
             String email = (String) claims.get("email");
             String residentNumber = (String) claims.get("residentNumber");
@@ -92,6 +109,8 @@ public class JWTCheckFilter extends OncePerRequestFilter {
                     = new UsernamePasswordAuthenticationToken(memberDTO, password, memberDTO.getAuthorities());
 
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+
+            log.info("🚀 SecurityContext에 저장된 ID: " + SecurityContextHolder.getContext().getAuthentication()); // ✅ 여기서 "login"이 아닌지 확인
 
             filterChain.doFilter(request, response);
 

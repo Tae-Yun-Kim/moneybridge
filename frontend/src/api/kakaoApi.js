@@ -3,8 +3,8 @@
 import axios from "axios";
 import { API_SERVER_HOST } from "./memberApi";
 
-const rest_api_key = `0cbfb79c592893c78e6621e3271f76e7`; // REST API 키
-const client_secret = `2W2TfSQZs9TgiewPtp7Ugt92HB9qVdQY`;
+const rest_api_key = ``; // REST API 키
+const client_secret = ``; //SECRET 키
 const redirect_uri = `http://localhost:3000/member/kakao`; // 카카오 로그인 리다이렉트 URI
 const logout_redirect_uri = `http://localhost:3000`; // 로그아웃 리다이렉트 URI
 

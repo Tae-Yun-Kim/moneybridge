@@ -138,8 +138,14 @@ const LoginComponent = () => {
           role: data.role,
           isLender: data.isLender,
           grade: data.grade,
+          accountNumber: data.accountNumber,
         };
+
         localStorage.setItem("member", JSON.stringify(userInfo));
+        localStorage.setItem("userId", data.id); // JSON.stringify 없이 저장
+        localStorage.setItem("isLender", JSON.stringify(data.isLender));
+        localStorage.setItem("memberGrade", data.grade);
+
         moveToPath("/");
       }
     });
@@ -185,7 +191,7 @@ const LoginComponent = () => {
             </Link>
           </div>
         </form>
-        <KakaoLoginComponent />
+        {/* <KakaoLoginComponent /> */}
       </div>
     </div>
   );

@@ -1,0 +1,90 @@
+/* 전체 컨테이너 */
+.contract-list-container {
+  max-width: auto;
+  text-align: center;
+  margin: 0 auto;
+  padding: 20px;
+  /* background-color: #f9fafb; */
+  border-radius: 8px;
+  /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); */
+  font-family: "Noto Sans KR", sans-serif;
+}
+
+.contract-list-container ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* 제목 */
+.contract-title {
+  font-size: 22px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+/* 계약 카드 */
+.contract-item {
+  background: white;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  cursor: pointer;
+  /* max-width: 1000px; */
+}
+
+/* 접힘 상태에서 보이는 요약 정보 */
+.contract-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.contract-ex {
+  display: flex;
+}
+
+.toggle-icon {
+  font-size: 18px;
+  transition: transform 0.3s ease;
+  color: white;
+  border-radius: 5px;
+  background-color: black;
+}
+
+.toggle-icon:hover {
+  background-color: gray;
+}
+
+/* 펼쳐진 상태의 상세 정보 */
+.contract-details {
+  display: flex;
+  font-size: 15px;
+  justify-content: space-around;
+  align-items: center;
+  background: #fff;
+  border-top: 1px solid #ddd;
+}
+
+.contract-button {
+  color: white;
+  border-radius: 5px;
+  font-size: 15px;
+  padding: 10px;
+  background-color: black;
+}
+
+.contract-button:hover {
+  background-color: gray;
+}
+
+.month-late {
+  width: 50px;
+}

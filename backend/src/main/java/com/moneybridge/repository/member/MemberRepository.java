@@ -22,6 +22,31 @@ public interface MemberRepository extends JpaRepository<Member, String> {
 
     Optional<Member> findByEmail(String email);
 
+    @Query("SELECT DISTINCT m FROM Member m " +
+            "LEFT JOIN FETCH m.account " +
+            "LEFT JOIN FETCH m.wallet " +
+            "LEFT JOIN FETCH m.lenderStatus " +
+            "LEFT JOIN FETCH m.memberGradeList " +
+//            "LEFT JOIN FETCH m.memberRoleList " +  // ✅ 추가
+            "WHERE m.id = :memberId")
+    Optional<Member> findByIdWithDetails(@Param("memberId") String memberId);
+//@EntityGraph(attributePaths = {"memberRoleList", "account", "wallet", "lenderStatus", "memberGradeList"})
+//@Query("SELECT m FROM Member m WHERE m.id = :id")
+//Optional<Member> findByIdWithDetails(@Param("id") String id);
+@EntityGraph(attributePaths = {"memberRoleList", "account", "wallet"})
+@Query("SELECT m FROM Member m WHERE m.id = :id")
+Optional<Member> findByIdWithRoles(@Param("id") String id);
+
+    @EntityGraph(attributePaths = {"lenderStatus"})
+    @Query("SELECT m FROM Member m WHERE m.id = :id")
+    Optional<Member> findByIdWithLenderStatus(@Param("id") String id);
+
+    @EntityGraph(attributePaths = {"memberGradeList"})
+    @Query("SELECT m FROM Member m WHERE m.id = :id")
+    Optional<Member> findByIdWithGrades(@Param("id") String id);
+
+
+
     // 중복 확인
     boolean existsById(String id); // 아이디 중복 확인
     boolean existsByResidentNumber(String residentNumber); // 주민번호 중복 확인
@@ -47,8 +72,8 @@ public interface MemberRepository extends JpaRepository<Member, String> {
     @Query("SELECT m FROM Member m ORDER BY m.transactionCount DESC")
     List<Member> findTop10ByTransactionCount();
 
-    @Query("SELECT m FROM Member m LEFT JOIN FETCH m.memberGradeList WHERE m.id = :id")
-    Optional<Member> findByIdWithGrades(@Param("id") String id);
+//    @Query("SELECT m FROM Member m LEFT JOIN FETCH m.memberGradeList WHERE m.id = :id")
+//    Optional<Member> findByIdWithGrades(@Param("id") String id);
 
 
     @Query("SELECT m FROM Member m " +

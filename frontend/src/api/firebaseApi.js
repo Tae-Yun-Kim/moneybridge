@@ -8,7 +8,7 @@ import {
 
 // Firebase 프로젝트의 설정 값
 const firebaseConfig = {
-  apiKey: "AIzaSyA7JDhXf56OhdQRJeYMGxnY_3JezYvOSws",
+  apiKey: "//api키",
   authDomain: "ezen-f52f4.firebaseapp.com",
   projectId: "ezen-f52f4",
   storageBucket: "ezen-f52f4.firebasestorage.app",

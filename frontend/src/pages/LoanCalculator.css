@@ -1,0 +1,69 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&display=swap");
+
+.loan-calculator {
+  width: auto;
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  border: 2px solid #ddd;
+  border-radius: 5px;
+  /* background-color: #f9f9f9; */
+  text-align: center;
+  font-family: "Noto Sans KR", sans-serif;
+}
+
+.loan-calculator h2 {
+  font-size: 25px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.loan-calculator p {
+  font-size: 15px;
+}
+
+.loan-calculator .input-container {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  margin-bottom: 10px;
+}
+
+.loan-calculator label {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.loan-calculator input {
+  width: 95%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.loan-calculator button {
+  background-color: black;
+  color: white;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-top: 10px;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.loan-calculator button:hover {
+  background-color: gray;
+}
+
+.loan-calculator .result-container {
+  margin-top: 15px;
+  padding: 10px;
+  background-color: rgb(218, 212, 212);
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: bold;
+}

@@ -1,6 +1,7 @@
 import React from "react";
 import LenderRequestComponent from "../../components/lender/LenderRequestComponent";
 import BasicMenu from "../../components/menus/BasicMenu";
+import "./LenderPage.css";
 
 const LenderPage = () => {
   const storedMember = localStorage.getItem("member");
@@ -22,14 +23,23 @@ const LenderPage = () => {
   return (
     <div>
       <BasicMenu />
-      <div>
-        <h1>채권자 신청</h1>
-        <p>현재 상태: {isLender ? "채권자" : "채무자"}</p>
-        <LenderRequestComponent
-          userId={id}
-          isLender={isLender}
-          lenderStatus={lenderStatus}
-        />
+      <h1 className="page-title">채권자 신청</h1>
+      <div className="card-container">
+        {/* 현재 상태 카드 */}
+        <div className="card">
+          <h2>현재 상태</h2>
+          <p>{isLender ? "채권자" : "채무자"}</p>
+        </div>
+
+        {/* 신청/포기 버튼 카드 */}
+        <div className="card">
+          <h2>신청 상태</h2>
+          <LenderRequestComponent
+            userId={id}
+            isLender={isLender}
+            lenderStatus={lenderStatus}
+          />
+        </div>
       </div>
     </div>
   );

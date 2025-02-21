@@ -1,15 +1,16 @@
 import UpdateComponent from "../../components/member/UpdateComponent";
+import BasicMenu from "../../components/menus/BasicMenu";
 import BasicLayout from "../../layouts/BasicLayout";
 
 const UpdatePage = () => {
   return (
-    <BasicLayout>
-      <div className=" text-3xl">회원수정 페이지</div>
+    <div className="fixed top-0 left-0 z-[1055] flex flex-col h-full w-full">
+      <BasicMenu />
 
-      <div className="bg-white w-full mt-4 p-2">
+      <div className="w-full flex flex-wrap  h-full justify-center  items-center border-2">
         <UpdateComponent></UpdateComponent>
       </div>
-    </BasicLayout>
+    </div>
   );
 };
 

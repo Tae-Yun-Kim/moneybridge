@@ -1,0 +1,82 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&display=swap");
+
+/* 전체 컨테이너 */
+.qna-form-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: "Noto Sans KR", "Roboto", sans-serif;
+}
+
+/* QnA 작성 제목 */
+.qna-form-title {
+  text-align: center;
+  font-weight: bold;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+/* 입력 필드 스타일 */
+.qna-form-group {
+  margin-bottom: 15px;
+}
+
+.qna-form-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.qna-input,
+.qna-textarea {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid black;
+  border-radius: 4px;
+  background-color: white;
+  outline: none;
+  transition: border-color 0.3s ease-in-out;
+}
+
+.qna-input:focus,
+.qna-textarea:focus {
+  border-color: gray;
+}
+
+.qna-textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+/* 비밀글 체크박스 */
+.qna-checkbox {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  margin-bottom: 15px;
+}
+
+.qna-checkbox input {
+  margin-right: 8px;
+}
+
+/* 등록 버튼 */
+.qna-submit {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.qna-submit-button {
+  padding: 10px 20px;
+  background-color: black;
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.qna-submit-button:hover {
+  background-color: gray;
+}

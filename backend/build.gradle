@@ -39,6 +39,19 @@ dependencies {
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 //    implementation 'io.awspring.cloud:spring-cloud-aws-starter-s3:3.0.2'
+//    implementation 'net.nurigo:sdk:4.3.2'
+    // ✅ 기본 PDF 생성 라이브러리 (이혜수)
+    implementation 'com.itextpdf:itext7-core:8.0.2'
+
+    // ✅ HTML을 PDF로 변환하는 모듈 추가 (이혜수)
+    implementation 'com.itextpdf:html2pdf:5.0.0'
+
+    // ✅ iText PDF 라이브러리 이혜수추가
+    implementation 'com.itextpdf:itext7-core:8.0.2'
+    implementation 'com.itextpdf:html2pdf:5.0.0'
+
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'

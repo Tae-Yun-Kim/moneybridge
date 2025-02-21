@@ -26,6 +26,10 @@ const useCustomLogin = () => {
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
       localStorage.removeItem("member");
+      localStorage.removeItem("userId");
+      localStorage.removeItem("isLender");
+      localStorage.removeItem("memberGrade");
+      localStorage.removeItem("grade");
 
       // Redux 상태 초기화
       dispatch(logout());

@@ -1,0 +1,76 @@
+.pending-requests-container {
+  margin-top: 20px;
+}
+
+.empty-message {
+  text-align: center;
+  color: #888;
+  font-size: 16px;
+}
+
+.pending-request-list {
+  list-style: none;
+  padding: 0;
+}
+
+.pending-request-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* background: #f9f9f9; */
+  padding: 15px;
+  margin-bottom: 10px;
+  /* border-radius: 8px; */
+  /* border: 1px solid #ddd; */
+  border-bottom: 1px solid black;
+}
+
+.request-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.request-name {
+  font-weight: bold;
+}
+
+.request-email {
+  color: #666;
+  font-size: 14px;
+}
+
+.request-status {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.request-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.approve-btn {
+  background: #4caf50;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.reject-btn {
+  background: #ff5252;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.approve-btn:hover {
+  background: #388e3c;
+}
+
+.reject-btn:hover {
+  background: #d32f2f;
+}

@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;700&family=Anton&family=Bebas+Neue&display=swap");
+
 /* 전체 컨테이너 */
 .mypage-component {
   display: flex;
@@ -10,24 +12,44 @@
   /* border-radius: 15px; 모서리 둥글게 */
   /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 부드러운 그림자 */
   text-align: left;
-  font-family: Arial, sans-serif;
+  font-family: "Noto Sans KR", "Roboto", sans-serif;
 }
 
 .mypage-component .transfer {
   margin-top: 20px; /* 개별 섹션 간격 추가 */
-  border: 1px solid black;
+  /* border: 1px solid black; */
   padding: 0 10px;
 }
 
 .mypage-component .deposit {
   margin-top: 20px; /* 개별 섹션 간격 추가 */
-  border: 1px solid black;
+  /* border: 1px solid black; */
   padding: 0 10px;
 }
 
 .mypage-component .withdraw {
-  border: 1px solid black;
+  /* border: 1px solid black; */
   padding: 0 10px;
+}
+
+.mypage-contract {
+  display: flex;
+  flex-direction: column;
+}
+
+.mypage-contract-btn {
+  margin-left: auto;
+}
+
+.mypage-contract-btn-btn {
+  display: flex;
+  color: white;
+  background-color: black;
+  border-radius: 5px;
+}
+
+.mypage-contract-btn-btn:hover {
+  background-color: gray;
 }
 
 /* 제목 스타일 */
@@ -66,19 +88,21 @@ a {
 }
 
 a.bg-green {
-  background-color: #10b981; /* 초록색 */
+  background-color: black;
+  border-radius: 5px;
 }
 
 a.bg-green:hover {
-  background-color: #059669; /* 진한 초록색 */
+  background-color: rgb(87, 86, 86);
 }
 
 a.bg-blue {
-  background-color: #2563eb; /* 파란색 */
+  background-color: gray;
+  border-radius: 5px;
 }
 
 a.bg-blue:hover {
-  background-color: #1e40af; /* 진한 파란색 */
+  background-color: rgb(37, 37, 37);
 }
 
 /* 버튼 스타일 */
@@ -147,24 +171,137 @@ a.bg-blue:hover {
   flex: 1; /* 각 박스가 동일한 너비를 차지 */
   background-color: #ffffff; /* 흰색 배경 */
   padding: 20px;
-  /* border-radius: 10px; 모서리 둥글게 */
+  margin-bottom: 10px;
+  border-radius: 5px; /*모서리 둥글게*/
   /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 그림자 */
   border: 1px solid black;
   display: flex;
   flex-direction: column; /* 내부 요소 세로 정렬 */
   justify-content: space-between; /* 요소를 상하로 배치 */
-  min-height: 200px; /* 최소 높이 지정 */
+  min-height: 100px; /* 최소 높이 지정 */
+  max-width: 400px;
+  min-width: 300px;
+}
+
+.wallet-info-box-c {
+  flex: 1; /* 각 박스가 동일한 너비를 차지 */
+  background-color: #ffffff; /* 흰색 배경 */
+  padding: 15px;
+  border-radius: 5px; /*모서리 둥글게*/
+  /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 그림자 */
+  border: 1px solid black;
+  display: flex;
+  flex-direction: column; /* 내부 요소 세로 정렬 */
+  justify-content: space-between; /* 요소를 상하로 배치 */
+  max-height: 100px; /* 최소 높이 지정 */
+  max-width: 400px;
+  min-width: 300px;
+}
+
+.user-info-box p {
+  font-size: 1rem;
+}
+
+.wallet-info-box p {
+  font-size: 1rem;
 }
 
 .infoi {
   display: flex;
+  font-size: 1rem;
 }
 
 .infon {
   padding-left: 5%;
+  font-size: 1rem;
 }
 
 .deposit {
+}
+
+.no-wallet {
+  color: red;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.btn-create-wallet {
+  background-color: black;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.btn-create-wallet:hover {
+  background-color: gray;
+}
+
+/* 게이지 전체 컨테이너 */
+.transaction-gauge-container {
+  position: relative;
+  width: 100%;
+  padding-top: 15px;
+}
+
+/* 눈금 위 숫자 라벨 */
+.gauge-labels {
+  position: absolute;
+  top: -12px; /* 숫자를 위로 올림 */
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: bold;
+  color: #333;
+  pointer-events: none;
+}
+
+.gauge-label {
+  position: absolute;
+  transform: translateX(-50%);
+}
+
+/* 마지막 30+ 라벨 */
+.gauge-label.last-label {
+  right: 0;
+  transform: translateX(0);
+}
+
+/* 게이지 바 */
+.transaction-gauge {
+  width: 100%;
+  height: 10px;
+  background-color: #ddd;
+  border-radius: 5px;
+  position: relative;
+}
+
+/* 게이지 채우기 */
+.transaction-gauge-fill {
+  height: 100%;
+  background-color: #4caf50;
+  border-radius: 5px;
+  transition: width 0.3s ease-in-out;
+}
+
+/* 눈금 (tick) */
+.gauge-ticks {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+
+.tick {
+  position: absolute;
+  height: 100%;
+  width: 2px;
+  background-color: black;
+  transform: translateX(-50%);
 }
 
 /* 반응형 설정 */

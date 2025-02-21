@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { requestLenderToggle } from "../../api/lenderApi";
+import "./LenderRequestComponent.css";
 
 // const LenderRequestComponent = ({ id, isLender, lenderStatus }) => {
 //   const [status, setStatus] = useState(lenderStatus);
@@ -76,7 +77,7 @@ const LenderRequestComponent = ({ id, isLender, lenderStatus }) => {
       {status === "PENDING" ? (
         <p>신청 대기 중입니다. 관리자의 승인을 기다려주세요.</p>
       ) : (
-        <button onClick={handleRequest} disabled={loading}>
+        <button className="button" onClick={handleRequest} disabled={loading}>
           {isLender ? "채권자 포기 신청" : "채권자 신청"}
         </button>
       )}

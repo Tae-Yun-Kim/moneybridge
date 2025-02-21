@@ -1,0 +1,70 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&display=swap");
+
+.oneToOne-container {
+  padding: 20px;
+}
+
+/* 문의 내역 페이지 제목 */
+.oneToOneInquiryPageTitle-o {
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+/* 문의 목록 전체 컨테이너 */
+.inquiryListContainer-o {
+  display: flex;
+  flex-direction: column;
+  max-width: 800px;
+  margin: 0 auto;
+  /* gap: 10px; */
+}
+
+/* 개별 문의 아이템 */
+.inquiryItem-o {
+  background-color: white;
+  border-bottom: 1px solid black;
+  padding: 0 20px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.inquiryItem-o:hover {
+  background-color: #f5f5f5;
+  transform: translateY(-2px);
+}
+
+/* 문의 제목 */
+.inquiryItem-o h3 {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+/* 작성자 */
+.inquiryItem-o p {
+  font-size: 14px;
+  color: #555;
+}
+
+/* 문의 내역이 없을 때 */
+.noInquiriesText-o {
+  text-align: center;
+  font-size: 16px;
+  color: #888;
+  margin-top: 20px;
+}
+
+.qna-title-o {
+  display: flex;
+  align-items: baseline;
+  text-align: center;
+  font-weight: bold;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.qna-status-o {
+  color: rgb(218, 76, 76);
+}

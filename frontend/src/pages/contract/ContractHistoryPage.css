@@ -1,0 +1,129 @@
+.contract-container-h {
+  padding: 20px;
+  background: #fff;
+  border-radius: 5px;
+  /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); */
+}
+
+.contract-title-h {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.no-contracts-h {
+  text-align: center;
+  font-size: 18px;
+  color: #6b7280;
+}
+
+.contract-list-h {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.contract-card-h {
+  border: 1px solid #ddd;
+  width: auto;
+  border-radius: 8px;
+  padding: 15px;
+  background: #f9f9f9;
+}
+
+.contract-summary-h {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.contract-id-h {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.contract-amount-h {
+  font-size: 16px;
+  color: #1e40af;
+  font-weight: bold;
+}
+
+.toggle-btn-h {
+  background: black;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.toggle-btn-h:hover {
+  background-color: gray;
+}
+
+.contract-details {
+  display: flex;
+  width: auto;
+  font-size: 15px;
+  border-top: 1px solid #ddd;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 15px;
+}
+
+.contract-details p {
+  margin: 5px;
+}
+
+.contract-actions-h {
+  display: flex;
+  gap: 10px;
+}
+
+.view-btn-h,
+.pdf-btn-h,
+.delete-btn-h {
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.view-btn-h:hover,
+.pdf-btn-h:hover,
+.delete-btn-h:hover {
+  color: white;
+  background-color: black;
+}
+
+.back-to-mypage-h {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.back-to-mypage-h button {
+  color: white;
+  background-color: black;
+  border-radius: 5px;
+}
+
+.back-to-mypage-h button:hover {
+  background-color: gray;
+}
+
+.contract-det {
+  display: flex;
+  flex-direction: column;
+}
+
+.contract-info {
+  width: 500px;
+  text-align: center;
+}
+
+.contract-close {
+  border-radius: 5px;
+}
+
+.contract-close:hover {
+  color: white;
+  background-color: black;
+}
