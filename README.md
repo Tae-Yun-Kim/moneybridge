@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/e7cad46c-904a-4231-a980-5c570b647ffe)# MoneyBridge (fullstack_second)
+# MoneyBridge 
 RESTful API, Spring Boot, React, Python, AWS 를 활용한 두번째 풀스택 프로젝트(금융)
 
 ## 프로젝트 소개
