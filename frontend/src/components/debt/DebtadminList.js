@@ -76,29 +76,58 @@ const DebtAdminList = () => {
         <ul>
           {debtRequests.map((request) => (
             <li key={request.id} className="debt-list">
-              <div>
-                <strong>🆔 요청 ID:</strong> {request.id} <br />
-              </div>
-              <div>
-                <strong>📄 계약 ID:</strong> {request.contractId} <br />
-              </div>
-              <div>
-                <strong>👤 출자자 ID:</strong> {request.lenderId} <br />
-              </div>
-              <div>
-                <strong>🚦 현재 상태:</strong>
+              {/* 왼쪽 요청 정보 */}
+              <div className="debt-info">
+                {/* 윗줄 */}
+                <div className="debt-top">
+                  <div>
+                    <strong>🆔 요청 ID:</strong> {request.id}
+                  </div>
+                  <div>
+                    <strong>📄 계약 ID:</strong> {request.contractId}
+                  </div>
+                  <div>
+                    <strong>👤 출자자 ID:</strong> {request.lenderId}
+                  </div>
+                  <div>
+                    <strong>💳 채무자 ID:</strong>{" "}
+                    {request.borrowerId || "정보 없음"}
+                  </div>
+                </div>
 
-                <span className="debt-status">
-                  {request.debtstatus === "PENDING"
-                    ? "⏳ 승인 대기"
-                    : request.debtstatus === "APPROVED"
-                    ? "✅ 승인 완료"
-                    : request.debtstatus === "COLLECTED"
-                    ? "✅ 추심 완료"
-                    : "❌ 거절됨"}
-                </span>
+                {/* 아랫줄 */}
+                <div className="debt-bottom">
+                  <div>
+                    <strong>💰 추심 금액:</strong>{" "}
+                    {request.debtAmount.toLocaleString()} 원
+                  </div>
+                  <div>
+                    <strong>📈 추가 이자율:</strong>{" "}
+                    {(request.extraInterestRate * 100).toFixed(2)}%
+                  </div>
+                  <div>
+                    <strong>💰📈 익월 연체원리금:</strong>{" "}
+                    {request.overdueDebt.toLocaleString()} 원
+                  </div>
+                  <div>
+                    <strong>🚦 현재 상태:</strong>
+                    <span
+                      className={`debt-status ${request.debtstatus.toLowerCase()}`}
+                    >
+                      {request.debtstatus === "PENDING"
+                        ? "⏳ 승인 대기"
+                        : request.debtstatus === "APPROVED"
+                        ? "✅ 승인 완료"
+                        : request.debtstatus === "COLLECTED"
+                        ? "✅ 추심 완료"
+                        : "❌ 거절됨"}
+                    </span>
+                  </div>
+                </div>
               </div>
-              <div className="debt-select">
+
+              {/* 오른쪽 버튼 (세로 정렬 + 최소한의 크기) */}
+              <div className="debt-actions-wrapper">
                 {request.debtstatus === "PENDING" && (
                   <>
                     <button
@@ -115,8 +144,6 @@ const DebtAdminList = () => {
                     </button>
                   </>
                 )}
-
-                {/* 🔹 "추심 완료" 버튼 추가 (APPROVED 상태에서만 보임) */}
                 {request.debtstatus === "APPROVED" && (
                   <button
                     className="debt-button-f"

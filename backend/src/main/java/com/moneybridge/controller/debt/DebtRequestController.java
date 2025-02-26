@@ -22,12 +22,15 @@ public class DebtRequestController {
     private final WalletRepository walletRepository;
     private final WalletService walletService;
 
-    // ✅ 출자자가 추심 요청 생성 (PENDING 상태로 요청됨)
+
     @PostMapping("/request")
     public ResponseEntity<DebtRequestDTO> requestDebt(@RequestBody DebtRequestDTO dto) {
-        log.info("📌 추심 요청: contractId={}, lenderId={}", dto.getContractId(), dto.getLenderId());
+        log.info("📌 추심 요청: contractId={}, lenderId={}, borrowerId={}, 추가 이자율={}, 추심금액={}, 연체 추심금={}",
+                dto.getContractId(), dto.getLenderId(), dto.getBorrowerId(), dto.getExtraInterestRate(), dto.getDebtAmount(),dto.getOverdueDebt());
+
         return ResponseEntity.ok(debtService.createDebtRequest(dto));
     }
+
 
     // ✅ 관리자 또는 승인자가 추심 요청 상태 변경 (APPROVED / REJECTED)
     @PutMapping("/request/{id}/status")

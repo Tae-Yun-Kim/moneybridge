@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Bell } from "lucide-react";
-import { format } from "date-fns"; // date-fns import 추가
+import { format } from "date-fns";
 import {
   getMemberNotifications,
   deleteNotification,
@@ -21,13 +21,7 @@ const NotificationComponent = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
   const [error, setError] = useState(null);
-  const navigate = useNavigate(); // ✅ 페이지 이동을 위한 Hook
-
-  const handleNotificationClick = (notification) => {
-    if (notification.redirectUrl) {
-      navigate(notification.redirectUrl); // ✅ 알림 클릭 시 해당 URL로 이동
-    }
-  };
+  const navigate = useNavigate();
 
   // 알림 목록 조회
   const fetchNotifications = async () => {
@@ -42,18 +36,23 @@ const NotificationComponent = () => {
     }
   };
 
-  // 알림 삭제
-  const handleDelete = async (notificationId) => {
+  // 알림 삭제 + 페이지 이동
+  const handleConfirm = async (notification) => {
     try {
-      await deleteNotification(notificationId);
+      await deleteNotification(notification.notificationId);
       setNotifications((prev) =>
-        prev.filter((notif) => notif.notificationId !== notificationId)
+        prev.filter(
+          (notif) => notif.notificationId !== notification.notificationId
+        )
       );
       setUnreadCount((prev) => Math.max(0, prev - 1));
       setError(null);
+      if (notification.redirectUrl) {
+        navigate(notification.redirectUrl); // ✅ 확인 버튼 클릭 시 삭제 후 페이지 이동
+      }
     } catch (error) {
-      setError("알림 삭제에 실패했습니다.");
-      console.error("알림 삭제 실패:", error);
+      setError("알림 확인 처리에 실패했습니다.");
+      console.error("알림 확인 실패:", error);
     }
   };
 
@@ -93,7 +92,7 @@ const NotificationComponent = () => {
         default:
           throw new Error("알 수 없는 알림 유형입니다.");
       }
-      await fetchNotifications(); // 알림 목록 새로고침
+      await fetchNotifications();
       setError(null);
     } catch (error) {
       setError("알림 생성에 실패했습니다.");
@@ -102,38 +101,15 @@ const NotificationComponent = () => {
   };
 
   useEffect(() => {
-    fetchNotifications(); // 새로고침 후에도 알림 개수를 유지하도록 초기 로드
+    fetchNotifications();
   }, []);
 
   useEffect(() => {
     if (showDropdown) {
-      fetchNotifications(); // 드롭다운이 열릴 때만 새로고침
+      fetchNotifications();
     }
   }, [showDropdown]);
-  // const getNotificationMessage = (notification) => {
-  //   switch (notification.type) {
-  //     case 'TRANSFER_TO_WALLET':
-  //     case 'DEBTOR_TO_CREDITOR':
-  //       return `계좌에서 지갑으로 ${notification.amount?.toLocaleString()}원이 이체되었습니다.`;
-  //     case 'TRANSFER_TO_ACCOUNT':
-  //     case 'CREDITOR_TO_DEBTOR':
-  //       return `지갑에서 계좌로 ${notification.amount?.toLocaleString()}원이 이체되었습니다.`;
-  //     case 'CONTRACT_PENDING':
-  //       return '새로운 계약 요청이 있습니다.';
-  //     case 'APPROVAL_PENDING':
-  //       return `승인 대기 중입니다: ${notification.comment || ''}`;
-  //     case 'CONTRACT_ACTIVE':
-  //       return '계약이 체결되었습니다.';
-  //     case 'CONTRACT_COMPLETED':
-  //       return '계약이 완료되었습니다.';
-  //     case 'CONTRACT_CANCELLED':
-  //       return '계약이 취소되었습니다.';
-  //     case 'OVERDUE':
-  //       return '연체가 발생했습니다.';
-  //     default:
-  //       return notification.message || '알 수 없는 알림';
-  //   }
-  // };
+
   const getNotificationMessage = (notification) => {
     switch (notification.type) {
       case "TRANSFER_TO_WALLET":
@@ -187,7 +163,6 @@ const NotificationComponent = () => {
                 <div
                   key={notification.notificationId}
                   className="notification-item"
-                  onClick={() => handleNotificationClick(notification)} // ✅ 알림 클릭 시 이동
                 >
                   <div className="notification-item-content">
                     <p className="notification-time">
@@ -200,10 +175,7 @@ const NotificationComponent = () => {
                       {getNotificationMessage(notification)}
                     </p>
                     <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDelete(notification.notificationId);
-                      }}
+                      onClick={() => handleConfirm(notification)} // ✅ 확인 버튼 클릭 시 삭제 + 이동
                       className="notification-delete-btn"
                     >
                       확인

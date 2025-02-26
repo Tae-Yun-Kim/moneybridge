@@ -250,14 +250,12 @@ public Member findById(String memberId) {
         if (member.isLender()) {
             member.getLenderStatus().clear();
             member.getLenderStatus().add(LenderStatus.PENDING_SURRENDER);
-//            member.setLender(false); // isLender를 false로 변경
             memberRepository.saveAndFlush(member); // 변경 즉시 반영
             log.info("채권자 포기 신청 완료. LenderStatus: {}, isLender: {}", member.getLenderStatus(), member.isLender());
             return "채권자 포기 신청이 접수되었습니다. 관리자의 승인을 기다려주세요.";
         } else {
             member.getLenderStatus().clear();
             member.getLenderStatus().add(LenderStatus.PENDING);
-//            member.setLender(false); // 신청 상태에서는 false 유지
             memberRepository.saveAndFlush(member); // 변경 즉시 반영
             log.info("채권자 신청 완료. LenderStatus: {}, isLender: {}", member.getLenderStatus(), member.isLender());
             return "채권자 신청이 접수되었습니다. 관리자의 승인을 기다려주세요.";

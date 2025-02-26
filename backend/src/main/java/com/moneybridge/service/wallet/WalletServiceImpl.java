@@ -260,49 +260,60 @@ public void transferFromAccountToWallet(String memberId, Long amount) {
 //        walletRepository.save(wallet); // 지갑 업데이트
 //        memberRepository.save(member); // 계좌 업데이트
 //    }
-@Override
-@Transactional
-public void transferFromWalletToAccount(String memberId, Long amount) {
-    // 1. 회원 및 지갑 찾기
-    Member member = memberRepository.findById(memberId)
+    @Override
+    @Transactional
+    public void transferFromWalletToAccount(String memberId, Long amount) {
+     // 1. 회원 및 지갑 찾기
+        Member member = memberRepository.findById(memberId)
             .orElseThrow(() -> new RuntimeException("Member not found"));
-    Wallet wallet = walletRepository.findByMember(member)
+         Wallet wallet = walletRepository.findByMember(member)
             .orElseThrow(() -> new RuntimeException("Wallet not found"));
 
-    // ✅ 지갑이 잠겨있다면 출금 불가
-    if (wallet.isLocked()) {
-        throw new IllegalStateException("❌ 지갑이 잠겨 있어 출금할 수 없습니다.");
-    }
+        log.info("✅ [After Update] 계좌 잔액: " + wallet.getAccount().getBalance());
+        log.info("✅ [After Update] 지갑 잔액: " + wallet.getBalance());
 
-    // 2. 잔액 검증
-    if (wallet.getBalance() < amount) {
-        throw new IllegalArgumentException("Insufficient wallet balance");
-    }
+        // ✅ 지갑이 잠겨있다면 출금 불가
+        if (wallet.isLocked()) {
+            throw new IllegalStateException("❌ 지갑이 잠겨 있어 출금할 수 없습니다.");
+        }
 
-    // 3. 계좌 검증
-    if (wallet.getAccount() == null) {
-        throw new IllegalArgumentException("No linked account found for this wallet");
-    }
+        // 2. 잔액 검증
+        if (wallet.getBalance() < amount) {
+            throw new IllegalArgumentException("Insufficient wallet balance");
+        }
 
-    // 4. 지갑 잔액 차감 및 계좌 잔액 증가
-    long newAccountBalance = wallet.getAccount().getBalance() - amount;
-    long newWalletBalance = wallet.getBalance() + amount;
+        // 3. 계좌 검증
+        if (wallet.getAccount() == null) {
+            throw new IllegalArgumentException("No linked account found for this wallet");
+        }
 
-    wallet.getAccount().setBalance(newAccountBalance); // 계좌 잔액 직접 설정
-    wallet.setBalance(newWalletBalance); // 지갑 잔액 직접 설정
+        // 4. 지갑 잔액 차감 및 계좌 잔액 증가
+        long newWalletBalance = wallet.getBalance() - amount;
+        long newAccountBalance = wallet.getAccount().getBalance() + amount;
 
-    // 5. 거래 기록 생성 및 저장
-    WalletTransaction transaction = WalletTransaction.builder()
-            .fromWallet(wallet) // 출발 지갑
-            .toWallet(null) // 계좌로 송금하므로 `toWallet`은 null
-            .amount(amount)
-            .transactionType("출금") // 거래 유형: 출금
-            .build();
-    walletTransactionRepository.save(transaction); // 거래 내역 저장
+        log.info("✅ [After Update] 계좌 잔액: " + wallet.getAccount().getBalance());
+        log.info("✅ [After Update] 지갑 잔액: " + wallet.getBalance());
 
-    // 6. 저장
-    walletRepository.save(wallet); // 지갑 업데이트
-    accountRepository.save(wallet.getAccount()); // 계좌 업데이트
+
+        wallet.getAccount().setBalance(newAccountBalance); // 계좌 잔액 직접 설정
+        wallet.setBalance(newWalletBalance); // 지갑 잔액 직접 설정
+
+        // 5. 거래 기록 생성 및 저장
+        WalletTransaction transaction = WalletTransaction.builder()
+                .fromWallet(wallet) // 출발 지갑
+                .toWallet(null) // 계좌로 송금하므로 `toWallet`은 null
+                .amount(amount)
+                .transactionType("출금") // 거래 유형: 출금
+                .build();
+        walletTransactionRepository.save(transaction); // 거래 내역 저장
+
+
+        // 6. 저장
+        walletRepository.save(wallet); // 지갑 업데이트
+        accountRepository.save(wallet.getAccount()); // 계좌 업데이트
+
+        log.info("✅ [After Update] 계좌 잔액: " + wallet.getAccount().getBalance());
+        log.info("✅ [After Update] 지갑 잔액: " + wallet.getBalance());
     }
 
     @Override

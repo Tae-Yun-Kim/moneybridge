@@ -3,12 +3,12 @@
 /* 전체 네비게이션 */
 .navbar {
   display: flex;
-  justify-content: space-around;
+  justify-content: flex-start;
   align-items: center;
   font-family: Arial, sans-serif;
   background-color: #fff;
   border-bottom: 1px solid #ddd;
-  padding: 0 20px;
+  padding: 0 80px;
   height: 129px;
   /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); */
   font-family: "Noto Sans KR", "Roboto", sans-serif;
@@ -22,6 +22,7 @@
   padding: 0 20px;
   padding-top: 10px;
   gap: 20px; /* 요소 간격 추가 */
+  margin-left: 75px;
 }
 
 .navbar .nav-container .second {
@@ -29,6 +30,10 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+
+.next {
+  display: flex;
 }
 
 /* 로고 */
@@ -46,10 +51,6 @@
   padding: 0;
 }
 
-.nav-bottom {
-  width: 100%;
-}
-
 /* .nav-menu li a {
   text-decoration: none;
   color: #333;
@@ -65,16 +66,20 @@
 /* 로그인/로그아웃 */
 .nav-login {
   display: flex;
+  justify-content: flex-end;
   align-items: center;
   font-size: 14px;
   color: gray;
+  font-family: "Noto Sans KR", "Roboto", sans-serif;
+  margin-right: 50px;
 }
 
 .nav-login a {
   text-decoration: none;
   color: black;
-  margin-left: 10px; /* 버튼 간 간격 */
+  margin-left: 30px; /* 버튼 간 간격 */
   font-weight: bold;
+  padding: 5px;
 }
 
 .nav-login a:hover {
@@ -91,10 +96,10 @@
 }
 /* 검색창 */
 .search-bar {
-  margin-top: 10px;
+  margin: 10px 0;
   display: flex;
   justify-content: center;
-  width: 100%;
+  width: 70%;
 }
 
 .search-bar form {
@@ -126,7 +131,7 @@
 .menu-bar {
   display: flex;
   justify-content: center;
-  gap: 50px;
+  gap: 150px;
   list-style: none;
   padding: 0;
 }
@@ -134,7 +139,7 @@
 .menu-bar li a {
   text-decoration: none;
   color: #333;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: bold;
 }
 
@@ -162,4 +167,16 @@
 .ad-content img {
   max-width: 100px;
   max-height: 100px;
+}
+
+@media (max-width: 768px) {
+  .menu-bar {
+    gap: 100px;
+  }
+}
+
+@media (max-width: 480px) {
+  .menu-bar {
+    gap: 30px;
+  }
 }

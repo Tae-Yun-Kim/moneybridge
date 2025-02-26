@@ -40,7 +40,11 @@ public class DebtServiceImpl implements DebtService {
                     DebtRequest debtRequest = DebtRequest.builder()
                             .contract(contract)
                             .lender(contract.getLender())
+                            .borrower(contract.getBorrower())
                             .debtstatus(DebtRequestStatus.PENDING)
+                            .extraInterestRate(dto.getExtraInterestRate()) // ✅ 추가 이자율 저장
+                            .debtAmount(dto.getDebtAmount()) // ✅ 추심 금액 그대로 저장
+                            .overdueDebt(Math.round(dto.getDebtAmount() + (dto.getDebtAmount() * dto.getExtraInterestRate()))) // ✅ 정수 변환 후 저장
                             .build();
 
                     debtRequestRepository.save(debtRequest);
@@ -87,7 +91,11 @@ public class DebtServiceImpl implements DebtService {
 
         return debtRequestRepository.findById(requestId)
                 .map(debtRequest -> {
-                    debtRequest.setDebtstatus(status);
+                    // ✅ debtstatus 변경 시 approvedAt 자동 업데이트
+                    debtRequest.updateDebtStatus(status);
+
+
+
                     debtRequestRepository.save(debtRequest);
 
                     // ✅ 상태 변경에 따른 대출자의 지갑 잠금/해제 처리
