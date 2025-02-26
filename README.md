@@ -1,4 +1,4 @@
-# MoneyBridge ㅇ
+# MoneyBridge
 RESTful API, Spring Boot, React, Python, AWS 를 활용한 두번째 풀스택 프로젝트(금융)
 
 ## 프로젝트 소개
