@@ -46,37 +46,47 @@ const DebtuserList = ({ userId, isLender }) => {
       }
 
       const data = await getContractsByLender(userId); // 출자자의 계약 조회
-      const overdueContracts = data.filter(
-        (contract) => contract.status === "OVERDUE"
-      );
+      const overdueContracts = data
+        .filter((contract) => contract.status === "OVERDUE")
+        .map((contract) => ({
+          ...contract,
+          borrowerId: contract.borrowerId, // ✅ 채무자 ID 추가
+        }));
 
       setContracts(overdueContracts);
-      fetchDebtStatuses(overdueContracts.map((contract) => contract.id)); // ✅ 추심 상태 조회
+      fetchDebtStatuses(overdueContracts);
     } catch (error) {
       console.error("💥 연체 계약 목록 불러오기 중 오류 발생:", error);
     }
   };
 
-  // ✅ 각 계약의 추심 상태 조회
-  const fetchDebtStatuses = async (contractIds) => {
+  // ✅ 각 계약의 추심 상태 조회 및 채무자 ID 저장
+  const fetchDebtStatuses = async (contracts) => {
     try {
-      const debtStatusesMap = { ...debtStatuses }; // 기존 상태 유지
+      const debtStatusesMap = {};
+
       await Promise.all(
-        contractIds.map(async (contractId) => {
+        contracts.map(async (contract) => {
           try {
-            const response = await getDebtStatusByContract(contractId);
-            debtStatusesMap[contractId] =
-              response.length > 0 ? response[0].debtstatus : "NONE";
+            const response = await getDebtStatusByContract(contract.id);
+            debtStatusesMap[contract.id] = {
+              debtstatus: response.length > 0 ? response[0].debtstatus : "NONE",
+              borrowerId: contract.borrowerId, // ✅ 채무자 ID 저장
+            };
           } catch (error) {
             console.error(
-              `💥 계약 ID ${contractId}의 추심 상태 불러오기 실패`,
+              "💥 계약 ID ${contract.id}의 추심 상태 불러오기 실패",
               error
             );
-            debtStatusesMap[contractId] = "NONE";
+            debtStatusesMap[contract.id] = {
+              debtstatus: "NONE",
+              borrowerId: contract.borrowerId || "정보 없음",
+            };
           }
         })
       );
-      setDebtStatuses(debtStatusesMap); // ✅ 최신 상태 반영
+
+      setDebtStatuses(debtStatusesMap);
     } catch (error) {
       console.error("💥 추심 상태 불러오기 실패:", error);
     }
@@ -86,32 +96,55 @@ const DebtuserList = ({ userId, isLender }) => {
     fetchContracts();
   }, [userId, isLender]);
 
-  // ✅ 출자자가 추심 요청 버튼 클릭 시 실행
-  const handleDebtRequest = async (contractId, lenderId) => {
+  const handleDebtRequest = async (
+    contractId,
+    lenderId,
+    borrowerId,
+    loanAmount,
+    interestRate
+  ) => {
     try {
-      // ✅ 상태를 먼저 PENDING으로 업데이트하여 UI 반영
+      // ✅ 추가 이자율 계산
+      const extraInterestRate = interestRate / 100 + 0.5 * (interestRate / 100);
+
+      // ✅ 추심금액 계산
+      const debtAmount = Math.floor(
+        loanAmount + loanAmount * extraInterestRate
+      );
+
       setDebtStatuses((prev) => ({
         ...prev,
-        [contractId]: "PENDING", // ✅ 특정 계약만 업데이트
+        [contractId]: {
+          ...prev[contractId],
+          debtstatus: "PENDING",
+        },
       }));
 
-      await requestDebtCollection(contractId, lenderId);
+      // ✅ 백엔드로 추가 이자율과 추심금액 함께 전달
+      await requestDebtCollection(
+        contractId,
+        lenderId,
+        borrowerId,
+        debtAmount,
+        extraInterestRate
+      );
+
       alert(`✅ 계약 ${contractId}의 추심 요청이 관리자에게 전달되었습니다.`);
 
-      // ✅ 추심 상태를 다시 확인하여 UI 갱신
-      fetchDebtStatuses([contractId]);
+      fetchDebtStatuses([{ id: contractId, borrowerId }]); // ✅ 추심 상태 다시 확인
     } catch (error) {
       console.error("💥 추심 요청 중 오류 발생:", error);
       alert("❌ 추심 요청에 실패했습니다. 다시 시도해주세요.");
 
-      // ✅ 오류 발생 시 상태를 원래대로 되돌림
       setDebtStatuses((prev) => ({
         ...prev,
-        [contractId]: "NONE",
+        [contractId]: {
+          ...prev[contractId],
+          debtstatus: "NONE",
+        },
       }));
     }
   };
-
   return (
     <div className="debt-container-u">
       <h2 className="debt-title-u">추심 대상 계약</h2>
@@ -132,32 +165,54 @@ const DebtuserList = ({ userId, isLender }) => {
                   <strong>📈 이자율:</strong> {contract.interestRate}% <br />
                 </div>
                 <div>
-                  <strong>🚦 계약 상태:</strong>
+                  <strong>📈 추심금액:</strong>
+                  {Math.floor(
+                    contract.loanAmount +
+                      contract.loanAmount *
+                        (contract.interestRate / 100 +
+                          0.5 * (contract.interestRate / 100))
+                  )}
+                  원 <br />
+                </div>
 
+                <div>
+                  <strong>🚦 계약 상태:</strong>
                   <span className="debt-status-u">
                     {getStatusLabel(
                       contract.status?.toUpperCase() || "UNKNOWN"
                     )}
                   </span>
                 </div>
+                <div>
+                  <strong>👤 채무자 ID:</strong>{" "}
+                  {debtStatuses[contract.id]?.borrowerId || "정보 없음"} <br />
+                </div>
                 {isLender && (
                   <div className="debt-status-action">
-                    {debtStatuses[contract.id] === "PENDING" ? (
+                    {debtStatuses[contract.id]?.debtstatus === "PENDING" ? (
                       <span className="debt-status-action-p">
                         ⏳ 추심 승인 대기 중
                       </span>
-                    ) : debtStatuses[contract.id] === "APPROVED" ? (
+                    ) : debtStatuses[contract.id]?.debtstatus === "APPROVED" ? (
                       <span className="debt-status-action-a">
                         ✅ 추심 승인 완료
                       </span>
-                    ) : debtStatuses[contract.id] === "REJECTED" ? (
+                    ) : debtStatuses[contract.id]?.debtstatus === "REJECTED" ? (
                       <span className="debt-status-action-r">
                         ❌ 추심 신청 거절
                       </span>
                     ) : (
                       <button
                         className="debt-start"
-                        onClick={() => handleDebtRequest(contract.id, userId)}
+                        onClick={() =>
+                          handleDebtRequest(
+                            contract.id,
+                            userId,
+                            contract.borrowerId,
+                            contract.loanAmount,
+                            contract.interestRate
+                          )
+                        }
                       >
                         ✅ 추심 신청
                       </button>

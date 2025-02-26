@@ -89,6 +89,7 @@ import com.moneybridge.domain.member.Member;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -161,6 +162,9 @@ public class Contract {
     @Column(nullable = false)
     private LocalDateTime updatedAt; // 계약 수정일
 
+    @Column(nullable = true)
+    private LocalDate contractAt; // 계약이 ACTIVE로 변경된 날짜 (날짜만 저장)
+
     @Column(name = "deleted_by_users")
     private String deletedByUsers; // 삭제한 유저 ID 리스트 (콤마로 구분)
 
@@ -226,6 +230,18 @@ public class Contract {
         System.out.println("✅ 상환 기간 연장 완료: " + additionalMonths + "개월 / 총 상환 금액: " + this.totalRepaymentAmount + "원");
         System.out.println("🔹 이자율 변경: " + this.interestRate + "%");
         System.out.println("🛠️ 현재 연장 요청 횟수: " + this.extensionRequestCount);
+    }
+
+    // ✅ 계약 상태 변경 시 contractAt 자동 업데이트 (날짜만 저장)
+    public void setStatus(ContractStatus newStatus) {
+        ContractStatus previousStatus = this.status; // 기존 상태 저장
+        this.status = newStatus;
+        this.updatedAt = LocalDateTime.now(); // updatedAt 갱신
+
+        // WAITING_FOR_APPROVAL → ACTIVE 변경 시 contractAt 설정 (날짜만 저장)
+        if (previousStatus == ContractStatus.WAITING_FOR_APPROVAL && newStatus == ContractStatus.ACTIVE) {
+            this.contractAt = this.updatedAt.toLocalDate(); // ✅ 날짜까지만 저장
+        }
     }
 
 }

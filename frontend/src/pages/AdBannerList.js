@@ -37,40 +37,6 @@ const adBanners = [
 ];
 
 const AdBannerList = () => {
-  //   return (
-  //     <div className="ad-banner-container">
-  //       <Swiper
-  //         modules={[Navigation, Pagination]}
-  //         spaceBetween={20}
-  //         slidesPerView={1}
-  //         navigation
-  //         pagination={{ clickable: true }}
-  //         // autoplay={{ delay: 5000 }}
-  //         loop
-  //       >
-  //         {adBanners.map((banner) => (
-  //           <SwiperSlide key={banner.id}>
-  //             <a
-  //               href={banner.link}
-  //               target="_blank"
-  //               rel="noopener noreferrer"
-  //               className="ad-banner"
-  //             >
-  //               <img
-  //                 src={banner.image}
-  //                 alt={banner.title}
-  //                 className="ad-banner-img"
-  //               />
-  //               <div className="ad-banner-text">
-  //                 <h3>{banner.title}</h3>
-  //                 <p>{banner.description}</p>
-  //               </div>
-  //             </a>
-  //           </SwiperSlide>
-  //         ))}
-  //       </Swiper>
-  //     </div>
-  //   );
   return (
     <div className="ad-banner-container">
       {/* 🔹 Swiper 바깥에 커스텀 네비게이션 버튼 추가 */}

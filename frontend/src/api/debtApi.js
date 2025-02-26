@@ -52,11 +52,23 @@ export const updateDebtRequestStatus = async (requestId, debtstatus) => {
 };
 
 // ✅ 연체 계약 추심 요청 API
-export const requestDebtCollection = async (contractId, lenderId) => {
+export const requestDebtCollection = async (
+  contractId,
+  lenderId,
+  borrowerId,
+  debtAmount,
+  extraInterestRate,
+  overdueDebt
+) => {
   try {
     const response = await jwtAxios.post(`${BASE_URL}/request`, {
       contractId,
       lenderId,
+      borrowerId,
+      debtAmount, // ✅ 추심금액 추가
+      extraInterestRate, // ✅ 추가 이자율 추가
+      overdueDebt,
+
       debtstatus: "PENDING",
     });
     return response.data;

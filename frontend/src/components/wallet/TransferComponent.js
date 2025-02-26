@@ -42,6 +42,7 @@ const TransferComponent = () => {
       }
 
       if (direction === "wallet-to-account") {
+        console.log("direction", direction);
         // 지갑 → 계좌 송금
         await transferFromWalletToAccount(memberId, parseInt(amount));
         setMessage(`지갑에서 계좌로 ${amount}원이 송금되었습니다.`);

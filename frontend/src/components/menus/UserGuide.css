@@ -4,7 +4,7 @@
   max-width: 800px;
   margin: auto;
   padding: 20px;
-  /* font-family: "Arial", sans-serif; */
+  font-family: "Noto Sans KR", "Roboto", sans-serif;
   text-align: center;
 }
 
@@ -22,6 +22,7 @@ p {
   display: flex;
   justify-content: center;
   margin-bottom: 20px;
+  font-family: "Noto Sans KR", "Roboto", sans-serif;
 }
 
 .tab-buttons button {

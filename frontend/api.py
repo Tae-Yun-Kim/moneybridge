@@ -32,7 +32,7 @@ elif platform.system() == 'Darwin':
 app = Flask(__name__)
 CORS(app)
 
-OPENAI_API_KEY = "API_KEY"
+OPENAI_API_KEY = "APIKEY"
 
 @app.route('/chat', methods=['POST'])
 def chat():
@@ -130,120 +130,7 @@ def voice_chat():
         return jsonify({"response": "🔄 다시 말씀해주세요!"})
     
     return filter_voice(audio_text)
-    
-# @app.route('/filter', methods=['POST'])
-# def filter():
-#     table = 'loan_posts'  # <-사용할 테이블 이름
-    
-#     user_input = request.json.get('message')
-#     print(user_input)
 
-#     def extract_amount(text):
-#         match = re.search(r'(\d+(\.\d+)?)[억만천]?', text)  # "500만원" 같은 표현에서 숫자 추출
-#         if match:
-#             amount = int(match.group(1))  # 숫자로 변환
-#             if '억' in text:
-#                 return amount * 100000000
-#             elif '만' in text:
-#                 return amount * 10000
-#             elif '천' in text:
-#                 return amount * 1000
-#             return int(amount)
-#         return None
-
-#     loan_amount = extract_amount(user_input)
-    
-#     if loan_amount is None:
-#         return jsonify({"response": "대출 금액을 정확히 입력해주세요 (예: 500만원, 2억)."})
-
-#     # 데이터베이스에서 게시글 가져오기
-#     dataframe = db.show_data(table)
-
-#     if dataframe.empty:
-#         return jsonify({"response": "현재 대출 게시글이 없습니다."})
-
-#     if "loan_amount" in dataframe.columns and "contractStatus" in dataframe.columns:
-#         # 🔹 계약이 완료되지 않은 게시글만 필터링
-#         filtered_df = dataframe[
-#             (dataframe["loan_amount"] == loan_amount) & 
-#             (~dataframe["contractStatus"].isin(["계약 완료", "진행중", "계약 취소"]))
-#         ]
-        
-#         if filtered_df.empty:
-#             return jsonify({"response": f"{loan_amount}원을 빌려주는 게시글이 없습니다."})
-
-#          # 자연스러운 문장으로 응답 생성
-#         response_text = f"<p>{loan_amount:,}원을 빌려주는 게시글 리스트입니다:\n\n</p><ul>"
-#         for _, row in filtered_df.iterrows():
-#             response_text += (
-#                 f"<li>작성자: {row['member_id']}, "
-#                 f"대출 금액: {row['loan_amount']:,}원, 작성일: {row['created_at']}, "
-#                 f"상환 기간: {row['repayment_period']}일, "
-#                  f"<a href='/post/view/{row['id']}' className='chatbot-response-button'>게시글보기</a></li>\n"
-#             )
-#         response_text += "</ul>"
-
-#         return jsonify({"response": response_text})
-    
-#     return jsonify({"response": "데이터베이스에 amount 컬럼이 없습니다."})
-
-
-# def filter_voice(user_input):
-#     """ 음성으로 대출 게시글 검색 """
-#     table = "loan_posts"
-
-#     # user_input = request.json.get("message")  # 음성 입력 데이터
-
-#     print(f"🎙️ 음성 입력: {user_input}")
-
-#     def extract_amount(text):
-#         """ 음성 입력에서 대출 금액 추출 """
-#         match = re.search(r'(\d+(?:\.\d+)?)[억만천원]?', text)
-#         if match:
-#             amount = int(match.group(1))
-#             if '억' in text:
-#                 return amount * 100000000
-#             elif '만' in text:
-#                 return amount * 10000
-#             elif '천' in text:
-#                 return amount * 1000
-#             elif '원' in text:  # "원" 단위가 있으면 그대로 사용
-#                 return amount
-#             return int(amount)
-#         return None
-
-#     loan_amount = extract_amount(user_input)
-
-#     if loan_amount is None:
-#         return jsonify({"response": "❌ 대출 금액을 정확히 입력해주세요 (예: 500만원, 2억)."})
-
-#     # 🔹 데이터 조회
-#     dataframe = db.show_data(table)
-
-#     if dataframe.empty:
-        
-#         return jsonify({"response": "⚠️ 현재 대출 게시글이 없습니다."})
-
-#     # 🔹 금액 필터링
-#     if "loan_amount" in dataframe.columns:
-#         filtered_df = dataframe[dataframe["loan_amount"] == loan_amount]
-
-#         if filtered_df.empty:
-#             return jsonify({"response": f"❌ {loan_amount:,}원을 빌려주는 게시글이 없습니다."})
-
-#         response_text = f"<p>{loan_amount}원을 빌려주는 게시글 리스트입니다.<p><ul>"
-#         for _, row in filtered_df.iterrows():
-#             response_text += (
-#                 f"<il>작성자: {row['member_id']},"
-#                 f"대출 금액: {row['loan_amount']:,}원, 작성일: {row['created_at']}, "
-#                 f"상환 기간: {row['repayment_period']}일, "
-#                 f"<a href='/post/view/{row['id']}' className='chatbot-response-button'>게시글보기</a></li>\n"
-#             )
-#         response_text += "</ul>"
-
-#         return jsonify({"response": response_text})
-
-#     return jsonify({"response": "⚠️ 데이터베이스에 'loan_amount' 컬럼이 없습니다."})
 
 @app.route('/filter', methods=['POST'])
 def filter():
@@ -300,7 +187,7 @@ def filter():
         response_text += (
             f"<li>작성자: {row['member_id']}, "
             f"대출 금액: {row['loan_amount']:,}원, 작성일: {row['created_at']}, "
-            f"상환 기간: {row['repayment_period']}일, "
+            f"상환 기간: {row['repayment_period']}개월, "
             f"<a href='/post/view/{row['id']}' className='chatbot-response-button'>게시글보기</a></li>\n"
         )
     response_text += "</ul>"

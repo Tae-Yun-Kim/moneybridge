@@ -83,7 +83,9 @@ const DonationProgress = () => {
                 tick={{ fontSize: 14 }}
                 tickMargin={20}
               />
-              <Tooltip formatter={(value) => `${value.toLocaleString()}원`} />
+              <Tooltip
+                formatter={(value) => `${(value / 10000).toFixed(0)}만원`}
+              />
               <Legend />
 
               {/* 🔹 Line + Label 표시 */}
@@ -97,7 +99,7 @@ const DonationProgress = () => {
                 <LabelList
                   dataKey="totalDonation"
                   position="top"
-                  formatter={(value) => `${value.toLocaleString()}원`}
+                  formatter={(value) => `${(value / 10000).toFixed(0)}만원`}
                 />
               </Line>
             </LineChart>

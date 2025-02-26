@@ -1,13 +1,13 @@
-/* 추심 요청 관리 페이지 스타일 */
+/* 컨테이너 스타일 */
 .debt-container {
   max-width: 1200px;
   margin: 30px auto;
   padding: 20px;
   background: #fff;
   border-radius: 10px;
-  /* box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); */
 }
 
+/* 제목 스타일 */
 .debt-title {
   font-size: 24px;
   font-weight: bold;
@@ -15,67 +15,59 @@
   text-align: center;
 }
 
+/* 리스트 항목 스타일 */
 .debt-list {
   display: flex;
-  justify-content: space-around;
-  /* background: #f9f9f9; */
+  justify-content: space-between;
+  align-items: center;
   padding: 15px;
-  /* border-radius: 8px; */
-  /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); */
-  /* margin-bottom: 15px; */
   border-bottom: 1px solid black;
-  /* transition: transform 0.2s ease-in-out; */
 }
 
-.debt-list strong {
-  color: black;
-}
-
-/* .debt-list:hover {
-  transform: scale(1.02);
-} */
-
-.debt-status {
-  font-weight: bold;
-  /* padding: 5px 10px; */
-  border-radius: 5px;
-  display: inline-block;
-}
-
-/* 상태별 색상 */
-.debt-status.pending {
-  background: #ffcc80;
-  color: #333;
-}
-
-.debt-status.approved {
-  background: #81c784;
-  color: white;
-}
-
-.debt-status.collected {
-  background: #64b5f6;
-  color: white;
-}
-
-.debt-status.rejected {
-  background: #b0bec5;
-  color: white;
-}
-
-.debt-select {
-  /* margin-top: 10px; */
+/* 왼쪽 정보 컨테이너 */
+.debt-info {
   display: flex;
-  gap: 10px;
+  flex-direction: column;
+  flex-grow: 1;
 }
 
+/* 윗줄 스타일 (요청 ID, 계약 ID, 출자자 ID, 채무자 ID) */
+.debt-top {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding-bottom: 5px;
+  font-weight: bold;
+}
+
+/* 아랫줄 스타일 (추심 금액, 추가 이자율, 익월 연체 원리금, 현재 상태) */
+.debt-bottom {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding-top: 5px;
+  font-weight: bold;
+  align-items: center;
+}
+
+/* 버튼 컨테이너 (세로 정렬, 최소 크기 유지) */
+.debt-actions-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  width: 80px;
+}
+
+/* 버튼 스타일 */
 .debt-button-a,
 .debt-button-r,
 .debt-button-f {
-  padding: 8px 14px;
-  border: none;
-  font-size: 14px;
+  width: 90%;
+  padding: 6px 12px;
+  font-size: 13px;
   font-weight: bold;
+  border: none;
   border-radius: 5px;
   cursor: pointer;
   transition: background 0.2s ease-in-out;

@@ -59,8 +59,8 @@ function Chatbot() {
       <div
         style={{
           position: "fixed",
-          top: "2%",
-          right: "2%",
+          top: "7%",
+          right: "10%",
           zIndex: 1000,
         }}
       >
@@ -88,10 +88,10 @@ function Chatbot() {
           className="chatbot"
           style={{
             position: "fixed",
-            bottom: "150px",
+            bottom: "50px",
             right: "150px",
             width: "500px",
-            height: "800px",
+            height: "700px",
             backgroundColor: "#fff",
             border: "1px solid #ddd",
             borderRadius: "10px",
